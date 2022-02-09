@@ -1,5 +1,8 @@
 NAME	= minishell
-SRC		= minishell.c
+SRC		= minishell.c\
+			debug.c\
+			env.c
+
 
 SRCBONUS= bonus.c
 
@@ -14,14 +17,15 @@ OBJDIR	= obj/
 LIBDIR	= includes
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -g
+LFLAGS	= -lreadline
 
 all: $(NAME)
 
 $(NAME): $(OBJS) libft/libft.a
-	$(CC) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a
+	$(CC) $(LFLAGS) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a
 
 bonus: $(OBJSBONUS) libft/libft.a
-	$(CC) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a
+	$(CC) $(LFLAGS) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(OBJDIR)
