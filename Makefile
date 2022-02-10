@@ -1,7 +1,8 @@
 NAME	= minishell
 SRC		= minishell.c\
 			debug.c\
-			env.c
+			env.c\
+			cmd.c
 
 
 SRCBONUS= bonus.c
@@ -29,7 +30,7 @@ bonus: $(OBJSBONUS) libft/libft.a
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) -c -I $(LIBDIR) -o $@ $<
+	$(CC) $(LFLAGS) $(CFLAGS) -c -I $(LIBDIR) -o $@ $<
 
 clean:
 	/bin/rm -f $(addprefix $(OBJDIR),$(OBJ))

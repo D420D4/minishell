@@ -20,6 +20,12 @@ void print_cmd(t_cmd *cmd)
 	int i;
 
 	i = 0;
+	if(!cmd)
+	{
+		printf("ERROR cmd\n");
+		return;
+	}
+
 	printf ("%d << >> %d : ", cmd->fd_in, cmd->fd_out);
 	while (cmd->cmd[i])
 	{

@@ -20,5 +20,6 @@ typedef struct s_cmd
 }	t_cmd;
 
 t_list *parse_env(char **env);
+t_cmd *getCmd(void);
 
 #endif
