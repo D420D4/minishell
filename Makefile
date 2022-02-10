@@ -23,10 +23,10 @@ LFLAGS	= -lreadline
 all: $(NAME)
 
 $(NAME): $(OBJS) libft/libft.a
-	$(CC) $(LFLAGS) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a
+	$(CC) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a $(LFLAGS)
 
 bonus: $(OBJSBONUS) libft/libft.a
-	$(CC) $(LFLAGS) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a
+	$(CC) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(OBJDIR)
