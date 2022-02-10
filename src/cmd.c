@@ -146,6 +146,7 @@ t_cmd *getCmd(void)
 
 	cmd = 0;
 	brut = readline("$> ");
+	add_history(brut);
 	parseLine(&cmd, split_quote(brut, '|'));
 
 	return (cmd);
