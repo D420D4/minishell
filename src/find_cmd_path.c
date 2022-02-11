@@ -69,7 +69,7 @@ static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
 			}
 		}
 		free(cmd_name);
-		free_tab(path);
+//		free_tab(path);
 	}
 	return (cmd_path);
 }
@@ -96,7 +96,7 @@ char	*find_cmd_path(char **cmd, t_list *env)
 	char	*cmd_path;
 
 	cmd_name = find_cmd_name(cmd);
-	if (cmd_name = NULL)
+	if (cmd_name == NULL)
 		return (NULL);
 	if (is_in_str(cmd_name, '/'))
 		cmd_path = find_cmd_path_with_name(cmd_name);

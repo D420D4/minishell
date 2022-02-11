@@ -19,7 +19,7 @@ static int	read_stdin(char *limiter)
 	int		pipefds[2];
 
 	if (pipe(pipefds) == -1)
-		perror("pipe");
+			perror("pipe");
 	len = ft_strlen(limiter);
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
@@ -53,7 +53,7 @@ static int	set_new_rd_in_open(char *filename, int *rd_in)
 	}
 	else
 	{
-		ft_putchar_fd("syntax error\n", 2);
+		ft_putstr_fd("syntax error\n", 2);
 		g_exit_status = 2;
 		return (1);
 	}
@@ -69,7 +69,7 @@ static int	set_new_rd_in_heredoc(char *limiter, int *rd_in)
 		*rd_in = read_stdin(limiter);
 	else
 	{
-		ft_putchar_fd("syntax error\n", 2);
+		ft_putstr_fd("syntax error\n", 2);
 		g_exit_status = 2;
 		return (1);
 	}

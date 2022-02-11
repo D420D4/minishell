@@ -5,9 +5,12 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "../libft/libft.h"
+#include "../includes/get_next_line.h"
 # include <fcntl.h>
 # include <errno.h>
 #include <dirent.h>
+#include <string.h>
+#include <stdio.h>
 
 typedef struct s_data
 {
@@ -22,7 +25,7 @@ typedef struct s_cmd
 	int fd_in;
 }	t_cmd;
 
-int	g_exit_status;
+int g_exit_status = 0;
 
 t_list *parse_env(char **env);
 t_cmd *getCmd(void);
@@ -35,4 +38,6 @@ char	*find_cmd_path(char **cmd, t_list *env);
 int	is_a_file(char *str);
 char	**find_cmd_argv(char **cmd, char *cmd_path);
 int	check_null(char **tab, int len);
+int	exec_cmd(t_cmd *cmd, t_data data);
+
 #endif

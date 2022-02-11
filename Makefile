@@ -2,7 +2,15 @@ NAME	= minishell
 SRC		= minishell.c\
 			debug.c\
 			env.c\
-			cmd.c
+			cmd.c\
+			execute.c\
+			find_cmd_argv.c\
+			find_cmd_path.c\
+			redirection_in.c\
+			redirection_out.c\
+			utils.c\
+			get_next_line/get_next_line.c\
+			get_next_line/get_next_line_utils.c\
 
 
 SRCBONUS= bonus.c
@@ -22,7 +30,7 @@ LFLAGS	= -lreadline
 
 all: $(NAME)
 
-$(NAME): $(OBJS) libft/libft.a
+$(NAME): libft/libft.a $(OBJS)
 	$(CC) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a $(LFLAGS)
 
 bonus: $(OBJSBONUS) libft/libft.a
@@ -30,6 +38,7 @@ bonus: $(OBJSBONUS) libft/libft.a
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)/get_next_line
 	$(CC) $(LFLAGS) $(CFLAGS) -c -I $(LIBDIR) -o $@ $<
 
 clean:

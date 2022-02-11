@@ -26,6 +26,7 @@ int main(int ac, char **av, char **envp)
 	while (!cmd || ft_memcmp(cmd->cmd[0], "exit", 5))
 	{
 		cmd = getCmd();
+		exec_cmd(cmd, data);
 		print_cmd(cmd);
 	}
 	return (0);

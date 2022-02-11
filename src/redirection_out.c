@@ -25,7 +25,7 @@ static int set_new_rd_out_trunc(char *filename, int *rd_out)
 	}
 	else
 	{
-		ft_putchar_fd("syntax error\n", 2);
+		ft_putstr_fd("syntax error\n", 2);
 		g_exit_status = 2;
 		return (1);
 	}
@@ -45,7 +45,7 @@ static int set_new_rd_out_append(char *filename, int *rd_out)
 	}
 	else
 	{
-		ft_putchar_fd("syntax error\n", 2);
+		ft_putstr_fd("syntax error\n", 2);
 		g_exit_status = 2;
 		return (1);
 	}
@@ -74,4 +74,7 @@ int	find_rd_output(char **cmd, int *rd_out)
 		}
 		i++;
 	}
+
+	//TODO jai ajoute ca, faut peut etre mettre autre chose...
+	return (0);
 }

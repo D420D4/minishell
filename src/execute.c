@@ -29,8 +29,9 @@ int	exec_cmd(t_cmd *cmd, t_data data)
 			cmd->fd_in = rd_in;
 		if (rd_out != -1)
 			cmd->fd_out = rd_out;
-		cmd_path = find_cmd_path(cmd, data.env);
-		cmd_argv = find_cmd_argv(cmd, cmd_path);
+		cmd_path = find_cmd_path(cmd->cmd, data.env);
+		cmd_argv = find_cmd_argv(cmd->cmd, cmd_path);
+		(void) cmd_argv;
 	}
 	return (0);
 }
