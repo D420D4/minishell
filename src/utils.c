@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/10 18:30:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/11 17:31:35 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,29 @@ int	check_null(char **tab, int len)
 		}
 	}
 	return (0);
+}
+
+void	close_fd(int fd)
+{
+	if (fd > 2)
+	{
+		if (close(fd))
+			perror("close");
+	}
+}
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	if (tab)
+	{
+		i = 0;
+		while(tab[i])
+		{
+			free(tab[i]);
+			i++;
+		}
+		free(tab);
+	}
 }

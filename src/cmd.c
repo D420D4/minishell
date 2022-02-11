@@ -20,6 +20,15 @@ t_cmd *newCmd()
 	return (cmd);
 }
 
+void	free_cmd(t_cmd *cmd)
+{
+	if (cmd)
+	{
+		free(cmd->cmd_path);
+		free_tab(cmd->cmd_argv);
+	}
+}
+
 void nothing(void *v)
 {
 	(void)v;

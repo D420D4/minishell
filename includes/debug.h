@@ -9,6 +9,7 @@
 
 void print_env(t_data *data);
 void print_cmd(t_cmd *cmd);
+void print_path_argv(t_cmd *cmd);
 
 
 #endif //MINISHELL_DEBUG_H

@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/10 13:37:21 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/11 13:19:51 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,13 @@ static int	read_stdin(char *limiter)
 	}
 	if (line)
 		free(line);
-	if (close(pipefds[1]))
-		perror("close");
+	close_fd(pipefds[1]);
 	return (pipefds[0]);
 }
 
 static int	set_new_rd_in_open(char *filename, int *rd_in)
 {
-	if (*rd_in != -1)
-		if (close(*rd_in))
-			perror("close");
+	close_fd(*rd_in);
 	if (filename)
 	{
 		*rd_in = open(filename, O_RDONLY);
@@ -62,9 +59,7 @@ static int	set_new_rd_in_open(char *filename, int *rd_in)
 
 static int	set_new_rd_in_heredoc(char *limiter, int *rd_in)
 {
-	if (*rd_in != -1)
-		if (close(*rd_in))
-			perror("close");
+	close_fd(*rd_in);
 	if (limiter)
 		*rd_in = read_stdin(limiter);
 	else
@@ -80,8 +75,8 @@ int	find_rd_in(char **cmd, int *rd_in)
 {
 	int	i;
 
-	i = 0;
 	*rd_in = -1;
+	i = 0;
 	while(cmd[i])
 	{
 		if (!ft_memcmp(cmd[i], "<", 2))

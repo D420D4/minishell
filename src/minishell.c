@@ -28,7 +28,8 @@ int main(int ac, char **av, char **envp)
 	{
 		cmd = getCmd();
 		exec_cmd(cmd, data);
-		print_cmd(cmd);
+		printf("----------------- $? = %d -----------\n", g_exit_status);
+		//print_cmd(cmd);
 	}
 	return (0);
 }

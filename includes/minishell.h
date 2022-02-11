@@ -8,9 +8,10 @@
 #include "../includes/get_next_line.h"
 # include <fcntl.h>
 # include <errno.h>
-#include <dirent.h>
-#include <string.h>
-#include <stdio.h>
+# include <dirent.h>
+# include <string.h>
+# include <stdio.h>
+# include <sys/wait.h>
 
 typedef struct s_data
 {
@@ -23,6 +24,9 @@ typedef struct s_cmd
 	struct s_cmd *pipe;
 	int fd_out;
 	int fd_in;
+	char	*cmd_path;
+	char	**cmd_argv;
+	int	pid;
 }	t_cmd;
 
 extern int g_exit_status;
@@ -39,5 +43,8 @@ int	is_a_file(char *str);
 char	**find_cmd_argv(char **cmd, char *cmd_path);
 int	check_null(char **tab, int len);
 int	exec_cmd(t_cmd *cmd, t_data data);
+void	close_fd(int fd);
+void	free_tab(char **tab);
+char	**env_to_tab(t_list *env);
 
 #endif

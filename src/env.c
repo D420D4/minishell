@@ -17,3 +17,24 @@ t_list	*parse_env(char **env)
 	}
 	return (lst);
 }
+
+char	**env_to_tab(t_list *env)
+{
+	int		size;
+	int		i;
+	char	**tab;
+
+	size = ft_lstsize(env);
+	tab = malloc((size + 1) * sizeof(char *));
+	if (tab == NULL)
+		return (NULL);
+	i = 0;
+	while(env)
+	{
+		tab[i] = ft_strdup(env->content);
+		env = env->next;
+		i++;
+	}
+	tab[i] = NULL;
+	return (tab);
+}

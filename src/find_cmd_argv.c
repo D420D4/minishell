@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 18:25:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/10 18:50:23 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/11 11:33:43 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**find_cmd_argv(char **cmd, char *cmd_path)
 
 	len = 0;
 	i = -1;
-	while (cmd[++i])
+	while (cmd_path && cmd[++i])
 	{
 		if (!ft_memcmp(cmd[i], "<", 2) || !ft_memcmp(cmd[i], "<<", 3)
 			|| !ft_memcmp(cmd[i], ">", 2) || !ft_memcmp(cmd[i], ">>", 3))
@@ -33,14 +33,14 @@ char	**find_cmd_argv(char **cmd, char *cmd_path)
 		return (NULL);
 	i = -1;
 	len = 0;
-	while (cmd[++i])
+	while (cmd_path && cmd[++i])
 	{
 		if (!ft_memcmp(cmd[i], "<", 2) || !ft_memcmp(cmd[i], "<<", 3)
 			|| !ft_memcmp(cmd[i], ">", 2) || !ft_memcmp(cmd[i], ">>", 3))
 			i++;
 		else
 		{
-			if (len == 0)
+			if (len != 0)
 				cmd_argv[len++] = ft_strdup(cmd[i]);
 			else
 				cmd_argv[len++] = ft_strdup(cmd_path);

@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 15:45:29 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/10 18:40:04 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/11 17:37:28 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static char	*find_cmd_path_with_name(char *cmd_name)
 		return (NULL);
 	}
 	ft_putstr_fd(cmd_name,2);
-	ft_putstr_fd(": Is a directory", 2);
+	ft_putstr_fd(": Is a directory\n", 2);
+	g_exit_status = 126;
 	return(NULL);
 }
 
@@ -69,7 +70,6 @@ static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
 			}
 		}
 		free(cmd_name);
-//		free_tab(path);
 	}
 	return (cmd_path);
 }
@@ -108,6 +108,7 @@ char	*find_cmd_path(char **cmd, t_list *env)
 			ft_putstr_fd("Command not found: ", 2);
 			ft_putstr_fd(cmd_name, 2);
 			ft_putchar_fd('\n', 2);
+			g_exit_status = 127;
 		}
 	}
 	return (cmd_path);
