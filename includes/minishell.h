@@ -25,7 +25,7 @@ typedef struct s_cmd
 	int fd_in;
 }	t_cmd;
 
-int g_exit_status = 0;
+extern int g_exit_status;
 
 t_list *parse_env(char **env);
 t_cmd *getCmd(void);
