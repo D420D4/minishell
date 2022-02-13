@@ -21,5 +21,9 @@ void	ft_putstr_fd(char *s, int fd)
 	i = 0;
 	while (*(s + i))
 		i++;
+	if (fd == 2)
+		write(2, "\e[1;31m",7);
 	write(fd, s, i);
+	if (fd == 2)
+		write(2, "\e[0m",7);
 }

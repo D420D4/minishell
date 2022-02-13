@@ -11,7 +11,11 @@ SRC		= minishell.c\
 			utils.c\
 			get_next_line/get_next_line.c\
 			get_next_line/get_next_line_utils.c\
-
+			signal.c\
+			echo.c\
+			builtin_functions.c\
+			export.c\
+			unset.c\
 
 SRCBONUS= bonus.c
 

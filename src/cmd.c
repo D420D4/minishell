@@ -2,9 +2,6 @@
 // Created by plefevre on 2/10/22.
 //
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include "../includes/minishell.h"
 
 t_cmd *newCmd()
@@ -34,27 +31,65 @@ void nothing(void *v)
 	(void)v;
 }
 
-char *remove_quote(char *s)
+char *substring(char *s, char c)
+{
+	int i;
+	char *ss;
+
+	i = 0;
+	while (s[i] && s[i] != c)
+		i++;
+	ss = malloc(i + 1);
+	if (!ss)
+		return (0);
+	i = 0;
+	while (s[i] && s[i] != c)
+	{
+		ss[i] = s[i];
+		i++;
+	}
+	ss[i] = 0;
+	return (ss);
+}
+
+char *replace(char *s, int p, int nb, char *news)
 {
 	char *ss;
-	int nb_quote;
+	int i;
+	int j;
+	int k;
+
+	ss = malloc(ft_strlen(s) + ft_strlen(news) - nb + 1);
+	i = 0;
+	j = 0;
+	k = 0;
+	if (!ss)
+		return (0);
+	while (s[i] && i < p)
+		ss[k++] = s[i++];
+	while (news[j])
+		ss[k++] = news[j++];
+	while (s[i])
+		ss[k++] = s[i++];
+	ss[k] = 0;
+	return (ss);
+}
+
+char *remove_quote(char *s, t_data *data)
+{
+	char *ss;
+	char *sub;
+	char *sub2;
 	int quote;
 	int i;
 	int j;
 
 	if (!s)
 		return (0);
-	nb_quote = 0;
 	quote = 0;
 	i = -1;
-	while (s[++i])
-	{
-		if (s[i] == '\'' && quote != 2 && ++nb_quote)
-			quote = (quote + 1) % 2;
-		if (s[i] == '\"' && quote != 1 && ++nb_quote)
-			quote = (quote + 2) % 4;
-	}
-	ss = malloc(ft_strlen(s) - nb_quote + 1);
+
+	ss = malloc(ft_strlen(s) + 1);
 	if (!ss)
 		return (0);
 	i = -1;
@@ -65,17 +100,28 @@ char *remove_quote(char *s)
 			quote = (quote + 1) % 2;
 		else if (s[i] == '\"' && quote != 1)
 			quote = (quote + 2) % 4;
-		else
+		else if (s[i] == '$')
+		{
+			sub = substring(s + i + 1, ' ');
+			sub2 = getvalue(sub, data);
+			if (sub2)
+				s = replace(s, i, ft_strlen(sub) + 1, sub2);
+			else
+				s = replace(s, i, ft_strlen(sub) + 1, "");
+			i += ft_strlen(sub2) - ft_strlen(sub) - 1;
+		}else
 			ss[++j] = s[i];
 	}
 	ss[++j] = 0;
 	free(s);
-	return (ss);
+	s = ft_strdup(ss);
+	free(ss);
+	return (s);
 }
 
 
 //s have an even number of " and '
-char **split_quote(char *s, char c)
+char **split_quote(char *s, char c, t_data *data)
 {
 	t_list *mots;
 	t_list *mots2;
@@ -98,7 +144,7 @@ char **split_quote(char *s, char c)
 			if (ft_strlen(string))
 			{
 				if (c == ' ')
-					ft_lstadd_back(&mots, ft_lstnew(remove_quote(string)));
+					ft_lstadd_back(&mots, ft_lstnew(remove_quote(string, data)));
 				else
 					ft_lstadd_back(&mots, ft_lstnew(string));
 				if (!ft_lstlast(mots)->content)
@@ -137,26 +183,27 @@ char **split_quote(char *s, char c)
 	return (ss);
 }
 
-void parseLine(t_cmd **cmd, char **bruts)
+void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 {
 	if (!bruts || !*bruts)
 		return;
 
 	if (!*cmd)
 		*cmd = newCmd();
-	(*cmd)->cmd = split_quote(*bruts, ' ');
-	parseLine(&((*cmd)->pipe), bruts + 1);
+	(*cmd)->cmd = split_quote(*bruts, ' ',data);
+	parseLine(&((*cmd)->pipe), bruts + 1, data);
 }
 
-t_cmd *getCmd(void)
+t_cmd *getCmd(t_data *data)
 {
 	char *brut;
 	t_cmd *cmd;
 
 	cmd = 0;
-	brut = readline("$> ");
+	brut = readline(PROMPT);
 	add_history(brut);
-	parseLine(&cmd, split_quote(brut, '|'));
-
+	if (!brut)
+		return (0);
+	parseLine(&cmd, split_quote(brut, '|', data), data);
 	return (cmd);
 }
