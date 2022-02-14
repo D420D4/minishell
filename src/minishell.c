@@ -24,7 +24,7 @@ int main(int ac, char **av, char **envp)
 	data.env = parse_env(envp);
 	cmd = 0;
 
-	while (!cmd || ft_memcmp(cmd->cmd[0], "exit", 5))
+	while (1)
 	{
 		getCmdSignal();
 		cmd = getCmd(&data);
@@ -38,12 +38,17 @@ int main(int ac, char **av, char **envp)
 		//TODO mettre lexecute builtin dans exe_cmd, les builtin ne prennent pas en compte les pipe!!!!
 		if (!execute_builtin(cmd, &data))
 			exec_cmd(cmd, data);
+		if (cmd)
+		{
+			if(!ft_memcmp(cmd->cmd[0], "exit", 5))
+				break ;
+			free_cmd(cmd);
+			cmd = 0;
+		}
 		printf("----------------- $? = %d -----------\n", g_exit_status);
-		//print_cmd(cmd);
-	}
 
-	if (cmd && !ft_memcmp(cmd->cmd[0], "exit", 5))
-		return (ft_atoi(cmd->cmd[1]));
+	}
+	ft_lstclear(  &data.env, &free);
 	return (0);
 }
 

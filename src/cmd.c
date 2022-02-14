@@ -14,21 +14,43 @@ t_cmd *newCmd()
 	cmd->fd_in = 0;
 	cmd->fd_out = 1;
 	cmd->pipe = 0;
+	cmd->cmd = 0;
+	cmd->cmd_path = 0;
+	cmd->cmd_argv = 0;
+	cmd->pipe = 0;
 	return (cmd);
 }
 
 void	free_cmd(t_cmd *cmd)
 {
-	if (cmd)
-	{
+	if (!cmd)
+		return;
+
+	if (cmd->cmd_path)
 		free(cmd->cmd_path);
+	if (cmd->cmd_argv)
 		free_tab(cmd->cmd_argv);
-	}
+	if (cmd->cmd)
+		free_tab(cmd->cmd);
+	free(cmd);
 }
 
 void nothing(void *v)
 {
 	(void)v;
+}
+
+int is_in(char c, char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i])
+		if (c == s[i])
+			return (1);
+		else
+			i++;
+	return (0);
 }
 
 char *substring(char *s, char c)
@@ -100,15 +122,18 @@ char *remove_quote(char *s, t_data *data)
 			quote = (quote + 1) % 2;
 		else if (s[i] == '\"' && quote != 1)
 			quote = (quote + 2) % 4;
-		else if (s[i] == '$')
+		else if (s[i] == '&')
 		{
 			sub = substring(s + i + 1, ' ');
 			sub2 = getvalue(sub, data);
 			if (sub2)
+			{
 				s = replace(s, i, ft_strlen(sub) + 1, sub2);
+				i += ft_strlen(sub2) - ft_strlen(sub) - 1;
+			}
 			else
 				s = replace(s, i, ft_strlen(sub) + 1, "");
-			i += ft_strlen(sub2) - ft_strlen(sub) - 1;
+
 		}else
 			ss[++j] = s[i];
 	}
@@ -186,8 +211,7 @@ char **split_quote(char *s, char c, t_data *data)
 void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 {
 	if (!bruts || !*bruts)
-		return;
-
+		return;	
 	if (!*cmd)
 		*cmd = newCmd();
 	(*cmd)->cmd = split_quote(*bruts, ' ',data);
@@ -197,6 +221,7 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 t_cmd *getCmd(t_data *data)
 {
 	char *brut;
+	char **bruts;
 	t_cmd *cmd;
 
 	cmd = 0;
@@ -204,6 +229,9 @@ t_cmd *getCmd(t_data *data)
 	add_history(brut);
 	if (!brut)
 		return (0);
-	parseLine(&cmd, split_quote(brut, '|', data), data);
+	bruts = split_quote(brut, '|', data);
+	parseLine(&cmd, bruts, data);
+	free(brut);
+	free_tab(bruts);
 	return (cmd);
 }

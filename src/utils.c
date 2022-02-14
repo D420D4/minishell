@@ -68,14 +68,13 @@ void	free_tab(char **tab)
 {
 	int	i;
 
-	if (tab)
+	if (!tab)
+		return;
+	i = 0;
+	while (tab[i])
 	{
-		i = 0;
-		while(tab[i])
-		{
-			free(tab[i]);
-			i++;
-		}
-		free(tab);
+		free(tab[i]);
+		i++;
 	}
+	free(tab);
 }
