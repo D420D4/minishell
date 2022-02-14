@@ -50,11 +50,12 @@ char	*find_cmd_path(char **cmd, t_list *env);
 int	is_a_file(char *str);
 char	**find_cmd_argv(char **cmd, char *cmd_path);
 int	check_null(char **tab, int len);
-int	exec_cmd(t_cmd *cmd, t_data data);
+int	exec_cmd(t_cmd *cmd, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
 
 int	execute_builtin(t_cmd *cmd, t_data *data);
+int	is_in_builtin(char *cmd_name);
 int cmd_echo(char **cmd);
 int cmd_env(t_cmd *cmd, t_data *data);
 int cmd_export(t_cmd *cmd, t_data *data);

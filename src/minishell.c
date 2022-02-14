@@ -35,9 +35,7 @@ int main(int ac, char **av, char **envp)
 			ft_putstr_fd("\n", 1);
 			break;
 		}
-		//TODO mettre lexecute builtin dans exe_cmd, les builtin ne prennent pas en compte les pipe!!!!
-		if (!execute_builtin(cmd, &data))
-			exec_cmd(cmd, data);
+		exec_cmd(cmd, &data);
 		if (cmd)
 		{
 			if(!ft_memcmp(cmd->cmd[0], "exit", 5))

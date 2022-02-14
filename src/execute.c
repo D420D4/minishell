@@ -6,14 +6,14 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/11 17:44:36 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/14 13:08:07 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/debug.h"
 
-static void	exec_cmd_in_child(t_cmd *cmd, t_list *env, int pipefds[2])
+static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 {
 	int	child;
 	char	**tab;
@@ -33,14 +33,14 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_list *env, int pipefds[2])
 		}
 		close_fd(cmd->fd_in);
 		close_fd(cmd->fd_out);
-		if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0)
+		if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0 && !execute_builtin(cmd, data))
 		{
-			tab = env_to_tab(env);
+			tab = env_to_tab(data->env);
 			if (execve(cmd->cmd_path, cmd->cmd_argv, tab))
 				perror("execve");
+			free_tab(tab);
 		}
-		//free_cmd(cmd); fonction a creer pour free cmd ( au cas ou on lance pas execve faut free dans le child (cmd erronee / fail de execve..))
-		free_tab(tab);
+		free_cmd(cmd);
 		exit(g_exit_status);
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
@@ -62,7 +62,7 @@ void	wait_cmd(t_cmd *cmd)
 	g_exit_status = WEXITSTATUS(status);
 }
 
-int	exec_cmd(t_cmd *cmd, t_data data)
+int	exec_cmd(t_cmd *cmd, t_data *data)
 {
 	int	rd_in;
 	int	rd_out;
@@ -91,11 +91,11 @@ int	exec_cmd(t_cmd *cmd, t_data data)
 			close_fd(cmd->fd_out);
 			cmd->fd_out = rd_out;
 		}
-		cmd->cmd_path = find_cmd_path(cmd->cmd, data.env);
+		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
 		cmd->cmd_argv = find_cmd_argv(cmd->cmd, cmd->cmd_path);
 		//print_path_argv(cmd);
 		
-		exec_cmd_in_child(cmd, data.env, pipefds);
+		exec_cmd_in_child(cmd, data, pipefds);
 		cmd = cmd->pipe;
 	}
 	wait_cmd(temp);
