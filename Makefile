@@ -16,6 +16,7 @@ SRC		= minishell.c\
 			builtin_functions.c\
 			export.c\
 			unset.c\
+			cd.c\
 
 SRCBONUS= bonus.c
 

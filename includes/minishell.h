@@ -60,6 +60,7 @@ int cmd_echo(char **cmd);
 int cmd_env(t_cmd *cmd, t_data *data);
 int cmd_export(t_cmd *cmd, t_data *data);
 int cmd_unset(t_cmd *cmd, t_data *data);
+int cmd_cd(char **cmd, t_data *data);
 void	close_fd(int fd);
 void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);
