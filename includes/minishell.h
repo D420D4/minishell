@@ -64,5 +64,6 @@ void	close_fd(int fd);
 void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);
 void	free_cmd(t_cmd *cmd);
+char	*transform(char *original, t_data *data);
 
 #endif

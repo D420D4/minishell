@@ -38,15 +38,19 @@ char *getvalue(char *s, t_data *data)
 {
 	int j;
 	t_list *lst;
+	char *ss;
 
 	j = ft_strlen(s);
 	lst = data->env;
 	while (lst)
 		if (!ft_strncmp(s, (char *) lst->content, j))
-			return (lst->content);
+			return (lst->content + ft_strlen(s) + 1);
 		else
 			lst = lst->next;
-	return (0);
+	ss = malloc(1);
+	if (ss)
+		*ss = 0;
+	return (ss);
 }
 
 char	**env_to_tab(t_list *env)

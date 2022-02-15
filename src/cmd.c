@@ -40,110 +40,49 @@ void nothing(void *v)
 	(void)v;
 }
 
-int is_in(char c, char *s)
-{
-	int i;
 
-	i = 0;
-	while (s[i])
-		if (c == s[i])
-			return (1);
-		else
-			i++;
-	return (0);
-}
 
-char *substring(char *s, char c)
-{
-	int i;
-	char *ss;
 
-	i = 0;
-	while (s[i] && s[i] != c)
-		i++;
-	ss = malloc(i + 1);
-	if (!ss)
-		return (0);
-	i = 0;
-	while (s[i] && s[i] != c)
-	{
-		ss[i] = s[i];
-		i++;
-	}
-	ss[i] = 0;
-	return (ss);
-}
-
-char *replace(char *s, int p, int nb, char *news)
+char	*replace(char *s, char *word, char *new_word)
 {
 	char *ss;
 	int i;
 	int j;
-	int k;
+	int p;
 
-	ss = malloc(ft_strlen(s) + ft_strlen(news) - nb + 1);
+	if (!ft_strnstr(s, word, ft_strlen(s)))
+		return (strdup(s));
+	ss = malloc(ft_strlen(s) + 1 - ft_strlen(word) + ft_strlen(new_word));
+	if (!ss)
+	{
+		free(s);
+		return (0);
+	}
 	i = 0;
 	j = 0;
-	k = 0;
-	if (!ss)
-		return (0);
-	while (s[i] && i < p)
-		ss[k++] = s[i++];
-	while (news[j])
-		ss[k++] = news[j++];
-	while (s[i])
-		ss[k++] = s[i++];
-	ss[k] = 0;
+	while (s[i] && word[j])
+	{
+		if (s[i] != word[j])
+			j = -1;
+		ss[i] = s[i];
+		j++;
+		i++;
+	}
+	p = i;
+	if (!word[j])
+	{
+		i-= ft_strlen(word);
+		j = 0;
+		while (new_word[j])
+			ss[i++] = new_word[j++];
+
+	}
+	while (s[p])
+		ss[i++] = s[p++];
+	ss[i] = 0;
+	free(s);
 	return (ss);
 }
-
-char *remove_quote(char *s, t_data *data)
-{
-	char *ss;
-	char *sub;
-	char *sub2;
-	int quote;
-	int i;
-	int j;
-
-	if (!s)
-		return (0);
-	quote = 0;
-	i = -1;
-
-	ss = malloc(ft_strlen(s) + 1);
-	if (!ss)
-		return (0);
-	i = -1;
-	j = -1;
-	while (s[++i])
-	{
-		if (s[i] == '\'' && quote != 2)
-			quote = (quote + 1) % 2;
-		else if (s[i] == '\"' && quote != 1)
-			quote = (quote + 2) % 4;
-		else if (s[i] == '&')
-		{
-			sub = substring(s + i + 1, ' ');
-			sub2 = getvalue(sub, data);
-			if (sub2)
-			{
-				s = replace(s, i, ft_strlen(sub) + 1, sub2);
-				i += ft_strlen(sub2) - ft_strlen(sub) - 1;
-			}
-			else
-				s = replace(s, i, ft_strlen(sub) + 1, "");
-
-		}else
-			ss[++j] = s[i];
-	}
-	ss[++j] = 0;
-	free(s);
-	s = ft_strdup(ss);
-	free(ss);
-	return (s);
-}
-
 
 //s have an even number of " and '
 char **split_quote(char *s, char c, t_data *data)
@@ -169,7 +108,7 @@ char **split_quote(char *s, char c, t_data *data)
 			if (ft_strlen(string))
 			{
 				if (c == ' ')
-					ft_lstadd_back(&mots, ft_lstnew(remove_quote(string, data)));
+					ft_lstadd_back(&mots, ft_lstnew(transform(string, data)));
 				else
 					ft_lstadd_back(&mots, ft_lstnew(string));
 				if (!ft_lstlast(mots)->content)
