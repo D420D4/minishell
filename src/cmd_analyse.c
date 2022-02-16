@@ -37,13 +37,13 @@ char *substring(char *s, char *c)
 	return (ss);
 }
 
-void do_var(char **s, int f, t_data *data)
+void do_var(char **s, int *f, t_data *data)
 {
 	char *ss;
 	char *var_name;
 	char *var_value;
 
-	var_name = substring((*s) + f, " $\"");
+	var_name = substring((*s) + *f, " $\"");
 	if (var_name && ft_strlen(var_name) == 1)
 	{
 		free(var_name);
@@ -61,12 +61,13 @@ void do_var(char **s, int f, t_data *data)
 		free(var_name);
 		return ;
 	}
-	ft_memcpy(ss, *s, f);
-	ft_memcpy(ss + f, var_value, ft_strlen(var_value));
-	ft_memcpy(ss + f + ft_strlen(var_value),
-			  (*s) + f + ft_strlen(var_name), ft_strlen((*s) + f + ft_strlen(var_name)) + 1);
+	ft_memcpy(ss, *s, *f);
+	ft_memcpy(ss + *f, var_value, ft_strlen(var_value));
+	ft_memcpy(ss + *f + ft_strlen(var_value),
+			  (*s) + *f + ft_strlen(var_name), ft_strlen((*s) + *f + ft_strlen(var_name)) + 1);
 	free(*s);
 	free(var_name);
+	*f = *f + ft_strlen(var_value) - 1;
 	*s = ss;
 }
 
@@ -79,7 +80,7 @@ int inner_quote_1(char **s, int *i, t_data *data)
 	while ((*s)[f] && (*s)[f] != '"')
 	{
 		if ((*s)[f] == '$')
-			do_var(s, f, data);
+			do_var(s, &f, data);
 		f++;
 	}
 	if (!(*s)[f])
@@ -144,7 +145,7 @@ char	*transform(char *original, t_data *data)
 			if (inner_quote_2(&ss, &i))
 				return (0);
 		if (ss[i] == '$')
-			do_var(&ss, i, data);
+			do_var(&ss, &i, data);
 		i++;
 	}
 	return (ss);

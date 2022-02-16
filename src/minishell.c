@@ -29,7 +29,9 @@ int main(int ac, char **av, char **envp)
 		getCmdSignal();
 		cmd = getCmd(&data);
 		if (cmd)
+		{
 			print_cmd(cmd);
+		}
 		else
 		{
 			ft_putstr_fd("\n", 1);
@@ -43,7 +45,7 @@ int main(int ac, char **av, char **envp)
 			free_cmd(cmd);
 			cmd = 0;
 		}
-		printf("----------------- $? = %d -----------\n", g_exit_status);
+//		printf("----------------- $? = %d -----------\n", g_exit_status);
 
 	}
 	ft_lstclear(  &data.env, &free);

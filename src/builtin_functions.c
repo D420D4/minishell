@@ -30,6 +30,6 @@ int	execute_builtin(t_cmd *cmd, t_data *data)
 	else if (!ft_memcmp(cmd->cmd_path, "cd", 3))
 		g_exit_status = cmd_cd(cmd->cmd_argv, data);
 	else
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }

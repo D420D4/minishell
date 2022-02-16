@@ -43,7 +43,9 @@ char *getvalue(char *s, t_data *data)
 	j = ft_strlen(s);
 	lst = data->env;
 	while (lst)
-		if (!ft_strncmp(s, (char *) lst->content, j))
+		if (!ft_strncmp(s, (char *) lst->content, j)
+				&& ft_strlen((char *) lst->content) >= j
+				&& ((char *) lst->content)[j] == '=')
 			return (lst->content + ft_strlen(s) + 1);
 		else
 			lst = lst->next;

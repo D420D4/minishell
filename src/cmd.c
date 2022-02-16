@@ -85,7 +85,7 @@ char	*replace(char *s, char *word, char *new_word)
 }
 
 //s have an even number of " and '
-char **split_quote(char *s, char c, t_data *data)
+char **split_advanced(char *s, char c, t_data *data)
 {
 	t_list *mots;
 	t_list *mots2;
@@ -153,7 +153,7 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 		return;	
 	if (!*cmd)
 		*cmd = newCmd();
-	(*cmd)->cmd = split_quote(*bruts, ' ',data);
+	(*cmd)->cmd = split_advanced(*bruts, ' ', data);
 	parseLine(&((*cmd)->pipe), bruts + 1, data);
 }
 
@@ -168,7 +168,7 @@ t_cmd *getCmd(t_data *data)
 	add_history(brut);
 	if (!brut)
 		return (0);
-	bruts = split_quote(brut, '|', data);
+	bruts = split_advanced(brut, '|', data);
 	parseLine(&cmd, bruts, data);
 	free(brut);
 	free_tab(bruts);
