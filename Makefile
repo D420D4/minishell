@@ -1,22 +1,23 @@
 NAME	= minishell
 SRC		= minishell.c\
-			builtin_functions.c\
-			cmd.c\
-			cmd_analyse.c\
 			debug.c\
-			echo.c\
 			env.c\
+			cmd.c\
 			execute.c\
-			export.c\
 			find_cmd_argv.c\
 			find_cmd_path.c\
-			get_next_line/get_next_line.c\
-			get_next_line/get_next_line_utils.c\
 			redirection_in.c\
 			redirection_out.c\
+			utils.c\
+			get_next_line/get_next_line.c\
+			get_next_line/get_next_line_utils.c\
 			signal.c\
+			echo.c\
+			builtin_functions.c\
+			export.c\
 			unset.c\
 			utils.c\
+			cd.c\
 
 SRCBONUS= bonus.c
 

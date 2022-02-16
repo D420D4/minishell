@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/14 13:08:07 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/15 18:19:53 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,30 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		return (perror("fork"));
 	else if (child == 0)
 	{
-		tab = NULL;
-		if (cmd->pipe != NULL)
-			close_fd(pipefds[0]);
-		if (cmd->fd_in >= 0 && cmd->fd_out >=0)
+		if (!is_in_builtin(cmd->cmd_path))
 		{
-			dup2(cmd->fd_in, STDIN_FILENO);
-			dup2(cmd->fd_out, STDOUT_FILENO);
-		}
-		close_fd(cmd->fd_in);
-		close_fd(cmd->fd_out);
-		if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0 && !execute_builtin(cmd, data))
-		{
-			tab = env_to_tab(data->env);
-			if (execve(cmd->cmd_path, cmd->cmd_argv, tab))
-				perror("execve");
-			free_tab(tab);
+			tab = NULL;
+			if (cmd->pipe != NULL)
+				close_fd(pipefds[0]);
+			if (cmd->fd_in >= 0 && cmd->fd_out >=0)
+			{
+				dup2(cmd->fd_in, STDIN_FILENO);
+				dup2(cmd->fd_out, STDOUT_FILENO);
+			}
+			close_fd(cmd->fd_in);
+			close_fd(cmd->fd_out);
+			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0)
+			{
+				tab = env_to_tab(data->env);
+				if (execve(cmd->cmd_path, cmd->cmd_argv, tab))
+					perror("execve");
+				free_tab(tab);
+			}
 		}
 		free_cmd(cmd);
 		exit(g_exit_status);
 	}
+	execute_builtin(cmd, data);
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
 	cmd->pid = child;
 	close_fd(cmd->fd_in);
