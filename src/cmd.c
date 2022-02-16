@@ -85,7 +85,7 @@ char	*replace(char *s, char *word, char *new_word)
 }
 
 //s have an even number of " and '
-char **split_advanced(char *s, char c, t_data *data)
+char **split_advanced(char *s, char *c, t_data *data)
 {
 	t_list *mots;
 	t_list *mots2;
@@ -98,16 +98,16 @@ char **split_advanced(char *s, char c, t_data *data)
 	d = 0;
 	quote = 0;
 	mots = 0;
-	while (!i || s[i - 1])
+	while (i <= ft_strlen(s))
 	{
-		if ((s[i] == c || !s[i]) && quote == 0)
+		if ((!memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
 		{
 			char *string = ft_substr(s, d, i - d);
 			if (!string)
 				return (0);
 			if (ft_strlen(string))
 			{
-				if (c == ' ')
+				if (!memcmp(c, " ", 2))
 					ft_lstadd_back(&mots, ft_lstnew(transform(string, data)));
 				else
 					ft_lstadd_back(&mots, ft_lstnew(string));
@@ -119,7 +119,7 @@ char **split_advanced(char *s, char c, t_data *data)
 			}
 			else
 				free(string);
-			d = i + 1;
+			d = i + ft_strlen(c);
 		}
 		if (s[i] == '\'' && quote != 2)
 			quote = (quote + 1) % 2;
@@ -147,13 +147,65 @@ char **split_advanced(char *s, char c, t_data *data)
 	return (ss);
 }
 
+//Bonus, remove first spaces
+char *first_word(char *s)
+{
+	int	i;
+	int	j;
+	char *ss;
+
+	if (!s)
+		return (0);
+	i = 0;
+	j = 0;
+	while (s[i] ==  ' ')
+		i++;
+	while (s[i + j] && s[i + j] !=  ' ')
+		j++;
+	ss = malloc(j + 1);
+	if (!ss)
+		return (0);
+	j = 0;
+	while (s[i + j] && s[i + j] !=  ' ')
+	{
+		ss[j] = s[i + j];
+		j++;
+	}
+	ss[j] = 0;
+	return (ss);
+}
+
 void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 {
+	char	**split;
+	char 	*file;
+
 	if (!bruts || !*bruts)
 		return;	
 	if (!*cmd)
 		*cmd = newCmd();
-	(*cmd)->cmd = split_advanced(*bruts, ' ', data);
+
+	split = split_advanced(*bruts, ">>", data);
+	if (!split)
+		return;
+	file = first_word(split[1]);
+	if (file)
+	{
+		set_new_rd_out_append(file, &((*cmd)->fd_out));
+		free(file);
+	}
+	split = split_advanced(split[0], ">", data);
+	if (!split)
+		return;
+	file = first_word(split[1]);
+	if (file)
+	{
+		set_new_rd_out_trunc(file, &((*cmd)->fd_out));
+		free(file);
+	}
+	//TODO boulot de free des split (et clarification du code)
+
+	(*cmd)->cmd = split_advanced(split[0], " ", data);
 	parseLine(&((*cmd)->pipe), bruts + 1, data);
 }
 
@@ -168,7 +220,7 @@ t_cmd *getCmd(t_data *data)
 	add_history(brut);
 	if (!brut)
 		return (0);
-	bruts = split_advanced(brut, '|', data);
+	bruts = split_advanced(brut, "|", data);
 	parseLine(&cmd, bruts, data);
 	free(brut);
 	free_tab(bruts);

@@ -12,17 +12,9 @@
 
 #include "../includes/minishell.h"
 
-char	*find_home(t_list *env)
+char	*find_home(t_data *data)
 {
-	while(env)
-	{
-		if (ft_memcmp(env->content, "HOME=", 5) == 0)
-		{
-			return(env->content + 5);
-		}
-		env = env->next;
-	}
-	return (NULL);
+	return getvalue("HOME", data);
 }
 
 int	cmd_cd(char **cmd, t_data *data)
@@ -39,7 +31,7 @@ int	cmd_cd(char **cmd, t_data *data)
 	}
 	if (cmd[1] == NULL)
 	{
-		home = find_home(data->env);
+		home = find_home(data);
 		if (home == NULL)
 		{
 			ft_putendl_fd("cd: HOME not set", 2);

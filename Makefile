@@ -1,23 +1,23 @@
 NAME	= minishell
 SRC		= minishell.c\
-			debug.c\
-			env.c\
+			builtin_functions.c\
+			cd.c\
 			cmd.c\
+			cmd_analyse.c\
+			debug.c\
+			echo.c\
+			env.c\
 			execute.c\
+			export.c\
 			find_cmd_argv.c\
 			find_cmd_path.c\
-			redirection_in.c\
-			redirection_out.c\
-			utils.c\
 			get_next_line/get_next_line.c\
 			get_next_line/get_next_line_utils.c\
+			redirection_in.c\
+			redirection_out.c\
 			signal.c\
-			echo.c\
-			builtin_functions.c\
-			export.c\
 			unset.c\
 			utils.c\
-			cd.c\
 
 SRCBONUS= bonus.c
 
@@ -55,7 +55,6 @@ clean:
 
 fclean: clean
 	/bin/rm -f $(NAME)
-	/bin/rm -f ./checker
 	make fclean -C ./libft
 
 libft/libft.a:

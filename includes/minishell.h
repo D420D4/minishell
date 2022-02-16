@@ -66,5 +66,7 @@ void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);
 void	free_cmd(t_cmd *cmd);
 char	*transform(char *original, t_data *data);
+int set_new_rd_out_trunc(char *filename, int *rd_out);
+int set_new_rd_out_append(char *filename, int *rd_out);
 
 #endif

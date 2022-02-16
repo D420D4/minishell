@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-static int set_new_rd_out_trunc(char *filename, int *rd_out)
+int set_new_rd_out_trunc(char *filename, int *rd_out)
 {
 	close_fd(*rd_out);
 	if (filename)
@@ -30,7 +30,7 @@ static int set_new_rd_out_trunc(char *filename, int *rd_out)
 	return (0);
 }
 
-static int set_new_rd_out_append(char *filename, int *rd_out)
+int set_new_rd_out_append(char *filename, int *rd_out)
 {
 	close_fd(*rd_out);
 	if (filename)
