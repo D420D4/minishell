@@ -6,16 +6,11 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 11:31:34 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/15 18:25:23 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/17 19:07:41 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-char	*find_home(t_data *data)
-{
-	return getvalue("HOME", data);
-}
 
 int	cmd_cd(char **cmd, t_data *data)
 {
@@ -31,7 +26,7 @@ int	cmd_cd(char **cmd, t_data *data)
 	}
 	if (cmd[1] == NULL)
 	{
-		home = find_home(data);
+		home = getvalue("HOME", data);
 		if (home == NULL)
 		{
 			ft_putendl_fd("cd: HOME not set", 2);
@@ -44,7 +39,19 @@ int	cmd_cd(char **cmd, t_data *data)
 	else
 	{
 		path = cmd[1];
-		if (!is_in_str(path, '/'))
+		if (cmd[1][0] == '~')
+		{
+			home = getvalue("HOME", data);
+			if (home == NULL)
+			{
+				ft_putendl_fd("cd: HOME not set", 2);
+				return (1);
+			}
+			absolut_path = ft_strjoin(home, cmd[1] + 1);
+			if (absolut_path == NULL)
+				return (1);
+		}
+		else if (!is_in_str(path, '/'))
 		{
 			path = ft_strjoin("/", path);
 			if (path == NULL)

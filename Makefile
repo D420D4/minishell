@@ -13,11 +13,13 @@ SRC		= minishell.c\
 			find_cmd_path.c\
 			get_next_line/get_next_line.c\
 			get_next_line/get_next_line_utils.c\
+			pwd.c\
 			redirection_in.c\
 			redirection_out.c\
 			signal.c\
 			unset.c\
 			utils.c\
+			wildcards.c\
 
 SRCBONUS= bonus.c
 

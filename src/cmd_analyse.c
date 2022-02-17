@@ -135,6 +135,7 @@ char	*transform(char *original, t_data *data)
 	if (!ss)
 		return (0);
 	i = 0;
+	//do_wildcards(&ss); // changer l endroit ou on gere les wildcards (avant les quotes ? a voir avec toi)
 	//todo free ss si return 0
 	while (ss[i])
 	{

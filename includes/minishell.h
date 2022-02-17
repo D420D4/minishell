@@ -53,6 +53,7 @@ int	check_null(char **tab, int len);
 int	exec_cmd(t_cmd *cmd, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
+void	do_wildcards(char **s);
 
 int	execute_builtin(t_cmd *cmd, t_data *data);
 int	is_in_builtin(char *cmd_name);
@@ -61,6 +62,7 @@ int cmd_env(t_cmd *cmd, t_data *data);
 int cmd_export(t_cmd *cmd, t_data *data);
 int cmd_unset(t_cmd *cmd, t_data *data);
 int cmd_cd(char **cmd, t_data *data);
+int cmd_pwd(void);
 void	close_fd(int fd);
 void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);

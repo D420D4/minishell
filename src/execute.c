@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/14 13:08:07 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/16 17:09:55 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	int	child;
 	char	**tab;
 
+	execute_builtin(cmd, data);
 	child = fork();
 	if (child == -1)
 		return (perror("fork"));

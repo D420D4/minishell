@@ -209,14 +209,54 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 	parseLine(&((*cmd)->pipe), bruts + 1, data);
 }
 
+int	get_startingline(char **line, t_data *data)
+{
+	char	*pwd;
+	char	*home;
+	char	*temp;
+
+	pwd = malloc(sizeof(char) * 4096);
+	if (pwd == NULL)
+		return (0);
+	if (getcwd(pwd,4096) == NULL)
+	{
+		perror("getcwd");
+		free(pwd);
+		return (0);
+	}
+	home = getvalue("HOME", data);
+	if (home && !ft_memcmp(pwd, home, ft_strlen(home)))
+	{
+		*line = ft_strjoin("~", pwd + ft_strlen(home));
+		free(pwd);
+	}
+	else
+		*line = pwd;
+	temp = *line;
+	*line = ft_strjoin("\e[1;36mminishell: ", temp);
+	free(temp);
+	if (*line == NULL)
+		return (0);
+	temp = *line;
+	*line = ft_strjoin(temp, " $> \e[0m");
+	free(temp);
+	if (*line == NULL)
+		return (0);
+	return (1);
+
+}
+
 t_cmd *getCmd(t_data *data)
 {
+	char *startingline;
 	char *brut;
 	char **bruts;
 	t_cmd *cmd;
 
 	cmd = 0;
-	brut = readline(PROMPT);
+	if (!get_startingline(&startingline, data))
+		return 0;
+	brut = readline(startingline);
 	add_history(brut);
 	if (!brut)
 		return (0);
