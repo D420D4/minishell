@@ -6,13 +6,13 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 15:32:37 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/16 15:37:36 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/19 16:16:05 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	cmd_pwd(void)
+int	cmd_pwd(t_cmd *cmd)
 {
 	char	*pwd;
 
@@ -25,6 +25,6 @@ int	cmd_pwd(void)
 		free(pwd);
 		return (1);
 	}
-	ft_putendl_fd(pwd, 1);
+	ft_putendl_fd(pwd, cmd->fd_out);
 	return (0);
 }

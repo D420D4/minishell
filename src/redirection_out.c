@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:09:58 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/11 13:19:43 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/19 15:07:41 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int set_new_rd_out_append(char *filename, int *rd_out)
 	return (0);
 }
 
+/*
 int	find_rd_output(char **cmd, int *rd_out)
 {
 	int	i;
@@ -71,4 +72,4 @@ int	find_rd_output(char **cmd, int *rd_out)
 		i++;
 	}
 	return (0);
-}
+}*/

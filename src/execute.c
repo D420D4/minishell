@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/16 17:09:55 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/19 16:57:41 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 				dup2(cmd->fd_in, STDIN_FILENO);
 				dup2(cmd->fd_out, STDOUT_FILENO);
 			}
-			close_fd(cmd->fd_in);
-			close_fd(cmd->fd_out);
 			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0)
 			{
 				tab = env_to_tab(data->env);
@@ -44,6 +42,8 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 				free_tab(tab);
 			}
 		}
+		close_fd(cmd->fd_in);
+		close_fd(cmd->fd_out);
 		free_cmd(cmd);
 		exit(g_exit_status);
 	}
@@ -69,7 +69,6 @@ void	wait_cmd(t_cmd *cmd)
 int	exec_cmd(t_cmd *cmd, t_data *data)
 {
 	int	rd_in;
-	int	rd_out;
 	int	pipefds[2];
 	t_cmd	*temp;
 
@@ -80,20 +79,18 @@ int	exec_cmd(t_cmd *cmd, t_data *data)
 		{
 			if (pipe(pipefds) == -1)
 				perror("pipe");
-			cmd->fd_out = pipefds[1];
+			if (cmd->fd_out == 1)
+				cmd->fd_out = pipefds[1];
+			else
+				close_fd(pipefds[1]);
 			(cmd->pipe)->fd_in = pipefds[0];
 		}
-		if (find_rd_in(cmd->cmd, &rd_in) || find_rd_output(cmd->cmd, &rd_out))
+		if (find_rd_in(cmd->cmd, &rd_in))
 			return (1);
 		if (rd_in != -1)
 		{
 			close_fd(cmd->fd_in);
 			cmd->fd_in = rd_in;
-		}
-		if (rd_out != -1)
-		{
-			close_fd(cmd->fd_out);
-			cmd->fd_out = rd_out;
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
 		cmd->cmd_argv = find_cmd_argv(cmd->cmd, cmd->cmd_path);

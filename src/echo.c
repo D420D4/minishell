@@ -3,21 +3,23 @@
 //
 #include "../includes/minishell.h"
 
-int	cmd_echo(char **av)
+int	cmd_echo(t_cmd *cmd)
 {
 	int n;
 	int i;
-
+	char **av;
+	
+	av = cmd->cmd;
 	n = !ft_memcmp(av[1], "-n", 3);
 	av += 1 + n;
 	i = 0;
 	while (av[i])
 	{
-		printf("%s", av[i++]);
+		ft_putstr_fd(av[i++], cmd->fd_out);
 		if (av[i])
-			printf(" ");
+			ft_putstr_fd(" ", cmd->fd_out);
 	}
 	if (!n)
-		printf("\n");
+		ft_putstr_fd("\n", cmd->fd_out);
 	return (0);
 }

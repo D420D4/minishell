@@ -19,6 +19,7 @@
 # include <dirent.h>
 # include <string.h>
 # include <stdio.h>
+# include <limits.h>
 # include <sys/wait.h>
 
 typedef struct s_data
@@ -57,12 +58,13 @@ void	do_wildcards(char **s);
 
 int	execute_builtin(t_cmd *cmd, t_data *data);
 int	is_in_builtin(char *cmd_name);
-int cmd_echo(char **cmd);
+int cmd_echo(t_cmd *cmd);
 int cmd_env(t_cmd *cmd, t_data *data);
 int cmd_export(t_cmd *cmd, t_data *data);
 int cmd_unset(t_cmd *cmd, t_data *data);
 int cmd_cd(char **cmd, t_data *data);
-int cmd_pwd(void);
+int cmd_pwd(t_cmd *cmd);
+int cmd_exit(t_cmd *cmd, t_data *data);
 void	close_fd(int fd);
 void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);

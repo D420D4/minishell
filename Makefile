@@ -8,6 +8,7 @@ SRC		= minishell.c\
 			echo.c\
 			env.c\
 			execute.c\
+			exit.c\
 			export.c\
 			find_cmd_argv.c\
 			find_cmd_path.c\

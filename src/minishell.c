@@ -38,17 +38,9 @@ int main(int ac, char **av, char **envp)
 			break;
 		}
 		exec_cmd(cmd, &data);
-		if (cmd)
-		{
-			if(!ft_memcmp(cmd->cmd[0], "exit", 5))
-				break ;
-			free_cmd(cmd);
-			cmd = 0;
-		}
-//		printf("----------------- $? = %d -----------\n", g_exit_status);
-
+		printf("----------------- $? = %d -----------\n", g_exit_status);
 	}
-	ft_lstclear(  &data.env, &free);
+	ft_lstclear(&data.env, &free);
 	return (0);
 }
 

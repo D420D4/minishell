@@ -6,11 +6,44 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 11:31:34 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/17 19:07:41 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/19 16:38:30 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static void	changePWD(t_data *data)
+{
+	t_list *lst;
+	char	*pwd;
+	char	*new_content;
+
+	pwd = malloc(sizeof(char) * 4096);
+	if (pwd == NULL)
+		return ;
+	if (getcwd(pwd,4096) == NULL)
+	{
+		perror("getcwd");
+		free(pwd);
+		return ;
+	}
+	new_content = ft_strjoin("PWD=", pwd);
+	free(pwd);
+	if (new_content == NULL)
+		return ;
+	lst = data->env;
+	while (lst)
+	{
+		if (!ft_memcmp("PWD=", (char *) lst->content, 4))
+		{
+			free(lst->content);
+			lst->content = new_content;
+			return ;
+		}
+		lst = lst->next;
+	}
+	ft_lstadd_back(&(data->env), ft_lstnew(new_content));
+}
 
 int	cmd_cd(char **cmd, t_data *data)
 {
@@ -33,8 +66,6 @@ int	cmd_cd(char **cmd, t_data *data)
 			return (1);
 		}
 		absolut_path = ft_strdup(home);
-		if (absolut_path == NULL)
-			return (1);
 	}
 	else
 	{
@@ -48,8 +79,6 @@ int	cmd_cd(char **cmd, t_data *data)
 				return (1);
 			}
 			absolut_path = ft_strjoin(home, cmd[1] + 1);
-			if (absolut_path == NULL)
-				return (1);
 		}
 		else if (!is_in_str(path, '/'))
 		{
@@ -67,12 +96,12 @@ int	cmd_cd(char **cmd, t_data *data)
 			}
 			absolut_path = ft_strjoin(pwd, path);
 			free(pwd);
-			if (absolut_path == NULL)
-				return (1);
 		}
 		else
 			absolut_path = ft_strdup(path);
 	}
+	if (absolut_path == NULL)
+		return (1);
 	if (access(absolut_path, F_OK))
 	{
 		ft_putstr_fd("cd: ",2);
@@ -102,9 +131,9 @@ int	cmd_cd(char **cmd, t_data *data)
 	if (chdir(absolut_path))
 	{
 		perror("chdir");
-		free(absolut_path);
 		return (1);
 	}
 	free(absolut_path);
+	changePWD(data);
 	return (0);
 }
