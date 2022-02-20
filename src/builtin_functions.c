@@ -6,6 +6,8 @@
 
 int	is_in_builtin(char *cmd_name)
 {
+	if (!cmd_name)
+		return (0);
 	if (!ft_memcmp(cmd_name, "echo", 5)
 		|| !ft_memcmp(cmd_name, "env", 4)
 		|| !ft_memcmp(cmd_name, "export", 7)

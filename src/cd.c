@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 11:31:34 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/19 16:38:30 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/20 01:19:45 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,34 @@
 
 static void	changePWD(t_data *data)
 {
-	t_list *lst;
+	t_list	*lst;
 	char	*pwd;
 	char	*new_content;
 
-	pwd = malloc(sizeof(char) * 4096);
-	if (pwd == NULL)
-		return ;
-	if (getcwd(pwd,4096) == NULL)
-	{
-		perror("getcwd");
-		free(pwd);
-		return ;
-	}
-	new_content = ft_strjoin("PWD=", pwd);
-	free(pwd);
-	if (new_content == NULL)
-		return ;
 	lst = data->env;
 	while (lst)
 	{
 		if (!ft_memcmp("PWD=", (char *) lst->content, 4))
 		{
+			pwd = malloc(sizeof(char) * 4096);
+			if (pwd == NULL)
+				return ;
+			if (getcwd(pwd,4096) == NULL)
+			{
+				perror("getcwd");
+				free(pwd);
+				return ;
+			}
+			new_content = ft_strjoin("PWD=", pwd);
+			free(pwd);
+			if (new_content == NULL)
+				return ;
 			free(lst->content);
 			lst->content = new_content;
 			return ;
 		}
 		lst = lst->next;
 	}
-	ft_lstadd_back(&(data->env), ft_lstnew(new_content));
 }
 
 int	cmd_cd(char **cmd, t_data *data)

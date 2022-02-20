@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:30:08 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/19 19:44:52 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/20 03:45:44 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,9 @@ static int	exit_code(char *cmd)
 	if (cmd[i] != '\0' || (negative == 0 && code >= limit)
 		|| (negative == 1 && code > limit))
 		return (-1);
+	code %= 256;
 	if (negative)
-		code = ((-1) * (long) code) % 256;
-	else
-		code %= 256;
+		code =  (256 + (-1) * code) % 256;
 	return ((int) code);
 }
 
@@ -45,7 +44,7 @@ int	cmd_exit(t_cmd *cmd, t_data *data)
 	int	ret;
 
 	ft_putstr_fd("exit\n", 1);
-	if (cmd->cmd[1] == NULL)
+	if (!cmd || cmd->cmd[1] == NULL)
 		ret = 0;
 	else
 	{

@@ -1,6 +1,15 @@
-//
-// Created by plefevre on 2/10/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
+/*   Updated: 2022/02/20 06:01:59 by lcalvie          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "../includes/minishell.h"
 
@@ -25,7 +34,6 @@ void	free_cmd(t_cmd *cmd)
 {
 	if (!cmd)
 		return;
-
 	if (cmd->cmd_path)
 		free(cmd->cmd_path);
 	if (cmd->cmd_argv)
@@ -39,9 +47,6 @@ void nothing(void *v)
 {
 	(void)v;
 }
-
-
-
 
 char	*replace(char *s, char *word, char *new_word)
 {
@@ -84,6 +89,20 @@ char	*replace(char *s, char *word, char *new_word)
 	return (ss);
 }
 
+int	len_cmd(t_list	*mots)
+{
+	int	len;
+
+	len = 0;
+	while (mots)
+	{
+		if (((char*) mots->content)[0] != '\0')
+			len++;
+		mots = mots->next;
+	}
+	return (len);
+}
+
 //s have an even number of " and '
 char **split_advanced(char *s, char *c, t_data *data)
 {
@@ -108,7 +127,7 @@ char **split_advanced(char *s, char *c, t_data *data)
 			if (ft_strlen(string))
 			{
 				if (!memcmp(c, " ", 2))
-					ft_lstadd_back(&mots, ft_lstnew(transform(string, data)));
+					ft_lstadd_back(&mots, ft_lstnew(transform(string, data, &mots)));
 				else
 					ft_lstadd_back(&mots, ft_lstnew(string));
 				if (!ft_lstlast(mots)->content)
@@ -127,8 +146,7 @@ char **split_advanced(char *s, char *c, t_data *data)
 			quote = (quote + 2) % 4;
 		i++;
 	}
-
-	ss = malloc(sizeof (char *) * (ft_lstsize(mots) + 1));
+	ss = malloc(sizeof (char *) * (len_cmd(mots) + 1));
 	if (!ss)
 	{
 		ft_lstclear(&mots, &free);
@@ -138,9 +156,9 @@ char **split_advanced(char *s, char *c, t_data *data)
 	mots2 = mots;
 	while (mots)
 	{
-		ss[i] = (char*) mots->content;
+		if (((char*) mots->content)[0] != '\0')
+			ss[i++] = (char*) mots->content;
 		mots = mots->next;
-		i++;
 	}
 	ss[i] = 0;
 	ft_lstclear(&mots2,&nothing);

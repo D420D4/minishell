@@ -44,16 +44,18 @@ void do_var(char **s, int *f, t_data *data)
 	char *var_value;
 
 	var_name = substring((*s) + *f, " $\"");
-	if (var_name && ft_strlen(var_name) == 1)
+	if (!var_name || ft_strlen(var_name) == 1)
 	{
 		free(var_name);
 		return;
 	}
-	if (!var_name)
-		return;
-	var_value = getvalue(var_name + 1, data);
-	if (!var_value)
-		return;
+	if (ft_memcmp(var_name, "$?", 3))
+	{
+		var_value = getvalue(var_name + 1, data);
+	}
+	else
+		var_value = ft_itoa(g_exit_status);
+	// si var_value = NULL (la var existe pas dans env), ft_strlen  et ft_memcpy sont secure donc pas de soucis
 	int size = ft_strlen(*s) - ft_strlen(var_name) + ft_strlen(var_value) + 1;
 	ss = malloc(size);
 	if (!ss)
@@ -130,13 +132,10 @@ char	*transform(char *original, t_data *data)
 	char	*ss;
 	int		i;
 
-	(void) data;
 	ss = ft_strdup(original);
 	if (!ss)
 		return (0);
 	i = 0;
-	//do_wildcards(&ss); // changer l endroit ou on gere les wildcards (avant les quotes ? a voir avec toi)
-	//todo free ss si return 0
 	while (ss[i])
 	{
 		if (ss[i] == '"')
@@ -147,6 +146,8 @@ char	*transform(char *original, t_data *data)
 				return (0);
 		if (ss[i] == '$')
 			do_var(&ss, &i, data);
+		if (is_in('*', ss + i))
+			do_wildcards(&ss, &i); // marche partiellement (faut encore split selon les espaces et trier par ordre ascii, en progress)
 		i++;
 	}
 	return (ss);

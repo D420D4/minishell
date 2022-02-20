@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/17 17:24:55 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/20 07:23:33 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,23 +115,52 @@ void	get_current_dir(char *s, char **ss, int start, int end)
 		perror("closedir");
 }
 
-// retourne s si contient pas de wildcards sinon retourne ce qu il est cense retourner
-// reste a faire : inserer au bon moment du parsing , split selon les ' ' s et trier par ordre alphabetique ascii le char ** 
-// les trucs entre guillemets ne doivent pas etre wildcarder !!
-void	do_wildcards(char **s)
+void	do_wildcards(char **s, int *i)
 {
 	int	start;
 	int	end;
 	char	*ss;
+	int	j;
+	char	*final;
+	char	*wild;
 
-	if (!is_in_str(*s, '*'))
-		return;
-	start = ft_strchr(*s, '*') - *s;
-	end = ft_strrchr(*s, '*') - *s;
-	ss = NULL;
-	get_current_dir(*s, &ss, start, end);
+	j = *i;
+	while ((*s)[j] == ' ')
+		j++;
+	start = j;
+	while ((*s)[j] && (*s)[j] != ' ')
+	{
+		if ((*s)[j] == '\'' || (*s)[j] == '"' || (*s)[j] == '$')
+			return ;
+		j++;
+	}
+	end = j;
+	if (ft_strnstr(*s + start, "*", end - start) == NULL)
+		return ;
+	ss = malloc(sizeof(char) * (end - start));
 	if (ss == NULL)
 		return ;
+	ss[end - start] = '\0';
+	ft_memcpy(ss, *s + start, end - start + 1);
+	wild = NULL;
+	get_current_dir(ss, &wild, ft_strchr(ss, '*') - ss, ft_strrchr(ss, '*') - ss);
+	free(ss);
+	if (wild == NULL)
+	{
+		*i = j -1;
+		return ;
+	}
+	final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
+	if (final == NULL)
+	{
+		*i = j -1;
+		return ;
+	}
+	printf("%d %d\n", start, j);
+	ft_memcpy(final, *s, start);
+	ft_memcpy(final + start, wild, ft_strlen(wild));
+	ft_memcpy(final + start + ft_strlen(wild), *s + end, ft_strlen(*s + end) + 1);
 	free(*s);
-	*s = ss;
+	*s = final;
+	*i = end;
 }

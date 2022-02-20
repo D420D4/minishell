@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/19 16:57:41 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/20 05:09:15 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		}
 		close_fd(cmd->fd_in);
 		close_fd(cmd->fd_out);
-		free_cmd(cmd);
+		free_cmd(cmd); // envoyer temp ??
+		ft_lstclear(&(data->env), &free);
 		exit(g_exit_status);
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
@@ -63,7 +64,8 @@ void	wait_cmd(t_cmd *cmd)
 			perror("waitpid");
 		cmd = cmd->pipe;
 	}
-	g_exit_status = WEXITSTATUS(status);
+	if (WIFEXITED(status))
+		g_exit_status = WEXITSTATUS(status);
 }
 
 int	exec_cmd(t_cmd *cmd, t_data *data)

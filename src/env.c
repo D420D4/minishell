@@ -26,8 +26,8 @@ int cmd_env(t_cmd *cmd, t_data *data)
 		ft_putstr_fd("No options or arguments needed\n",2);
 	while (env)
 	{
-		ft_putstr_fd((char *) env->content,1);
-		ft_putstr_fd("\n",1);
+		ft_putstr_fd((char *) env->content, cmd->fd_out);
+		ft_putstr_fd("\n", cmd->fd_out);
 		env = env->next;
 	}
 	return (0);
@@ -38,7 +38,6 @@ char *getvalue(char *s, t_data *data)
 {
 	int j;
 	t_list *lst;
-	char *ss;
 
 	j = ft_strlen(s);
 	lst = data->env;
@@ -49,10 +48,7 @@ char *getvalue(char *s, t_data *data)
 			return (lst->content + ft_strlen(s) + 1);
 		else
 			lst = lst->next;
-	ss = malloc(1);
-	if (ss)
-		*ss = 0;
-	return (ss);
+	return (NULL); // plus logique de return NULL ici et pas le malloc(1) car sinon faut free dans des cas particuliers c relou
 }
 
 char	**env_to_tab(t_list *env)

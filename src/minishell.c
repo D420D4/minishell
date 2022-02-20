@@ -34,11 +34,11 @@ int main(int ac, char **av, char **envp)
 		}
 		else
 		{
-			ft_putstr_fd("\n", 1);
-			break;
+			// ici on catch le ctrl +D , SIGQUIT cest ctrl + backslash 
+			cmd_exit(cmd, &data);
 		}
 		exec_cmd(cmd, &data);
-		printf("----------------- $? = %d -----------\n", g_exit_status);
+		//printf("----------------- $? = %d -----------\n", g_exit_status);
 	}
 	ft_lstclear(&data.env, &free);
 	return (0);
