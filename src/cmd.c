@@ -127,7 +127,7 @@ char **split_advanced(char *s, char *c, t_data *data)
 			if (ft_strlen(string))
 			{
 				if (!memcmp(c, " ", 2))
-					ft_lstadd_back(&mots, ft_lstnew(transform(string, data, &mots)));
+					ft_lstadd_back(&mots, ft_lstnew(transform(string, data)));
 				else
 					ft_lstadd_back(&mots, ft_lstnew(string));
 				if (!ft_lstlast(mots)->content)
