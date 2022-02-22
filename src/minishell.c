@@ -28,15 +28,12 @@ int main(int ac, char **av, char **envp)
 	{
 		getCmdSignal();
 		cmd = getCmd(&data);
-		if (cmd)
-		{
-			print_cmd(cmd);
-		}
-		else
-		{
-			// ici on catch le ctrl +D , SIGQUIT cest ctrl + backslash 
+
+//		print_cmd(cmd);
+
+		// ici on catch le ctrl +D , SIGQUIT cest ctrl + backslash
+		if (!cmd)
 			cmd_exit(cmd, &data);
-		}
 		exec_cmd(cmd, &data);
 		//printf("----------------- $? = %d -----------\n", g_exit_status);
 	}

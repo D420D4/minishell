@@ -17,6 +17,8 @@ void print_env(t_data *data)
 }
 void print_cmd(t_cmd *cmd)
 {
+	if  (!cmd)
+		return;
 	int i;
 
 	i = 0;

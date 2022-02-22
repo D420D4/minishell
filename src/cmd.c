@@ -196,6 +196,7 @@ char *first_word(char *s)
 void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 {
 	char	**split;
+	char	**split2;
 	char 	*file;
 
 	if (!bruts || !*bruts)
@@ -212,18 +213,21 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 		set_new_rd_out_append(file, &((*cmd)->fd_out));
 		free(file);
 	}
-	split = split_advanced(split[0], ">", data);
+	split2 = split_advanced(split[0], ">", data);
 	if (!split)
 		return;
-	file = first_word(split[1]);
+	file = first_word(split2[1]);
 	if (file)
 	{
 		set_new_rd_out_trunc(file, &((*cmd)->fd_out));
 		free(file);
 	}
-	//TODO boulot de free des split (et clarification du code)
+
+
 
 	(*cmd)->cmd = split_advanced(split[0], " ", data);
+	free_tab(split);
+	free_tab(split2);
 	parseLine(&((*cmd)->pipe), bruts + 1, data);
 }
 
