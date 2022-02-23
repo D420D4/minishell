@@ -6,7 +6,7 @@
 #    By: plefevre <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/27 11:23:15 by plefevre          #+#    #+#              #
-#    Updated: 2021/12/05 19:04:51 by plefevre         ###   ########.fr        #
+#    Updated: 2022/02/23 10:41:38 by plefevre         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ bonus: $(OBJ) $(OBJ_BONUS)
 	ar rc libft.a $(OBJ) $(OBJ_BONUS)
 
 %.o: %.c
-	gcc -c -Wextra -Wall -Werror -I $(LIBDIR) -o $@ $< 
+	gcc -c -g -Wextra -Wall -Werror -I $(LIBDIR) -o $@ $< 
 
 clean:
 	/bin/rm -f $(OBJ) $(OBJ_BONUS)

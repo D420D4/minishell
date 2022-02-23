@@ -34,6 +34,8 @@ void	free_cmd(t_cmd *cmd)
 {
 	if (!cmd)
 		return;
+	if (cmd->pipe)
+		free_cmd(cmd->pipe);
 	if (cmd->cmd_path)
 		free(cmd->cmd_path);
 	if (cmd->cmd_argv)
@@ -89,25 +91,11 @@ char	*replace(char *s, char *word, char *new_word)
 	return (ss);
 }
 
-int	len_cmd(t_list	*mots)
-{
-	int	len;
-
-	len = 0;
-	while (mots)
-	{
-		if (((char*) mots->content)[0] != '\0')
-			len++;
-		mots = mots->next;
-	}
-	return (len);
-}
 
 //s have an even number of " and '
 char **split_advanced(char *s, char *c, t_data *data)
 {
 	t_list *mots;
-	t_list *mots2;
 	char **ss;
 	int i;
 	int d;
@@ -146,22 +134,8 @@ char **split_advanced(char *s, char *c, t_data *data)
 			quote = (quote + 2) % 4;
 		i++;
 	}
-	ss = malloc(sizeof (char *) * (len_cmd(mots) + 1));
-	if (!ss)
-	{
-		ft_lstclear(&mots, &free);
-		return (0);
-	}
-	i = 0;
-	mots2 = mots;
-	while (mots)
-	{
-		if (((char*) mots->content)[0] != '\0')
-			ss[i++] = (char*) mots->content;
-		mots = mots->next;
-	}
-	ss[i] = 0;
-	ft_lstclear(&mots2,&nothing);
+	ss = list_to_tab(mots);
+	ft_lstclear(&mots,&free);
 	return (ss);
 }
 
@@ -214,7 +188,7 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 		free(file);
 	}
 	split2 = split_advanced(split[0], ">", data);
-	if (!split)
+	if (!split2)
 		return;
 	file = first_word(split2[1]);
 	if (file)
@@ -282,6 +256,7 @@ t_cmd *getCmd(t_data *data)
 	if (!get_startingline(&startingline, data))
 		return 0;
 	brut = readline(startingline);
+	free (startingline);
 	add_history(brut);
 	if (!brut)
 		return (0);
@@ -289,5 +264,6 @@ t_cmd *getCmd(t_data *data)
 	parseLine(&cmd, bruts, data);
 	free(brut);
 	free_tab(bruts);
+	exit_clean();
 	return (cmd);
 }

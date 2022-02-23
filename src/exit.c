@@ -67,5 +67,12 @@ int	cmd_exit(t_cmd *cmd, t_data *data)
 	ft_lstclear(&(data->env), &free);
 	//free_data ??? il est pas malloc en fait mdrr
 	free_cmd(cmd);
+	exit_clean();
 	exit(ret);
+}
+
+
+void exit_clean(void)
+{
+	rl_clear_history();
 }

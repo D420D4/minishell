@@ -82,3 +82,45 @@ void	free_tab(char **tab)
 	}
 	free(tab);
 }
+
+int	len_cmd(t_list	*mots)
+{
+	int	len;
+
+	len = 0;
+	while (mots)
+	{
+		if (((char*) mots->content)[0] != '\0')
+			len++;
+		mots = mots->next;
+	}
+	return (len);
+}
+
+
+//remove "\0" element
+char **list_to_tab(t_list *lst)
+{
+	int i;
+	char **ss;
+
+	ss = malloc(sizeof (char *) * (len_cmd(lst) + 1));
+	if (!ss)
+		return (0);
+	i = 0;
+	while (lst)
+	{
+		if (((char*) lst->content)[0] != '\0')
+		{
+			ss[i++] = ft_strdup((char*) lst->content);
+			if (!ss[i-1])
+			{
+				free_tab(ss);
+				return (0);
+			}
+		}
+		lst = lst->next;
+	}
+	ss[i] = 0;
+	return (ss);
+}

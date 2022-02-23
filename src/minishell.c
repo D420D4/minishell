@@ -24,7 +24,7 @@ int main(int ac, char **av, char **envp)
 	data.env = parse_env(envp);
 	cmd = 0;
 
-	while (1)
+	while (42)
 	{
 		getCmdSignal();
 		cmd = getCmd(&data);
@@ -32,9 +32,10 @@ int main(int ac, char **av, char **envp)
 //		print_cmd(cmd);
 
 		// ici on catch le ctrl +D , SIGQUIT cest ctrl + backslash
-		if (!cmd)
-			cmd_exit(cmd, &data);
-		exec_cmd(cmd, &data);
+		if (cmd)
+			exec_cmd(cmd, &data);
+//			cmd_exit(cmd, &data);
+		free_cmd(cmd);
 		//printf("----------------- $? = %d -----------\n", g_exit_status);
 	}
 	ft_lstclear(&data.env, &free);

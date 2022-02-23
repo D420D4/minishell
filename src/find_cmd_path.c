@@ -70,6 +70,7 @@ static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
 			}
 		}
 		free(cmd_name);
+		free_tab(path);
 	}
 	return (cmd_path);
 }

@@ -132,7 +132,7 @@ char	*transform(char *original, t_data *data)
 	char	*ss;
 	int		i;
 
-	ss = ft_strdup(original);
+	ss = original;
 	if (!ss)
 		return (0);
 	i = 0;
@@ -140,10 +140,16 @@ char	*transform(char *original, t_data *data)
 	{
 		if (ss[i] == '"')
 			if (inner_quote_1(&ss, &i, data))
+			{
+				free(ss);
 				return (0);
+			}
 		if (ss[i] == '\'')
 			if (inner_quote_2(&ss, &i))
+			{
+				free(ss);
 				return (0);
+			}
 		if (ss[i] == '$')
 			do_var(&ss, &i, data);
 		if (is_in('*', ss + i))
