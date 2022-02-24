@@ -45,53 +45,6 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
-void nothing(void *v)
-{
-	(void)v;
-}
-
-char	*replace(char *s, char *word, char *new_word)
-{
-	char *ss;
-	int i;
-	int j;
-	int p;
-
-	if (!ft_strnstr(s, word, ft_strlen(s)))
-		return (strdup(s));
-	ss = malloc(ft_strlen(s) + 1 - ft_strlen(word) + ft_strlen(new_word));
-	if (!ss)
-	{
-		free(s);
-		return (0);
-	}
-	i = 0;
-	j = 0;
-	while (s[i] && word[j])
-	{
-		if (s[i] != word[j])
-			j = -1;
-		ss[i] = s[i];
-		j++;
-		i++;
-	}
-	p = i;
-	if (!word[j])
-	{
-		i-= ft_strlen(word);
-		j = 0;
-		while (new_word[j])
-			ss[i++] = new_word[j++];
-
-	}
-	while (s[p])
-		ss[i++] = s[p++];
-	ss[i] = 0;
-	free(s);
-	return (ss);
-}
-
-
 //s have an even number of " and '
 char **split_advanced(char *s, char *c, t_data *data)
 {
@@ -140,7 +93,7 @@ char **split_advanced(char *s, char *c, t_data *data)
 }
 
 //Bonus, remove first spaces
-char *first_word(char *s)
+char *first_word(const char *s)
 {
 	int	i;
 	int	j;

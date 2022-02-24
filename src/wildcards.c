@@ -56,6 +56,7 @@ int	check_middle_end_letters(char *d_name, char *s, int start, int end)
 	return (check_end_letters(d_name + j, s, end));
 }
 
+//Because we are in an universe with multiple worlds and instead ckecking only a little word, our ambitious make us checking WORLD ;-P
 void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, int end)
 {
 	char *temp;
