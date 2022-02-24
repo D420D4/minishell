@@ -58,6 +58,8 @@ char **split_advanced(char *s, char *c, t_data *data)
 	d = 0;
 	quote = 0;
 	mots = 0;
+
+	i = 0;
 	while (i <= ft_strlen(s))
 	{
 		if ((!memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
@@ -150,7 +152,22 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 		free(file);
 	}
 
-
+	int i = 0;
+	int j = 0;
+//	int quote = 0;
+	while (split[0][i]){
+		if (split[0][i] == ' ')
+		{
+			do_wildcards(&split[0], &j);
+			j = i;
+		}
+//		if (split[0][i] == '\'' && quote != 2)
+//			quote = (quote + 1) % 2;
+//		else if (split[0][i] == '\"' && quote != 1)
+//			quote = (quote + 2) % 4;
+		i++;
+	}
+	do_wildcards(&split[0], &j);
 
 	(*cmd)->cmd = split_advanced(split[0], " ", data);
 	free_tab(split);
