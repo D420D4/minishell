@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 05:09:15 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/27 23:58:54 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	int	child;
 	char	**tab;
 
-	execute_builtin(cmd, data);
 	child = fork();
 	if (child == -1)
 		return (perror("fork"));
 	else if (child == 0)
 	{
-		if (!is_in_builtin(cmd->cmd_path))
+		if (execute_builtin(cmd, data))
 		{
 			tab = NULL;
 			if (cmd->pipe != NULL)
@@ -97,7 +96,8 @@ int	exec_cmd(t_cmd *cmd, t_data *data)
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
 		cmd->cmd_argv = find_cmd_argv(cmd->cmd, cmd->cmd_path);
 		//print_path_argv(cmd);
-		
+		if (cmd == temp && cmd->pipe == NULL && !execute_builtin(cmd, data))
+			return (0);
 		exec_cmd_in_child(cmd, data, pipefds);
 		cmd = cmd->pipe;
 	}

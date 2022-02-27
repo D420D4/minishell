@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 07:23:33 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/26 00:02:37 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	do_wildcards(char **s, int *i)
 		*i = j -1;
 		return ;
 	}
-	printf("%d %d\n", start, j);
+	//printf("%d %d\n", start, j);
 	ft_memcpy(final, *s, start);
 	ft_memcpy(final + start, wild, ft_strlen(wild));
 	ft_memcpy(final + start + ft_strlen(wild), *s + end, ft_strlen(*s + end) + 1);
