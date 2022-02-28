@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 15:45:29 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/14 12:57:24 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:30:11 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ char	*find_cmd_name(char **cmd)
 {
 	int	i = 0;
 	
+	if (!cmd)
+		return (NULL);
 	while (cmd[i])
 	{
 		if (!ft_memcmp(cmd[i], "<", 2) || !ft_memcmp(cmd[i], "<<", 3)

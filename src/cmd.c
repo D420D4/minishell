@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 06:01:59 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:46:52 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,7 @@ t_cmd *getCmd(t_data *data)
 	if (!get_startingline(&startingline, data))
 		return 0;
 	brut = readline(startingline);
-	free (startingline);
+	free(startingline);
 	add_history(brut);
 	if (!brut)
 		return (0);
@@ -234,6 +234,5 @@ t_cmd *getCmd(t_data *data)
 	parseLine(&cmd, bruts, data);
 	free(brut);
 	free_tab(bruts);
-	exit_clean();
 	return (cmd);
 }

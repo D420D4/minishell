@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:30:08 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 03:45:44 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:28:19 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	cmd_exit(t_cmd *cmd, t_data *data)
 		}
 	}
 	ft_lstclear(&(data->env), &free);
-	//free_data ??? il est pas malloc en fait mdrr
 	free_cmd(cmd);
 	exit_clean();
 	exit(ret);

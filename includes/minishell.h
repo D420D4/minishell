@@ -74,5 +74,7 @@ int set_new_rd_out_trunc(char *filename, int *rd_out);
 int set_new_rd_out_append(char *filename, int *rd_out);
 void exit_clean(void);
 char **list_to_tab(t_list *lst);
+void	ft_sort_vector(char **vector, int size);
+char	*ft_strjoin_vector(int size, char **strs, char *sep);
 
 #endif

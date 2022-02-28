@@ -20,7 +20,7 @@ int main(int ac, char **av, char **envp)
 		getCmdSignal();
 		cmd = getCmd(&data);
 
-//		print_cmd(cmd);
+		print_cmd(cmd);
 
 		// ici on catch le ctrl +D , SIGQUIT cest ctrl + backslash
 		if (cmd)
@@ -30,6 +30,7 @@ int main(int ac, char **av, char **envp)
 		//printf("----------------- $? = %d -----------\n", g_exit_status);
 	}
 	ft_lstclear(&data.env, &free);
+	exit_clean();
 	return (0);
 }
 

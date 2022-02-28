@@ -17,12 +17,7 @@ void handle_sigint(int signo) {
 
 void handle_sigquit(int signo) {
 	if (signo == SIGQUIT) {
-		ft_putstr_fd("\b\b  \n", 1);
-		ft_putstr_fd("CTRL + D ", 1);
-		rl_replace_line("exit", 1);
-		rl_on_new_line();
 		rl_redisplay();
-		g_exit_status = 130;
 	}
 }
 

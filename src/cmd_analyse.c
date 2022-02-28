@@ -55,7 +55,7 @@ void do_var(char **s, int *f, t_data *data)
 	}
 	else
 		var_value = ft_itoa(g_exit_status);
-	// si var_value = NULL (la var existe pas dans env), ft_strlen  et ft_memcpy sont secure donc pas de soucis
+	
 	int size = ft_strlen(*s) - ft_strlen(var_name) + ft_strlen(var_value) + 1;
 	ss = malloc(size);
 	if (!ss)
@@ -131,20 +131,22 @@ char	*transform(char *original, t_data *data)
 {
 	char	*ss;
 	int		i;
+	int	not_null;
 
+	not_null = 0;
 	ss = original;
 	if (!ss)
 		return (0);
 	i = 0;
 	while (ss[i])
 	{
-		if (ss[i] == '"')
+		if (ss[i] == '"' && ++not_null)
 			if (inner_quote_1(&ss, &i, data))
 			{
 				free(ss);
 				return (0);
 			}
-		if (ss[i] == '\'')
+		if (ss[i] == '\'' && ++not_null)
 			if (inner_quote_2(&ss, &i))
 
 			{
@@ -156,6 +158,11 @@ char	*transform(char *original, t_data *data)
 //		if (is_in('*', ss + i))
 //			do_wildcards(&ss, &i); // marche partiellement (faut encore split selon les espaces et trier par ordre ascii, en progress)
 		i++;
+	}
+	if (ss[0] == '\0' && !not_null)
+	{
+		free(ss);
+		return (NULL);
 	}
 	return (ss);
 }

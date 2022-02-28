@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 05:08:03 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:03:24 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	len_cmd(t_list	*mots)
 	len = 0;
 	while (mots)
 	{
-		if (((char*) mots->content)[0] != '\0')
+		if (((char*) mots->content) != NULL)
 			len++;
 		mots = mots->next;
 	}
@@ -110,7 +110,7 @@ char **list_to_tab(t_list *lst)
 	i = 0;
 	while (lst)
 	{
-		if (((char*) lst->content)[0] != '\0')
+		if (((char*) lst->content) != NULL)
 		{
 			ss[i++] = ft_strdup((char*) lst->content);
 			if (!ss[i-1])
@@ -123,4 +123,40 @@ char **list_to_tab(t_list *lst)
 	}
 	ss[i] = 0;
 	return (ss);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
+
+void	ft_sort_vector(char **vector, int size)
+{
+	int		i;
+	int		j;
+	char	*str_temp;
+
+	if (size <= 1)
+		return ;
+	i = 0;
+	while (i < size)
+	{
+		j = 0;
+		while (j < size - 1)
+		{
+			if (ft_strcmp(vector[i], vector[j]) < 0)
+			{
+				str_temp = &(vector[i][0]);
+				vector[i] = &(vector[j][0]);
+				vector[j] = str_temp;
+			}
+			j++;
+		}
+		i++;
+	}
 }

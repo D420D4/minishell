@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/26 00:02:37 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:01:01 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,25 @@ void	get_current_dir(char *s, char **ss, int start, int end)
 		perror("closedir");
 }
 
+int	ft_sort_str(char ** wilds)
+{
+	char	**split;
+	int	size;
+
+	split = ft_split(*wilds, ' ');
+	free(*wilds);
+	if (split == NULL)
+		return (0);
+	size = 0;
+	while (split[size])
+		size++;
+	ft_sort_vector(split, size);
+	*wilds = ft_strjoin_vector(size, split, " ");
+	if (*wilds == NULL)
+		return (0);
+	return (1);
+}
+
 void	do_wildcards(char **s, int *i)
 {
 	int	start;
@@ -146,13 +165,13 @@ void	do_wildcards(char **s, int *i)
 	wild = NULL;
 	get_current_dir(ss, &wild, ft_strchr(ss, '*') - ss, ft_strrchr(ss, '*') - ss);
 	free(ss);
-	if (wild == NULL)
+	if (wild == NULL || !ft_sort_str(&wild))
 	{
 		*i = j -1;
 		return ;
 	}
 	final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
-	if (final == NULL)
+	if (final == NULL && ft_sort_str(&wild))
 	{
 		*i = j -1;
 		return ;

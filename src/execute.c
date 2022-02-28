@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/27 23:58:54 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:28:33 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		free_cmd(cmd); // envoyer temp ??
 		ft_lstclear(&(data->env), &free);
 		exit(g_exit_status);
+		exit_clean();
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
 	cmd->pid = child;
@@ -86,9 +87,9 @@ int	exec_cmd(t_cmd *cmd, t_data *data)
 				close_fd(pipefds[1]);
 			(cmd->pipe)->fd_in = pipefds[0];
 		}
-		if (find_rd_in(cmd->cmd, &rd_in))
+		if (cmd->cmd && find_rd_in(cmd->cmd, &rd_in))
 			return (1);
-		if (rd_in != -1)
+		if (cmd->cmd && rd_in != -1)
 		{
 			close_fd(cmd->fd_in);
 			cmd->fd_in = rd_in;
