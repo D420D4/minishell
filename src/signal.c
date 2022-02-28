@@ -15,17 +15,10 @@ void handle_sigint(int signo) {
 	}
 }
 
-void handle_sigquit(int signo) {
-	if (signo == SIGQUIT) {
-		rl_redisplay();
-	}
-}
-
-
 void	getCmdSignal(void)
 {
 	if (signal(SIGINT, handle_sigint) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
-	if (signal(SIGQUIT, handle_sigquit) == SIG_ERR)
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 }
