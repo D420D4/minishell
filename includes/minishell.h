@@ -76,5 +76,7 @@ void exit_clean(void);
 char **list_to_tab(t_list *lst);
 void	ft_sort_vector(char **vector, int size);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
+void	execSignal(void);
+void	nothingSignal(void);
 
 #endif

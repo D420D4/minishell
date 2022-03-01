@@ -29,7 +29,9 @@ void print_cmd(t_cmd *cmd)
 	}
 
 	printf ("%d << >> %d : ", cmd->fd_in, cmd->fd_out);
-	while (cmd->cmd[i])
+	if (cmd->cmd == NULL)
+		printf("[] = NULL");
+	while (cmd->cmd && cmd->cmd[i])
 	{
 		printf("[%s] ", cmd->cmd[i]);
 		i++;

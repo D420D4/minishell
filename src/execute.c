@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/28 16:28:33 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/01 19:44:19 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		return (perror("fork"));
 	else if (child == 0)
 	{
+		execSignal();
+		ft_putstr_fd("Quit (core dumped)\n", 1);
 		if (execute_builtin(cmd, data))
 		{
 			tab = NULL;
@@ -45,8 +47,8 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		close_fd(cmd->fd_out);
 		free_cmd(cmd); // envoyer temp ??
 		ft_lstclear(&(data->env), &free);
-		exit(g_exit_status);
 		exit_clean();
+		exit(g_exit_status);
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
 	cmd->pid = child;
