@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/01 19:44:19 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/02 19:50:28 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,16 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	else if (child == 0)
 	{
 		execSignal();
-		ft_putstr_fd("Quit (core dumped)\n", 1);
+		if (cmd->pipe != NULL)
+			close_fd(pipefds[0]);
+		if (cmd->fd_in >= 0 && cmd->fd_out >=0)
+		{
+			dup2(cmd->fd_in, STDIN_FILENO);
+			dup2(cmd->fd_out, STDOUT_FILENO);
+		}
 		if (execute_builtin(cmd, data))
 		{
 			tab = NULL;
-			if (cmd->pipe != NULL)
-				close_fd(pipefds[0]);
-			if (cmd->fd_in >= 0 && cmd->fd_out >=0)
-			{
-				dup2(cmd->fd_in, STDIN_FILENO);
-				dup2(cmd->fd_out, STDOUT_FILENO);
-			}
 			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0)
 			{
 				tab = env_to_tab(data->env);
@@ -56,6 +55,20 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	close_fd(cmd->fd_out);
 }
 
+void	cmd_signal(int sig)
+{
+	if (sig == 2)
+	{
+		ft_putstr_fd("\n",1);
+		g_exit_status = 130;
+	}
+	else if (sig == 3)
+	{
+		ft_putstr_fd("Quit (core dumped)\n",1);
+		g_exit_status = 131;
+	}
+}
+
 void	wait_cmd(t_cmd *cmd)
 {
 	int status;
@@ -68,6 +81,8 @@ void	wait_cmd(t_cmd *cmd)
 	}
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
+	else if (__WIFSIGNALED(status))
+		cmd_signal(WTERMSIG(status));
 }
 
 int	exec_cmd(t_cmd *cmd, t_data *data)
@@ -77,6 +92,7 @@ int	exec_cmd(t_cmd *cmd, t_data *data)
 	t_cmd	*temp;
 
 	temp = cmd;
+	nothingSignal();
 	while(cmd)
 	{
 		if (cmd->pipe != NULL)
