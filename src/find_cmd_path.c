@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 15:45:29 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/28 16:30:11 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/04 15:56:09 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	**find_path(t_list *env)
 
 static char	*find_cmd_path_with_name(char *cmd_name)
 {
-	if (is_a_file(cmd_name))
+	if (access(cmd_name, F_OK) || is_a_file(cmd_name))
 	{
 		if (access(cmd_name, X_OK) == 0)
 			return (ft_strdup(cmd_name));
