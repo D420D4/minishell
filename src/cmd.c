@@ -23,6 +23,8 @@ t_cmd *newCmd()
 	cmd->fd_in = 0;
 	cmd->fd_out = 1;
 	cmd->pipe = 0;
+	cmd->on_success = 0;
+	cmd->on_fail = 0;
 	cmd->cmd = 0;
 	cmd->cmd_path = 0;
 	cmd->cmd_argv = 0;
@@ -121,8 +123,7 @@ char *first_word(const char *s)
 	ss[j] = 0;
 	return (ss);
 }
-
-void parseLine(t_cmd **cmd, char **bruts, t_data *data)
+void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 {
 	char	**split;
 	char	**split2;
@@ -153,17 +154,13 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 
 	int i = 0;
 	int j = 0;
-//	int quote = 0;
 	while (split[0][i]){
 		if (split[0][i] == ' ')
 		{
+			//Who did that? &split[0] = split...
 			do_wildcards(&split[0], &j);
 			j = i;
 		}
-//		if (split[0][i] == '\'' && quote != 2)
-//			quote = (quote + 1) % 2;
-//		else if (split[0][i] == '\"' && quote != 1)
-//			quote = (quote + 2) % 4;
 		i++;
 	}
 	do_wildcards(&split[0], &j);
@@ -171,7 +168,29 @@ void parseLine(t_cmd **cmd, char **bruts, t_data *data)
 	(*cmd)->cmd = split_advanced(split[0], " ", data);
 	free_tab(split);
 	free_tab(split2);
-	parseLine(&((*cmd)->pipe), bruts + 1, data);
+	parseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data);
+}
+void parseLine(t_cmd **cmd, char *brut, t_data *data)
+{
+	char 	**bruts;
+	bruts = split_advanced(brut, "|", data);
+	parseLine_no_pipe(cmd, bruts, data);
+}
+
+void parse_group(t_cmd **cmd, char *brut, t_data *data)
+{
+	if (!brut)
+		return;
+	if (!*cmd)
+		*cmd = newCmd();
+
+	char	**split;
+	split = split_advanced(brut, "&&", data);
+	if (!split)
+		return;
+	parseLine(cmd, split[0], data);
+	if(split[1])
+		parseLine(&(*cmd)->on_success, split[1], data);
 }
 
 int	get_startingline(char **line, t_data *data)
@@ -218,7 +237,6 @@ t_cmd *getCmd(t_data *data)
 {
 	char *startingline;
 	char *brut;
-	char **bruts;
 	t_cmd *cmd;
 
 	cmd = 0;
@@ -230,10 +248,9 @@ t_cmd *getCmd(t_data *data)
 		return (0);
 	if (brut[0] != '\0')
 		add_history(brut); //on ajoute pas les lignes vides a l histo
-	bruts = split_advanced(brut, "|", data);
 	cmd = newCmd();
-	parseLine(&cmd, bruts, data);
+	parse_group(&cmd, brut, data);
+//	parseLine(&cmd, bruts, data);
 	free(brut);
-	free_tab(bruts);
 	return (cmd);
 }

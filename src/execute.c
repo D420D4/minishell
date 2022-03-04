@@ -120,6 +120,11 @@ int	exec_cmd(t_cmd *cmd, t_data *data)
 		exec_cmd_in_child(cmd, data, pipefds);
 		cmd = cmd->pipe;
 	}
-	wait_cmd(temp);
+	wait_cmd(temp);/*
+	if (g_exit_status && cmd->on_fail)
+		exec_cmd(cmd->on_fail, data);
+	if (!g_exit_status && cmd->on_success)
+		exec_cmd(cmd->on_success, data);
+*/
 	return (0);
 }

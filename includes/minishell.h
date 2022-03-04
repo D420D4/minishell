@@ -31,6 +31,8 @@ typedef struct s_cmd
 {
 	char	**cmd;
 	struct s_cmd *pipe;
+	struct s_cmd *on_success;
+	struct s_cmd *on_fail;
 	int fd_out;
 	int fd_in;
 	char	*cmd_path;

@@ -42,6 +42,18 @@ void print_cmd(t_cmd *cmd)
 		printf("| ");
 		print_cmd(cmd->pipe);
 	}
+
+	if (cmd->on_success)
+	{
+		printf("&& ");
+		print_cmd(cmd->on_success);
+	}
+	if (cmd->on_fail)
+	{
+		printf("|| ");
+		print_cmd(cmd->on_fail);
+	}
+
 }
 
 void	print_path_argv(t_cmd *cmd)

@@ -19,7 +19,7 @@ int main(int ac, char **av, char **envp)
 	{
 		getCmdSignal();
 		cmd = getCmd(&data);
-		//print_cmd(cmd);
+		print_cmd(cmd);
 		if (cmd)
 			exec_cmd(cmd, &data);
 		else
