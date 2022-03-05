@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/01 16:05:31 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/05 19:30:49 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void parseLine(t_cmd **cmd, char *brut, t_data *data)
 
 void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
-	if (!brut)
+	if (!brut || brut[0] == '\0')
 		return;
 	if (!*cmd)
 		*cmd = newCmd();
