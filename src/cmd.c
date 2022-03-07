@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/05 19:30:49 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/07 20:11:45 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,24 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	split = split_advanced(*bruts, ">>", data);
 	if (!split)
 		return;
+
+	//PROBLEME
+	// dur de gerer ca comme ca, deja pcq peut y avoir pluieurs redirections de la meme sorte
+	// ca c est pas si dur a corriger faudrait faire un while sur le split[i] avec i qui commence a 1 genre
+	// MAIS peut y avoir pllusieurs redirections genre ">>" et ">" et la faudrait que la derniere 
+	// qui passe par la fonction set_new_rd_out soit la derniere donc globalement faudrait split_advanced_simultaneous les >> et les >
+	
+	//	AUSSI first_worLd doit devenir  
+	// 3
+	// 2 
+	// 1
+	// *jmets du suspense*
+	// FIRST_WORLLLD_ADVANCED
+	// pcq genre si y a une redirection suivi d un truc entre quote avec ddes espaces, faut s arreter a la fin de la quote et pas au premier espace tmtc
+
+	// g rien change jt attends avant de le faire 
+
+	//EH JRECONNAIS LA DOIT Y AVOIR UN L SUR CETTE FONCTION AHAH ENFIN C EST MOI QUI REMARQUE UNE  FAUTE OUAIIIIIIIIIIII	
 	file = first_word(split[1]);
 	if (file)
 	{
