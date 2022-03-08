@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/08 20:57:44 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/08 21:00:59 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	if (!bruts || !*bruts)
 		return;
 	if (!*cmd)
-		*cmd = newCmd();
+		*cmd = new_cmd();
 	split = split_advanced_redirections(*bruts);
 	if (!split)
 		return;
