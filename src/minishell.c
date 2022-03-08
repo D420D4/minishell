@@ -15,13 +15,15 @@ int main(int ac, char **av, char **envp)
 	(void) av;
 	(void) ac;
 	data.env = parse_env(envp);
+
+	print_header();
 	while (42)
 	{
 		getCmdSignal();
 		cmd = getCmd(&data);
 		print_cmd(cmd);
 		if (cmd)
-			exec_cmd(cmd, &data);
+			exec_cmds(cmd, &data);
 		else
 		{
 			g_exit_status = 0;

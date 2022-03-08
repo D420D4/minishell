@@ -1,7 +1,9 @@
 NAME	= minishell
 SRC		= minishell.c\
 			builtin_functions.c\
+			bonus_and_or.c\
 			cd.c\
+			header.c\
 			cmd.c\
 			cmd_analyse.c\
 			debug.c\

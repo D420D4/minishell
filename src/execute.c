@@ -6,17 +6,17 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/08 20:50:54 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/08 20:58:02 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/debug.h"
 
-static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
+static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 {
-	int	child;
-	char	**tab;
+	int child;
+	char **tab;
 
 	child = fork();
 	if (child == -1)
@@ -26,7 +26,7 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		execSignal();
 		if (cmd->pipe != NULL)
 			close_fd(pipefds[0]);
-		if (cmd->fd_in >= 0 && cmd->fd_out >=0)
+		if (cmd->fd_in >= 0 && cmd->fd_out >= 0)
 		{
 			dup2(cmd->fd_in, STDIN_FILENO);
 			dup2(cmd->fd_out, STDOUT_FILENO);
@@ -34,7 +34,7 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		if (execute_builtin(cmd, data))
 		{
 			tab = NULL;
-			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >=0)
+			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
 			{
 				tab = env_to_tab(data->env);
 				if (execve(cmd->cmd_path, cmd->cmd_argv, tab))
@@ -55,25 +55,24 @@ static void	exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	close_fd(cmd->fd_out);
 }
 
-void	cmd_signal(int sig)
+void cmd_signal(int sig)
 {
 	if (sig == 2)
 	{
-		ft_putstr_fd("\n",1);
+		ft_putstr_fd("\n", 1);
 		g_exit_status = 130;
-	}
-	else if (sig == 3)
+	} else if (sig == 3)
 	{
-		ft_putstr_fd("Quit (core dumped)\n",1);
+		ft_putstr_fd("Quit (core dumped)\n", 1);
 		g_exit_status = 131;
 	}
 }
 
-void	wait_cmd(t_cmd *cmd)
+void wait_cmd(t_cmd *cmd)
 {
 	int status;
 
-	while(cmd)
+	while (cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) == -1)
 			perror("waitpid");
@@ -85,14 +84,28 @@ void	wait_cmd(t_cmd *cmd)
 		cmd_signal(WTERMSIG(status));
 }
 
-int	exec_cmd(t_cmd *cmd, t_data *data)
+int exec_cmds(t_cmd *cmd, t_data *data)
+{
+	if (cmd->soon)
+		exec_cmds(cmd->soon, data);
+	else
+		exec_cmd(cmd, data);
+	if (cmd->on_fail && g_exit_status)
+		exec_cmds(cmd->on_fail, data);
+	if (cmd->on_success && !g_exit_status)
+		exec_cmds(cmd->on_success, data);
+
+	return (0);
+}
+
+int exec_cmd(t_cmd *cmd, t_data *data)
 {
 	int	pipefds[2];
 	t_cmd	*temp;
 
 	temp = cmd;
 	nothingSignal();
-	while(cmd)
+	while (cmd)
 	{
 		if (cmd->pipe != NULL)
 		{
