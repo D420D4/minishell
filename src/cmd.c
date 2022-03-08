@@ -13,7 +13,7 @@
 
 #include "../includes/minishell.h"
 
-t_cmd *newCmd()
+t_cmd *new_cmd(void)
 {
 	t_cmd *cmd;
 
@@ -25,13 +25,23 @@ t_cmd *newCmd()
 	cmd->pipe = 0;
 	cmd->on_success = 0;
 	cmd->on_fail = 0;
+	cmd->soon = 0;
 	cmd->cmd = 0;
+	cmd->txt = 0;
 	cmd->cmd_path = 0;
 	cmd->cmd_argv = 0;
 	cmd->pipe = 0;
 	return (cmd);
 }
 
+t_cmd *new_cmd_txt(char *txt)
+{
+	t_cmd *cmd = new_cmd();
+	if (!cmd)
+		return (0);
+	cmd->txt = ft_strdup(txt);
+	return (cmd);
+}
 void	free_cmd(t_cmd *cmd)
 {
 	if (!cmd)
@@ -132,7 +142,7 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	if (!bruts || !*bruts)
 		return;
 	if (!*cmd)
-		*cmd = newCmd();
+		*cmd = new_cmd();
 	split = split_advanced(*bruts, ">>", data);
 	if (!split)
 		return;
@@ -195,21 +205,6 @@ void parseLine(t_cmd **cmd, char *brut, t_data *data)
 	parseLine_no_pipe(cmd, bruts, data);
 }
 
-void parse_group(t_cmd **cmd, char *brut, t_data *data)
-{
-	if (!brut || brut[0] == '\0')
-		return;
-	if (!*cmd)
-		*cmd = newCmd();
-
-	char	**split;
-	split = split_advanced(brut, "&&", data);
-	if (!split)
-		return;
-	parseLine(cmd, split[0], data);
-	if(split[1])
-		parseLine(&(*cmd)->on_success, split[1], data);
-}
 
 int	get_startingline(char **line, t_data *data)
 {
@@ -266,7 +261,7 @@ t_cmd *getCmd(t_data *data)
 		return (0);
 	if (brut[0] != '\0')
 		add_history(brut); //on ajoute pas les lignes vides a l histo
-	cmd = newCmd();
+	cmd = new_cmd();
 	parse_group(&cmd, brut, data);
 //	parseLine(&cmd, bruts, data);
 	free(brut);

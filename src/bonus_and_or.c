@@ -1,26 +1,8 @@
-#include <stdio.h>
-#include <string.h>
-#include <malloc.h>
+//
+// Created by plefevre on 3/8/22.
+//
 
-typedef struct s_cmd
-{
-	char *txt;
-	struct s_cmd *cmd;
-	struct s_cmd *success;
-	struct s_cmd *failed;
-} t_cmd;
-
-t_cmd *new_cmd(char *s)
-{
-	t_cmd *cmd;
-	cmd = malloc(sizeof (t_cmd));
-	if (!cmd)
-		return (0);
-	cmd->cmd = 0;
-	cmd->success = 0;
-	cmd->failed = 0;
-	cmd->txt = s;
-}
+#include "../includes/minishell.h"
 
 
 int is_finish(char *txt)
@@ -123,7 +105,7 @@ char	*get_next(char *s, int *i)
 
 int progress(t_cmd *cmd)
 {
-	if (!cmd)
+	if (!cmd || !cmd->txt)
 		return (0);
 	if (is_finish(cmd->txt))
 		return 0;
@@ -134,64 +116,37 @@ int progress(t_cmd *cmd)
 	char *nncmd = strdup(cmd->txt + i + 2);
 
 	if (cmd->txt[i] == '&')
-		cmd->success = new_cmd(nncmd);
+		cmd->on_success = new_cmd_txt(nncmd);
 	if (cmd->txt[i] == '|')
-		cmd->failed= new_cmd(nncmd);
+		cmd->on_fail = new_cmd_txt(nncmd);
 
-	cmd->cmd = new_cmd(ncmd);
-	progress(cmd->cmd);
-	progress(cmd->success);
-	progress(cmd->failed);
+	cmd->soon = new_cmd_txt(ncmd);
+	progress(cmd->soon);
+	progress(cmd->on_success);
+	progress(cmd->on_fail);
 
 	return (1);
 }
 
-void printn(int n)
+void do_parse_line(t_cmd **cmd, t_data *data)
 {
-	while (n--)
-		printf("_");
-}
-
-void print_cmd(t_cmd *cmd, int n)
-{
-	int	i;
-
-	i = 0;
-	if (!cmd)
-	{
-		printf("\n");
+	if (!cmd || !*cmd)
 		return;
-	}
-
-	//printn(n);
-	printf("%s\n", cmd->txt);
-	printn(n);
-	printf("c :");
-	print_cmd(cmd->cmd, n + 2);
-	printn(n);
-	printf("1 :");
-	print_cmd(cmd->success, n + 2);
-	printn(n);
-	printf("0 :");
-	print_cmd(cmd->failed, n + 2);
+	do_parse_line(&(*cmd)->soon, data);
+	do_parse_line(&(*cmd)->on_success, data);
+	do_parse_line(&(*cmd)->on_fail, data);
+	parseLine(cmd, (*cmd)->txt, data);
 }
 
-int main(int ac, char **av)
+
+
+void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
-//	char *t= "(t1 't)' && t2 \"(wpeork)\") || t3 || t4";
+	if (!brut || brut[0] == '\0')
+		return;
+	if (*cmd)
+		*cmd = new_cmd_txt(brut);
 
-	t_cmd *cmd = new_cmd(av[1]);
-
-	progress(cmd);
-
-	print_cmd(cmd,0);
-
-/*
-	t1 't'
-		1 : t2 "(wpeork)"
-			0 : t3
-				0 : t3
-		0 : t3
-			0 : t4
-	return 0;*/
+	progress(*cmd);
+	do_parse_line(cmd, data);
 }

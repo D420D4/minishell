@@ -30,7 +30,9 @@ typedef struct s_data
 typedef struct s_cmd
 {
 	char	**cmd;
+	char	*txt;
 	struct s_cmd *pipe;
+	struct s_cmd *soon;
 	struct s_cmd *on_success;
 	struct s_cmd *on_fail;
 	int fd_out;
@@ -54,6 +56,7 @@ int	is_a_file(char *str);
 char	**find_cmd_argv(char **cmd, char *cmd_path);
 int	check_null(char **tab, int len);
 int	exec_cmd(t_cmd *cmd, t_data *data);
+int	exec_cmds(t_cmd *cmd, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
 void do_wildcards(char **s, int *i);
@@ -80,5 +83,11 @@ void	ft_sort_vector(char **vector, int size);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
 void	execSignal(void);
 void	nothingSignal(void);
+void 	print_header(void);
+t_cmd	*new_cmd(void);
+char **split_advanced(char *s, char *c, t_data *data);
+void parseLine(t_cmd **cmd, char *brut, t_data *data);
+void parse_group(t_cmd **cmd, char *brut, t_data *data);
+t_cmd *new_cmd_txt(char *txt);
 
 #endif

@@ -27,22 +27,25 @@ void print_cmd(t_cmd *cmd)
 		printf("ERROR cmd\n");
 		return;
 	}
-
-	printf ("%d << >> %d : ", cmd->fd_in, cmd->fd_out);
-	if (cmd->cmd == NULL)
-		printf("[] = NULL");
-	while (cmd->cmd && cmd->cmd[i])
+	if (cmd->soon)
+		print_cmd(cmd->soon);
+	else
 	{
-		printf("[%s] ", cmd->cmd[i]);
-		i++;
+		printf ("%d << >> %d : ", cmd->fd_in, cmd->fd_out);
+		if (cmd->cmd == NULL)
+			printf("[] = NULL");
+		while (cmd->cmd && cmd->cmd[i])
+		{
+			printf("[%s] ", cmd->cmd[i]);
+			i++;
+		}
+		printf("\n");
+		if (cmd->pipe)
+		{
+			printf("| ");
+			print_cmd(cmd->pipe);
+		}
 	}
-	printf("\n");
-	if (cmd->pipe)
-	{
-		printf("| ");
-		print_cmd(cmd->pipe);
-	}
-
 	if (cmd->on_success)
 	{
 		printf("&& ");
@@ -53,7 +56,6 @@ void print_cmd(t_cmd *cmd)
 		printf("|| ");
 		print_cmd(cmd->on_fail);
 	}
-
 }
 
 void	print_path_argv(t_cmd *cmd)
