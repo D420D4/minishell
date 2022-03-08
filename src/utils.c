@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/28 16:03:24 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/08 15:44:40 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,4 +159,16 @@ void	ft_sort_vector(char **vector, int size)
 		}
 		i++;
 	}
+}
+
+int	len_tab(char **tab)
+{
+	int	size;
+
+	if (!tab)
+		return (0);
+	size = 0;
+	while (tab[size])
+		size++;
+	return (size);
 }

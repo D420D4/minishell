@@ -19,6 +19,7 @@ SRC		= minishell.c\
 			redirection_in.c\
 			redirection_out.c\
 			signal.c\
+			split_redirection.c\
 			unset.c\
 			utils.c\
 			wildcards.c\

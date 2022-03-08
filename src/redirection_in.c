@@ -6,12 +6,13 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/11 13:19:51 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/08 20:54:36 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+//faut que je gere les signaux si ctrl+D ou ctrl+C dans les heredoc , jfais ca demain
 static int	read_stdin(char *limiter)
 {
 	char	*line;
@@ -39,7 +40,7 @@ static int	read_stdin(char *limiter)
 	return (pipefds[0]);
 }
 
-static int	set_new_rd_in_open(char *filename, int *rd_in)
+void	set_new_rd_in_open(char *filename, int *rd_in)
 {
 	close_fd(*rd_in);
 	if (filename)
@@ -48,50 +49,11 @@ static int	set_new_rd_in_open(char *filename, int *rd_in)
 		if (*rd_in == -1)
 			perror("open");
 	}
-	else
-	{
-		ft_putstr_fd("syntax error\n", 2);
-		g_exit_status = 2;
-		return (1);
-	}
-	return (0);
 }
 
-static int	set_new_rd_in_heredoc(char *limiter, int *rd_in)
+void	set_new_rd_in_heredoc(char *limiter, int *rd_in)
 {
 	close_fd(*rd_in);
 	if (limiter)
 		*rd_in = read_stdin(limiter);
-	else
-	{
-		ft_putstr_fd("syntax error\n", 2);
-		g_exit_status = 2;
-		return (1);
-	}
-	return (0);
-}
-
-int	find_rd_in(char **cmd, int *rd_in)
-{
-	int	i;
-
-	*rd_in = -1;
-	i = 0;
-	while(cmd[i])
-	{
-		if (!ft_memcmp(cmd[i], "<", 2))
-		{
-			if (set_new_rd_in_open(cmd[i + 1], rd_in))
-				return (1);
-			i++;
-		}
-		else if (!ft_memcmp(cmd[i], "<<", 3))
-		{
-			if (set_new_rd_in_heredoc(cmd[i + 1], rd_in))
-				return (1);
-			i++;
-		}
-		i++;
-	}
-	return (0);
 }

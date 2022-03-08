@@ -57,6 +57,7 @@ int	exec_cmd(t_cmd *cmd, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
 void do_wildcards(char **s, int *i);
+char	**split_advanced_redirections(char *s);
 
 int execute_builtin(t_cmd *cmd, t_data *data);
 int is_in_builtin(char *cmd_name);
@@ -72,13 +73,17 @@ void	free_tab(char **tab);
 char	**env_to_tab(t_list *env);
 void	free_cmd(t_cmd *cmd);
 char	*transform(char *original, t_data *data);
-int set_new_rd_out_trunc(char *filename, int *rd_out);
-int set_new_rd_out_append(char *filename, int *rd_out);
 void exit_clean(void);
 char **list_to_tab(t_list *lst);
 void	ft_sort_vector(char **vector, int size);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
 void	execSignal(void);
 void	nothingSignal(void);
+int	len_tab(char **tab);
+void	set_new_rd_in_open(char *filename, int *rd_in);
+void	set_new_rd_in_heredoc(char *limiter, int *rd_in);
+void	set_new_rd_out_trunc(char *filename, int *rd_out);
+void	set_new_rd_out_append(char *filename, int *rd_out);
+char	**do_redirections(char **split, t_cmd *cmd);
 
 #endif
