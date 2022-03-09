@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 01:21:50 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 17:46:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,43 @@ static int	is_only_space(char *string)
 	}
 	return (1);
 }
+/*
+static int is_first_word_special(char *s)
+{
+	int i;
+	int	quote;
+	char	**split;
+	char	*cpy;
+
+	i = 0;
+	quote = 0;
+
+	while (s[i] == ' ')
+		i++;
+	while (s[i] && !(s[i] == ' ' && !quote))
+	{
+		if ('*' == s[i] && !quote)
+		{
+			cpy = ft_strdup(s);
+			do_wildcards(&(cpy));
+			split = split_advanced(cpy, " ");
+			free(cpy);
+			if (!split || split[0] == NULL || split[1] == NULL)
+			{
+				free_tab(split);
+				return (0);
+			}
+			free_tab(split);
+			return (1);
+		}
+		if (s[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (s[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	return (0);
+}*/
 
 static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 {
@@ -42,6 +79,18 @@ static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 			return (0);
 		}
 	}
+	/* a remettre quand wildcards fonctionnent
+	else if (is_first_word_special(string))
+	{
+		free(string);
+		if (*mots != 0)
+		{
+			ft_putstr_fd("ambiguous redirect\n", 2);
+			g_exit_status = 1;
+			return (0);
+		}
+	}
+	*/
 	else
 	{
 		ft_lstadd_back(mots, ft_lstnew(string));
@@ -98,7 +147,7 @@ char	**split_advanced_redirections(char *s)
 		if ((!s[i] || !memcmp(s + i, ">>", 2) || !memcmp(s + i, ">", 1) 
 			|| !memcmp(s + i, "<<", 2) || !memcmp(s + i, "<", 1)) && quote == 0)
 		{
-			printf("[{%s}] %d\n", s + i, i);
+			//printf("[{%s}] %d\n", s + i, i);
 			if (!add_redirection(s, &mots, &i, &d))
 			{
 				ft_lstclear(&mots, &free);
@@ -116,11 +165,12 @@ char	**split_advanced_redirections(char *s)
 	return (ss);
 }
 
-char	**do_redirections(char **split, t_cmd *cmd)
+char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 {
 	t_list	*mots;
 	int	i;
 	char	**ss;
+	char	*string;
 
 	mots = 0;
 	i = -1;
@@ -128,12 +178,12 @@ char	**do_redirections(char **split, t_cmd *cmd)
 	{
 		if (!ft_memcmp(split[i], ">>", 3))
 		{
-			set_new_rd_out_append(split[i + 1], &(cmd->fd_out));
+			set_new_rd_out_append(split[i + 1], &(cmd->fd_out), data);
 			i++;
 		}
 		else if (!ft_memcmp(split[i], ">", 2))
 		{
-			set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out));
+			set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out), data);
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
@@ -147,17 +197,14 @@ char	**do_redirections(char **split, t_cmd *cmd)
 		}
 		else if (!ft_memcmp(split[i], "<", 2))
 		{
-			set_new_rd_in_open(split[i + 1], &(cmd->fd_in));
+			set_new_rd_in_open(split[i + 1], &(cmd->fd_in), data);
 			i++;
 		}
 		else
 		{
-			ft_lstadd_back(&mots, ft_lstnew(ft_strdup(split[i])));
-			if (!ft_lstlast(mots)->content)
-			{
-				ft_lstclear(&mots,&free);
-				return (0);
-			}
+			string = transform(ft_strdup(split[i]), data);
+			if (string)
+				ft_lstadd_back(&mots, ft_lstnew(string));
 		}
 	}
 	ss = list_to_tab(mots);

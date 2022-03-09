@@ -32,7 +32,7 @@ int	execute_builtin(t_cmd *cmd, t_data *data)
 	else if (!ft_memcmp(cmd->cmd_path, "unset", 6))
 		g_exit_status = cmd_unset(cmd, data);
 	else if (!ft_memcmp(cmd->cmd_path, "cd", 3))
-		g_exit_status = cmd_cd(cmd->cmd_argv, data);
+		g_exit_status = cmd_cd(cmd->cmd, data);
 	else if (!ft_memcmp(cmd->cmd_path, "pwd", 4))
 		g_exit_status = cmd_pwd(cmd);
 	else if (!ft_memcmp(cmd->cmd_path, "exit", 5))

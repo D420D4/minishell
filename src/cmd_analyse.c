@@ -155,7 +155,6 @@ char	*transform(char *original, t_data *data)
 			}
 		if (ss[i] == '$')
 			do_var(&ss, &i, data);
-		 // marche partiellement (faut encore split selon les espaces et trier par ordre ascii, en progress)
 		i++;
 	}
 	if (ss[0] == '\0' && !not_null)

@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 15:45:29 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/04 15:56:09 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 13:46:50 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,9 @@ static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
 
 char	*find_cmd_name(char **cmd)
 {
-	int	i = 0;
-	
 	if (!cmd)
 		return (NULL);
-	while (cmd[i])
-	{
-		if (!ft_memcmp(cmd[i], "<", 2) || !ft_memcmp(cmd[i], "<<", 3)
-			|| !ft_memcmp(cmd[i], ">", 2) || !ft_memcmp(cmd[i], ">>", 3))
-			i++;
-		else
-			return (cmd[i]);
-		i++;
-	}
-	return (NULL);
+	return (cmd[0]);
 }
 
 char	*find_cmd_path(char **cmd, t_list *env)

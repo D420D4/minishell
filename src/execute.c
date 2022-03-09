@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 00:06:20 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 13:42:41 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
 			{
 				tab = env_to_tab(data->env);
-				if (execve(cmd->cmd_path, cmd->cmd_argv, tab))
+				if (execve(cmd->cmd_path, cmd->cmd, tab))
 					perror("execve");
 				free_tab(tab);
 			}
@@ -121,7 +121,6 @@ int exec_cmd(t_cmd *cmd, t_data *data)
 				close_fd(pipefds[0]);
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
-		cmd->cmd_argv = find_cmd_argv(cmd->cmd, cmd->cmd_path);
 		if (cmd == temp && cmd->pipe == NULL && !execute_builtin(cmd, data))
 			return (0);
 		exec_cmd_in_child(cmd, data, pipefds);

@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 01:27:55 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 16:43:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,25 @@ static void	read_stdin(char *limiter, int fd)
 	}
 }
 
-void	set_new_rd_in_open(char *filename, int *rd_in)
+int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 {
+	char *filename;
+
 	close_fd(*rd_in);
+	filename = transform(ft_strdup(filename_brut), data);
 	if (filename)
 	{
 		*rd_in = open(filename, O_RDONLY);
 		if (*rd_in == -1)
 			perror("open");
 	}
+	else
+	{
+		g_exit_status = 1;
+		ft_putstr_fd("ambiguous redirect\n", 2);
+		return (0);
+	}
+	return (1);
 }
 
 int	set_new_rd_in_heredoc(char *limiter, int *rd_in)

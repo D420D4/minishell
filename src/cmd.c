@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 01:22:06 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 16:22:29 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,8 @@ int is_in_special(char c, char *s)
 	return (0);
 }
 
-
 //s have an even number of " and '
-char **split_advanced(char *s, char *c, t_data *data)
+char **split_advanced(char *s, char *c)
 {
 	t_list *mots;
 	char **ss;
@@ -88,19 +87,16 @@ char **split_advanced(char *s, char *c, t_data *data)
 	int d;
 	int quote;
 
-	i = 0;
 	d = 0;
 	quote = 0;
 	mots = 0;
-
+	if (!ft_memcmp(c, " ", 2))
+	{
+		while (is_in_special('*', s))
+			if (do_wildcards(&s))
+				return (0);
+	}
 	i = 0;
-
-	while (is_in_special('*', s))
-		if (do_wildcards(&s))
-			return (0);
-
-	i = 0;
-
 	while (i <= ft_strlen(s))
 	{
 		if ((!memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
@@ -110,10 +106,7 @@ char **split_advanced(char *s, char *c, t_data *data)
 				return (0);
 			if (ft_strlen(string))
 			{
-				if (!memcmp(c, " ", 2))
-					ft_lstadd_back(&mots, ft_lstnew(transform(string, data)));
-				else
-					ft_lstadd_back(&mots, ft_lstnew(string));
+				ft_lstadd_back(&mots, ft_lstnew(string));
 				if (!ft_lstlast(mots)->content)
 				{
 					ft_lstclear(&mots, &free);
@@ -180,24 +173,10 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	free_tab(split);
 	if (!new_brut)
 		return;
-	split = split_advanced(new_brut, " ", data);
+	split = split_advanced(new_brut, " ");
 	if (!split)
 		return;
-	/*
-	int i = 0;
-	int j = 0;
-	while (split[0][i]){
-		if (split[0][i] == ' ')
-		{
-			//Who did that? &split[0] = split...
-			do_wildcards(&split[0], &j);
-			j = i;
-		}
-		i++;
-	}
-	do_wildcards(&split[0], &j);
-	*/
-	(*cmd)->cmd = do_redirections(split, *cmd);
+	(*cmd)->cmd = do_redirections(split, *cmd, data);
 	free_tab(split);
 	if (!(*cmd)->cmd)
 		return;
@@ -206,7 +185,7 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 void parseLine(t_cmd **cmd, char *brut, t_data *data)
 {
 	char 	**bruts;
-	bruts = split_advanced(brut, "|", data);
+	bruts = split_advanced(brut, "|");
 	parseLine_no_pipe(cmd, bruts, data);
 }
 
