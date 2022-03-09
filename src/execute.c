@@ -103,6 +103,8 @@ int exec_cmd(t_cmd *cmd, t_data *data)
 	int	pipefds[2];
 	t_cmd	*temp;
 
+	parseLine(&cmd, cmd->txt, data);
+
 	temp = cmd;
 	nothingSignal();
 	while (cmd)
