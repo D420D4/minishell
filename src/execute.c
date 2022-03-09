@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/08 20:58:02 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 00:06:20 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	else if (child == 0)
 	{
 		execSignal();
-		if (cmd->pipe != NULL)
+		if (cmd->pipe != NULL && cmd->pipe->fd_in == pipefds[0])
 			close_fd(pipefds[0]);
 		if (cmd->fd_in >= 0 && cmd->fd_out >= 0)
 		{
@@ -115,7 +115,10 @@ int exec_cmd(t_cmd *cmd, t_data *data)
 				cmd->fd_out = pipefds[1];
 			else
 				close_fd(pipefds[1]);
-			(cmd->pipe)->fd_in = pipefds[0];
+			if ((cmd->pipe)->fd_in == 0)
+				(cmd->pipe)->fd_in = pipefds[0];
+			else
+				close_fd(pipefds[0]);
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
 		cmd->cmd_argv = find_cmd_argv(cmd->cmd, cmd->cmd_path);

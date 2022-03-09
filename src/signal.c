@@ -12,7 +12,6 @@ void handle_sigint(int signo) {
 		rl_on_new_line();
 		rl_redisplay();
 		g_exit_status = 130;
-		exit(1);
 	}
 }
 

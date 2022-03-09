@@ -84,7 +84,7 @@ void	execSignal(void);
 void	nothingSignal(void);
 int	len_tab(char **tab);
 void	set_new_rd_in_open(char *filename, int *rd_in);
-void	set_new_rd_in_heredoc(char *limiter, int *rd_in);
+int	set_new_rd_in_heredoc(char *limiter, int *rd_in);
 void	set_new_rd_out_trunc(char *filename, int *rd_out);
 void	set_new_rd_out_append(char *filename, int *rd_out);
 char	**do_redirections(char **split, t_cmd *cmd);

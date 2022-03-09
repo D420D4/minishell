@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/08 20:47:05 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/09 01:21:50 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,11 @@ char	**do_redirections(char **split, t_cmd *cmd)
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
 		{
-			set_new_rd_in_heredoc(split[i + 1], &(cmd->fd_in));
+			if (!set_new_rd_in_heredoc(split[i + 1], &(cmd->fd_in)))
+			{
+				ft_lstclear(&mots,&free);
+				return (NULL);
+			}
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<", 2))
