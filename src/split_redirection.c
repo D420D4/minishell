@@ -93,9 +93,12 @@ char	**split_advanced_redirections(char *s)
 	i = 0;
 	while (i <= ft_strlen(s))
 	{
+//		printf("%s\n", s + i);
+
 		if ((!s[i] || !memcmp(s + i, ">>", 2) || !memcmp(s + i, ">", 1) 
 			|| !memcmp(s + i, "<<", 2) || !memcmp(s + i, "<", 1)) && quote == 0)
 		{
+			printf("[{%s}] %d\n", s + i, i);
 			if (!add_redirection(s, &mots, &i, &d))
 			{
 				ft_lstclear(&mots, &free);

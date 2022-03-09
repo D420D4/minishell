@@ -57,6 +57,28 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
+int is_in_special(char c, char *s)
+{
+	int i;
+	int	quote;
+
+	i = 0;
+	quote = 0;
+
+	while (s[i])
+	{
+		if (c == s[i] && !quote)
+			return (1);
+		if (s[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (s[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	return (0);
+}
+
+
 //s have an even number of " and '
 char **split_advanced(char *s, char *c, t_data *data)
 {
@@ -72,6 +94,13 @@ char **split_advanced(char *s, char *c, t_data *data)
 	mots = 0;
 
 	i = 0;
+
+	while (is_in_special('*', s))
+		if (do_wildcards(&s))
+			return (0);
+
+	i = 0;
+
 	while (i <= ft_strlen(s))
 	{
 		if ((!memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)

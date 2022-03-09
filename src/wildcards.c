@@ -56,6 +56,32 @@ int	check_middle_end_letters(char *d_name, char *s, int start, int end)
 	return (check_end_letters(d_name + j, s, end));
 }
 
+char	*ft_strdup_quote(const char *s)
+{
+	int		i;
+	char	*ss;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	while (*(s + i))
+		i++;
+	ss = (char *)malloc(sizeof(char) * (i + 3));
+	if (!ss)
+		return (0);
+	ss[i + 2] = 0;
+	ss[i-- + 1] = '\'';
+	while (i >= 1)
+	{
+		ss[i] = s[i];
+		i--;
+	}
+	ss[0] = '\'';
+
+	return (ss);
+}
+
+
 //Because we are in an universe with multiple worlds and instead ckecking only a little word, our ambitious make us checking WORLD ;-P
 void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, int end)
 {
@@ -68,16 +94,19 @@ void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, in
 	else
 	{
 		if (*ss == NULL)
-			*ss = ft_strdup(dirp->d_name);
+			*ss = ft_strdup_quote(dirp->d_name);
 		else
 		{
 			temp = *ss;
-			*ss = ft_strjoin(temp, " ");
+			*ss = ft_strjoin(temp, " '");
 			free(temp);
 			if (*ss == NULL)
 				return ;
 			temp = *ss;
 			*ss = ft_strjoin(temp, dirp->d_name);
+			free(temp);
+			temp = *ss;
+			*ss = ft_strjoin(temp, "\'");
 			free(temp);
 		}
 	}
@@ -135,7 +164,7 @@ int	ft_sort_str(char ** wilds)
 	return (1);
 }
 
-void	do_wildcards(char **s, int *i)
+int	do_wildcards_word(char **s, int *i)
 {
 	int	start;
 	int	end;
@@ -151,15 +180,15 @@ void	do_wildcards(char **s, int *i)
 	while ((*s)[j] && (*s)[j] != ' ')
 	{
 		if ((*s)[j] == '\'' || (*s)[j] == '"' || (*s)[j] == '$')
-			return ;
+			return 1;
 		j++;
 	}
 	end = j;
 	if (ft_strnstr(*s + start, "*", end - start) == NULL)
-		return ;
+		return 0;
 	ss = malloc(sizeof(char) * (end - start));
 	if (ss == NULL)
-		return ;
+		return 1;
 	ss[end - start] = '\0';
 	ft_memcpy(ss, *s + start, end - start + 1);
 	wild = NULL;
@@ -168,13 +197,14 @@ void	do_wildcards(char **s, int *i)
 	if (wild == NULL || !ft_sort_str(&wild))
 	{
 		*i = j -1;
-		return ;
+		return 1;
 	}
+	printf("__%s__",wild);
 	final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
 	if (final == NULL && ft_sort_str(&wild))
 	{
 		*i = j -1;
-		return ;
+		return 1;
 	}
 	//printf("%d %d\n", start, j);
 	ft_memcpy(final, *s, start);
@@ -183,4 +213,24 @@ void	do_wildcards(char **s, int *i)
 	free(*s);
 	*s = final;
 	*i = end;
+	return (0);
+}
+
+int	do_wildcards(char **s)
+{
+	int start;
+
+	start = 0;
+	while ((*s)[start])
+	{
+		if (start == 0 || (*s)[start] == ' ')
+		{
+			while ((*s)[start] == ' ')
+				start++;
+			do_wildcards_word(s, &start);
+		}
+		start++;
+	}
+
+	return (0);
 }

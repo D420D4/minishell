@@ -59,7 +59,7 @@ int	exec_cmd(t_cmd *cmd, t_data *data);
 int	exec_cmds(t_cmd *cmd, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
-void do_wildcards(char **s, int *i);
+int do_wildcards(char **s);
 char	**split_advanced_redirections(char *s);
 
 int execute_builtin(t_cmd *cmd, t_data *data);
