@@ -1,18 +1,3 @@
-_END=\x1b[0m
-_BOLD=\x1b[1m
-_UNDER=\x1b[4m
-_REV=\x1b[7m
-
-# Colors
-_GREY=\x1b[30m
-_RED=\x1b[31m
-_GREEN=\x1b[32m
-_YELLOW=\x1b[33m
-_BLUE=\x1b[34m
-_PURPLE=\x1b[35m
-_CYAN=\x1b[36m
-_WHITE=\x1b[37m
-
 NAME	= minishell
 SRC		= minishell.c\
 		  builtin_functions.c\
@@ -59,15 +44,32 @@ LFLAGS	= -lreadline
 all: $(NAME)
 
 $(NAME): libft/libft.a $(OBJS)
-	@echo "${_BOLD}${_UNDER} Linking ${@}"
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@printf "%-16s" "Linking "
+	@tput sgr0
+	@tput setaf 6
+	@echo "${@}"
 	@$(CC) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a $(LFLAGS)
 
 bonus: $(OBJSBONUS) libft/libft.a
-	@echo "${_BOLD}${_UNDER} Linking ${@}"
-	@$(CC) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@printf "%-16s" "Linking "
+	@tput sgr0
+	@tput setaf 6
+	@$(CC) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a --no-print-directory
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
-	@echo "${_BOLD}${_UNDER} Compiling ${@}"
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@printf "%-16s" "Compiling "
+	@tput sgr0
+	@tput setaf 6
+	@echo "${@}"
 	@mkdir -p $(OBJDIR)
 	@mkdir -p $(OBJDIR)/get_next_line
 	@$(CC) $(LFLAGS) $(CFLAGS) -c -I $(LIBDIR) -o $@ $<
@@ -76,15 +78,29 @@ clean:
 	@/bin/rm -f $(addprefix $(OBJDIR),$(OBJ))
 	@/bin/rm -f $(addprefix $(OBJDIR),$(OBJBONUS))
 	@/bin/rm -rf $(OBJDIR)
-	@make clean -C ./libft
+	@make clean -C ./libft --no-print-directory
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@echo "clean done"
 
 fclean: clean
 	@/bin/rm -f $(NAME)
-	@#make fclean -C ./libft
+	@make fclean -C ./libft --no-print-directory
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@echo "fclean done"
+
 
 libft/libft.a:
-	@make bonus -C ./libft
+	@make bonus -C ./libft --no-print-directory
+
+print_name:
+	@tput bold
+	@tput setaf 208
+	@printf "%-10s " $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus print_name

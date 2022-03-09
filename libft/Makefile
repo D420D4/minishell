@@ -61,17 +61,54 @@ LIBDIR	= ./
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rc libft.a $(OBJ)
+	@tput bold	@make print_name --no-print-directory
+	@tput setaf 2
+	@printf "%-16s" "Compiling "
+	@tput sgr0
+	@tput setaf 6
+	@echo "${@}"
+	@ar rc libft.a $(OBJ)
+
 bonus: $(OBJ) $(OBJ_BONUS)
-	ar rc libft.a $(OBJ) $(OBJ_BONUS)
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@printf "%-16s" "Linking "
+	@tput sgr0
+	@tput setaf 6
+	@echo "${@}"
+	@ar rc libft.a $(OBJ) $(OBJ_BONUS)
 
 %.o: %.c
-	gcc -c -g -Wextra -Wall -Werror -I $(LIBDIR) -o $@ $< 
+	@make print_name --no-print-directory
+	@tput bold
+	@tput setaf 2
+	@printf "%-16s" "Compiling "
+	@tput sgr0
+	@tput setaf 6
+	@echo "${@}"
+	@gcc -c -g -Wextra -Wall -Werror -I $(LIBDIR) -o $@ $<
 
 clean:
-	/bin/rm -f $(OBJ) $(OBJ_BONUS)
+	@make print_name --no-print-directory
+	@/bin/rm -f $(OBJ) $(OBJ_BONUS)
+	@tput bold
+	@tput setaf 2
+	@echo "clean done"
+
 
 fclean: clean
-	/bin/rm -f $(NAME)
+	@make print_name --no-print-directory
+	@/bin/rm -f $(NAME)
+	@tput bold
+	@tput setaf 2
+	@echo "fclean done"
+
+print_name:
+	@tput bold
+	@tput setaf 208
+	@printf "%-10s " $(NAME)
 
 re:	fclean all
+
+.PHONY: all clean fclean re bonus print_name

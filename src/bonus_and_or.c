@@ -127,17 +127,17 @@ int progress(t_cmd *cmd)
 
 	return (1);
 }
-
-void do_parse_line(t_cmd **cmd, t_data *data)
-{
-	if (!cmd || !*cmd)
-		return;
-	do_parse_line(&(*cmd)->soon, data);
-	do_parse_line(&(*cmd)->on_success, data);
-	do_parse_line(&(*cmd)->on_fail, data);
-	parseLine(cmd, (*cmd)->txt, data);
-}
-
+//
+//void do_parse_line(t_cmd **cmd, t_data *data)
+//{
+//	if (!cmd || !*cmd)
+//		return;
+//	do_parse_line(&(*cmd)->soon, data);
+//	do_parse_line(&(*cmd)->on_success, data);
+//	do_parse_line(&(*cmd)->on_fail, data);
+//	parseLine(cmd, (*cmd)->txt, data);
+//}
+//
 
 
 void parse_group(t_cmd **cmd, char *brut, t_data *data)
@@ -148,5 +148,6 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 		*cmd = new_cmd_txt(brut);
 
 	progress(*cmd);
-	do_parse_line(cmd, data);
+	//do_parse_line(cmd, data);
+	(void) data;
 }
