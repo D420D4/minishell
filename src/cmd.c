@@ -109,7 +109,7 @@ char **split_advanced(char *s, char *c)
 	i = 0;
 	while (i <= ft_strlen(s))
 	{
-		if ((!memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
+		if ((!ft_memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
 		{
 			char *string = ft_substr(s, d, i - d);
 			if (!string)

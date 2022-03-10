@@ -48,24 +48,24 @@ static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 		if (!ft_lstlast(*mots)->content)
 			return (0);
 	}
-	if (!memcmp(s + *i, ">>", 2))
+	if (!ft_memcmp(s + *i, ">>", 2))
 	{
 		ft_lstadd_back(mots, ft_lstnew(ft_strdup(">>")));
 		*d = *i + 2;
 		(*i)++;
 	}
-	else if (!memcmp(s + *i, ">", 1))
+	else if (!ft_memcmp(s + *i, ">", 1))
 	{
 		ft_lstadd_back(mots, ft_lstnew(ft_strdup(">")));
 		*d = *i + 1;
 	}
-	else if (!memcmp(s + *i, "<<", 2))
+	else if (!ft_memcmp(s + *i, "<<", 2))
 	{
 		ft_lstadd_back(mots, ft_lstnew(ft_strdup("<<")));
 		*d = *i + 2;
 		(*i)++;
 	}
-	else if (!memcmp(s + *i, "<", 1))
+	else if (!ft_memcmp(s + *i, "<", 1))
 	{
 		ft_lstadd_back(mots, ft_lstnew(ft_strdup("<")));
 		*d = *i + 1;
@@ -95,8 +95,8 @@ char	**split_advanced_redirections(char *s)
 	{
 //		printf("%s\n", s + i);
 
-		if ((!s[i] || !memcmp(s + i, ">>", 2) || !memcmp(s + i, ">", 1) 
-			|| !memcmp(s + i, "<<", 2) || !memcmp(s + i, "<", 1)) && quote == 0)
+		if ((!s[i] || !ft_memcmp(s + i, ">>", 2) || !ft_memcmp(s + i, ">", 1)
+			|| !ft_memcmp(s + i, "<<", 2) || !ft_memcmp(s + i, "<", 1)) && quote == 0)
 		{
 			//printf("[{%s}] %d\n", s + i, i);
 			if (!add_redirection(s, &mots, &i, &d))

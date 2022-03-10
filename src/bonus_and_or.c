@@ -63,7 +63,7 @@ char	*get_next(char *s, int *i)
 		while (s[j]==' ')
 			j++;
 		//TODO libft
-		if (memcmp(s + j, "&&", 2) && memcmp(s + j, "||", 2) && s[j])
+		if (ft_memcmp(s + j, "&&", 2) && ft_memcmp(s + j, "||", 2) && s[j])
 			return (0);
 		*i = j;
 		char *cp = malloc(k - 1);
@@ -77,7 +77,7 @@ char	*get_next(char *s, int *i)
 	{
 		if (!quote && s[j] == ')')
 			return (0);
-		if (!memcmp(s + j, "&&", 2) || !memcmp(s + j, "||", 2))
+		if (!ft_memcmp(s + j, "&&", 2) || !ft_memcmp(s + j, "||", 2))
 		{
 			*i = j;
 			cmp++;
