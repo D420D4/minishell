@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/08 15:44:40 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 13:33:52 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,23 @@ char **list_to_tab(t_list *lst)
 
 int	ft_strcmp(char *s1, char *s2)
 {
-	while (*s1 && *s2 && *s1 == *s2)
+	char	c1;
+	char	c2;
+	
+	c1 = 0;
+	c2 = 0;
+	while (c1 == c2 && *s1 && *s2)
 	{
+		c1 = s1[0];
+		c2 = s2[0];
+		if (c1 >= 'A' && c1 <= 'Z')
+			c1 +=32;
+		if (c2 >= 'A' && c2 <= 'Z')
+			c2 +=32;
 		s1++;
 		s2++;
 	}
-	return (*s1 - *s2);
+	return (c1 - c2);
 }
 
 void	ft_sort_vector(char **vector, int size)
