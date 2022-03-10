@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:30:08 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 17:40:38 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 12:54:45 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ int	cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	int	ret;
 
-	if (!cmd)
-		ft_putstr_fd("exit\n", 1);
-	else
+	if (cmd_parent)
 		ft_putstr_fd("exit\n", cmd->fd_out);
 	if (!cmd || cmd->cmd[1] == NULL)
 		ret = 0;

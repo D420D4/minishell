@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 16:43:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 13:16:54 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,21 @@ static void	read_stdin(char *limiter, int fd)
 int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 {
 	char *filename;
-
+	char	**wildcards;
+	
 	close_fd(*rd_in);
-	filename = transform(ft_strdup(filename_brut), data);
+	if (is_in_special('*', filename_brut))
+	{
+		wildcards = do_wildcards_word(filename_brut);
+		if (!wildcards || len_tab(wildcards) > 1)
+			filename = NULL;
+		else if (wildcards[0] == 0)
+			filename = filename_brut;
+		else
+			filename = wildcards[0];
+	}
+	else
+		filename = transform(ft_strdup(filename_brut), data);
 	if (filename)
 	{
 		*rd_in = open(filename, O_RDONLY);
@@ -57,13 +69,54 @@ int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 	return (1);
 }
 
-int	set_new_rd_in_heredoc(char *limiter, int *rd_in)
+char	*no_quote(char *limiter_brut)
+{
+	char	*limiter;
+	int	i;
+	int	len;
+	int	quote;
+
+	if (!limiter_brut)
+		return (NULL);
+	i = -1;
+	len = 0;
+	while (limiter_brut[++i])
+	{
+		if (limiter_brut[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (limiter_brut[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		else
+			len++;
+	}
+	limiter = malloc(sizeof(char) * (len + 1));
+	if (!limiter)
+		return (NULL);
+	i = -1;
+	len = -1;
+	while (limiter_brut[++i])
+	{
+		if (limiter_brut[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (limiter_brut[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		else
+			limiter[++len] = limiter_brut[i];
+	}
+	limiter[++len] = '\0';
+	return (limiter);
+
+}
+
+int	set_new_rd_in_heredoc(char *limiter_brut, int *rd_in)
 {
 	int	pid;
 	int	pipefds[2];
 	int	status;
+	char	*limiter;
 
 	close_fd(*rd_in);
+	limiter = no_quote(limiter_brut);
 	if (limiter)
 	{
 		if (pipe(pipefds) == -1)
@@ -79,20 +132,23 @@ int	set_new_rd_in_heredoc(char *limiter, int *rd_in)
 			read_stdin(limiter,pipefds[1]);
 			exit (0);
 		}
-		nothingSignal();
-		if (waitpid(pid, &status, 0) == -1)
-			perror("waitpid");
-		getCmdSignal();
-		close_fd(pipefds[1]);
-		if (__WIFSIGNALED(status) && WTERMSIG(status) == 2)
+		else
 		{
-			close_fd(pipefds[0]);
-			ft_putstr_fd("\n", 1);
-			g_exit_status = 130;
-			return (0);
+			nothingSignal();
+			if (waitpid(pid, &status, 0) == -1)
+				perror("waitpid");
+			getCmdSignal();
+			close_fd(pipefds[1]);
+			if (__WIFSIGNALED(status) && WTERMSIG(status) == 2)
+			{
+				close_fd(pipefds[0]);
+				ft_putstr_fd("\n", 1);
+				g_exit_status = 130;
+				return (0);
+			}
+			*rd_in = pipefds[0];
+			return (1);
 		}
-		*rd_in = pipefds[0];
-		return (1);
 	}
 	return (0);
 }
