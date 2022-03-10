@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 17:46:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 01:55:30 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,43 +24,6 @@ static int	is_only_space(char *string)
 	}
 	return (1);
 }
-/*
-static int is_first_word_special(char *s)
-{
-	int i;
-	int	quote;
-	char	**split;
-	char	*cpy;
-
-	i = 0;
-	quote = 0;
-
-	while (s[i] == ' ')
-		i++;
-	while (s[i] && !(s[i] == ' ' && !quote))
-	{
-		if ('*' == s[i] && !quote)
-		{
-			cpy = ft_strdup(s);
-			do_wildcards(&(cpy));
-			split = split_advanced(cpy, " ");
-			free(cpy);
-			if (!split || split[0] == NULL || split[1] == NULL)
-			{
-				free_tab(split);
-				return (0);
-			}
-			free_tab(split);
-			return (1);
-		}
-		if (s[i] == '\'' && quote != 2)
-			quote = (quote + 1) % 2;
-		else if (s[i] == '\"' && quote != 1)
-			quote = (quote + 2) % 4;
-		i++;
-	}
-	return (0);
-}*/
 
 static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 {
@@ -79,18 +42,6 @@ static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 			return (0);
 		}
 	}
-	/* a remettre quand wildcards fonctionnent
-	else if (is_first_word_special(string))
-	{
-		free(string);
-		if (*mots != 0)
-		{
-			ft_putstr_fd("ambiguous redirect\n", 2);
-			g_exit_status = 1;
-			return (0);
-		}
-	}
-	*/
 	else
 	{
 		ft_lstadd_back(mots, ft_lstnew(string));
@@ -168,9 +119,11 @@ char	**split_advanced_redirections(char *s)
 char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 {
 	t_list	*mots;
+	int	j;
 	int	i;
 	char	**ss;
 	char	*string;
+	char	**wildcards;
 
 	mots = 0;
 	i = -1;
@@ -178,12 +131,14 @@ char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 	{
 		if (!ft_memcmp(split[i], ">>", 3))
 		{
-			set_new_rd_out_append(split[i + 1], &(cmd->fd_out), data);
+			if (!set_new_rd_out_append(split[i + 1], &(cmd->fd_out), data))
+				return (NULL);
 			i++;
 		}
 		else if (!ft_memcmp(split[i], ">", 2))
 		{
-			set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out), data);
+			if (!set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out), data))
+				return (NULL);
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
@@ -202,9 +157,24 @@ char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 		}
 		else
 		{
-			string = transform(ft_strdup(split[i]), data);
-			if (string)
-				ft_lstadd_back(&mots, ft_lstnew(string));
+			if (is_in_special('*', split[i]))
+			{
+				wildcards = do_wildcards_word(split[i]);
+				if (!wildcards || !wildcards[0])
+					ft_lstadd_back(&mots, ft_lstnew(ft_strdup(split[i])));
+				else
+				{
+					j = -1;
+					while (wildcards[++j])
+						ft_lstadd_back(&mots, ft_lstnew(ft_strdup(wildcards[j])));
+				}
+			}
+			else
+			{
+				string = transform(ft_strdup(split[i]), data);
+				if (string)
+					ft_lstadd_back(&mots, ft_lstnew(string));
+			}
 		}
 	}
 	ss = list_to_tab(mots);

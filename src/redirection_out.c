@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:09:58 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 16:11:01 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 01:36:17 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,21 @@
 int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data)
 {
 	char	*filename;
-
+	char	**wildcards;
+	
 	close_fd(*rd_out);
-	filename = transform(ft_strdup(filename_brut), data);
+	if (is_in_special('*', filename_brut))
+	{
+		wildcards = do_wildcards_word(filename_brut);
+		if (!wildcards || len_tab(wildcards) > 1)
+			filename = NULL;
+		else if (wildcards[0] == 0)
+			filename = filename_brut;
+		else
+			filename = wildcards[0];
+	}
+	else
+		filename = transform(ft_strdup(filename_brut), data);
 	if (filename)
 	{
 		*rd_out = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0644);
@@ -36,9 +48,21 @@ int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data)
 int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data)
 {
 	char	*filename;
+	char	**wildcards;
 	
 	close_fd(*rd_out);
-	filename = transform(ft_strdup(filename_brut), data);
+	if (is_in_special('*', filename_brut))
+	{
+		wildcards = do_wildcards_word(filename_brut);
+		if (!wildcards || len_tab(wildcards) > 1)
+			filename = NULL;
+		else if (wildcards[0] == 0)
+			filename = filename_brut;
+		else
+			filename = wildcards[0];
+	}
+	else
+		filename = transform(ft_strdup(filename_brut), data);
 	if (filename)
 	{
 		*rd_out = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0644);

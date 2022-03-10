@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/28 15:01:01 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 01:52:22 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ char	*ft_strdup_quote(const char *s)
 
 
 //Because we are in an universe with multiple worlds and instead ckecking only a little word, our ambitious make us checking WORLD ;-P
-void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, int end)
+void	check_if_world_match(struct dirent *dirp, char *s, t_list **wilds, int start, int end)
 {
-	char *temp;
+	//char *temp;
 
 	if (!ft_memcmp(dirp->d_name, ".", 1)
 	|| (start != 0 && ft_memcmp(s, dirp->d_name, start))
@@ -93,6 +93,7 @@ void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, in
 		return;
 	else
 	{
+		/*
 		if (*ss == NULL)
 			*ss = ft_strdup_quote(dirp->d_name);
 		else
@@ -107,13 +108,13 @@ void	check_if_world_match(struct dirent *dirp, char *s, char **ss, int start, in
 			free(temp);
 			temp = *ss;
 			*ss = ft_strjoin(temp, "\'");
-			free(temp);
-		}
+			free(temp);	
+		}*/
+		ft_lstadd_back(wilds, ft_lstnew(ft_strdup(dirp->d_name)));
 	}
 }
 
-
-void	get_current_dir(char *s, char **ss, int start, int end)
+void	get_current_dir(char *s, t_list **wilds, int start, int end)
 {
 	DIR	*dp;
 	char	*pwd;
@@ -139,68 +140,46 @@ void	get_current_dir(char *s, char **ss, int start, int end)
 		if (dirp == NULL)
 			read_next = 0;
 		else
-			check_if_world_match(dirp, s, ss, start, end);
+			check_if_world_match(dirp, s, wilds, start, end);
 	}
 	if (closedir(dp))
 		perror("closedir");
 }
 
-int	ft_sort_str(char ** wilds)
+char	**ft_sort_str(t_list *wilds)
 {
 	char	**split;
 	int	size;
 
-	split = ft_split(*wilds, ' ');
-	free(*wilds);
+	split = list_to_tab(wilds);
 	if (split == NULL)
 		return (0);
 	size = 0;
 	while (split[size])
 		size++;
 	ft_sort_vector(split, size);
+	return (split);/*
 	*wilds = ft_strjoin_vector(size, split, " ");
 	if (*wilds == NULL)
 		return (0);
-	return (1);
+	return (1);*/
 }
 
-int	do_wildcards_word(char **s, int *i)
+char	**do_wildcards_word(char *s)
 {
-	int	start;
-	int	end;
-	char	*ss;
-	int	j;
-	char	*final;
-	char	*wild;
+	t_list	*wilds;
 
-	j = *i;
-	while ((*s)[j] == ' ')
-		j++;
-	start = j;
-	while ((*s)[j] && (*s)[j] != ' ')
-	{
-		if ((*s)[j] == '\'' || (*s)[j] == '"' || (*s)[j] == '$')
-			return 1;
-		j++;
-	}
-	end = j;
-	if (ft_strnstr(*s + start, "*", end - start) == NULL)
-		return 0;
-	ss = malloc(sizeof(char) * (end - start));
-	if (ss == NULL)
-		return 1;
-	ss[end - start] = '\0';
-	ft_memcpy(ss, *s + start, end - start + 1);
-	wild = NULL;
-	get_current_dir(ss, &wild, ft_strchr(ss, '*') - ss, ft_strrchr(ss, '*') - ss);
-	free(ss);
+	wilds = 0;
+	get_current_dir(s, &wilds, ft_strchr(s, '*') - s, ft_strrchr(s, '*') - s);
+	/*
 	if (wild == NULL || !ft_sort_str(&wild))
 	{
 		*i = j -1;
-		return 1;
-	}
-	printf("__%s__",wild);
-	final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
+		return NULL;
+	}*/
+	return (ft_sort_str(wilds));
+	//printf("__%s__",wild);
+	/*final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
 	if (final == NULL && ft_sort_str(&wild))
 	{
 		*i = j -1;
@@ -213,9 +192,9 @@ int	do_wildcards_word(char **s, int *i)
 	free(*s);
 	*s = final;
 	*i = end;
-	return (0);
+	return (0);*/
 }
-
+/*
 int	do_wildcards(char **s)
 {
 	int start;
@@ -233,4 +212,4 @@ int	do_wildcards(char **s)
 	}
 
 	return (0);
-}
+}*/

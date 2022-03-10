@@ -95,4 +95,7 @@ void parseLine(t_cmd **cmd, char *brut, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 
+char	**do_wildcards_word(char *s);
+int	is_in_special(char c, char *s);
+
 #endif

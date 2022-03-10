@@ -1,0 +1,116 @@
+SI  TU SAIS PAS QUOI FAIRE : Y A DES TRUCS +/- FACILE OU +/- TRES CHIANT 
+
+1)
+wildcards : bah j ai code de la merde mdrrrr 
+genre faut refaire les checks 
+des exemples de commandes :
+
+check_end NUL A CHIER :
+*e detecte Makefile : c est good !
+*es detecte    Makefile includes : c est pas good !
+
+mais le partie relou et que j ai mal code c est surtout le check_middle_letters genre
+parce que je fais pas de difference entre 
+*abcd*efgh*ijkl
+et
+*a*b*c*d*e*f*g*h*i*j*k*l*
+
+exemple simple :
+-   *i*l* doit trouver Makefile includes minishell : c est good 
+-   *il* doit trouver que Makefile : c est pas good avec le notre ( normal j ai fait de la ****)
+
+
+
+2)si y a qu une quote / un nombre impaire de quote  : afficher le syntax error
+et set g_exit_statuts a 1
+-cat "
+-echo '
+echo $? affcihe 0
+
+
+"
+3) si la commande se termmine par un pipe, pareil c est une erreur de syntax  ( dans minishell ) !! faut arreter la commande
+je pense c est facile a gerer dans split_advanced, ptet juste un if un check si !ft_memcpr('|', 2)
+
+4)UN TRUC QUI PEUT TE PLAIRE
+c est pas hyper dur a faire masi c est marrant jtrouve
+echo c est une commande chelou :
+tu peux mettre autant de "-n" que tu veux AU DEBUT ca change pas la commande :
+
+echo -n -n -n -n -n -n -n -nr -n lol mdr -n 
+affiche -nr -n lol mdr -n sans \n
+
+et plus exactement tu peux mettre autant de n que tu veux dans tous les -n !
+echo -nnnnnnnnnnnnnnnnn -nnnnnnnnnnnn -nnn -n -nnnnnn -nn -n -nr -n lol mdr -n 
+affiche -nr -n lol mdr -n sans \n
+
+
+5) export tout court sans argument affiche tout l env avec des trucs chelou devant chaque bail
+
+jpeux l faire rapidos ca pcq je sais ou j ai code les signaux interactifs et les heredocs 
+6) si jamais y a un ctrl + c (au sein d une commande ou pendant les heredocs)
+faut pas exec le reste des commandes $$ ||  :
+
+cat || echo oui
+ctrl+c 
+on doit pas afficher le oui !
+cat << mdr || echo non
+ctrl+c 
+on doit pas afficher le non !
+
+7) dans l exec si le retour du fork c est -1 faut se casser de l exec
+c est pas trop claire mais en fait tu peux lancer /minishell avec -ulimit
+une option chelou j ai plus la commande exacte mais jdemanderai a julien qui a test ca sur notre minishell hier x)
+enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et du coup il a lancer un truc avec 5 pipe et je quittais pas l exec enfin c etait de la merde x)
+
+8) si tu fais ./minishell < /dev/urandom globalement le notre doit reagir comme dans bash
+jsp si c est vraiment a gerer mais sur le discord les gens disaient y a un ptit bout de temps que fallait 
+s occuper de ca avec une fonction autorise qu on a pas utilise : isatty jcrois
+
+9) jbonniva a aussi tester ca si t envoies juste 
+- "" dans notre minishell 
+y a un  tout ptit invalid read size 
+comme c est pas un test que jferai tous les jours voila faudra le corriger jle note ici surotut 
+pour le momebt ou on reglera les leaks
+
+10) jpense c est pas complique a faire mais un peu relou
+DU DETAIL ICI 
+quand on fait la commande :
+-$?1
+c est interprete par bash comme $? + 1 et pas comme la variable $?1 
+du coup echo $?1 renvoie 01 genre et pas rien ( en mode la var existe pas)
+
+11) dans export toujours 
+si tu fais genre machin=truc
+ca cree machin avec la valeur truc
+et si tu fais machin+=truc 
+ca ft_strjoin(truc, avec l ancienne valeur de $machin)
+voila pas tres clair
+AUCUNE IDEE SI C EST A GERER OU PAS mais comme ils disent sans argument et que bah techniquement c est pas un argument 
+je le met la
+
+exemple
+si jfais
+export TEAM+=dream
+ca va creer la variable $TEAM qui vaut dream ( concatenation de rien + dream)
+export TEAM+=team 
+mtn $TEAM vaut dreamteam
+
+
+12) jle note ici pcq c est a faire mais jvais essayer de finir demain j ai refait les redirections out proprement
+faut finir les redirections in et y aura nottament cette histoire de heredocs qui va etre un peu chiante 
+
+exemple de commande casse couille 
+cat << mdr && cat << mdr2
+bash s occupe d abord de faire les deux heredocs
+puis parse/execute le reste de la premiere commande
+et si success
+parse/execute le reste de la deuxieme commande
+
+comme on fait pour l instant les heredocs en mm temps que le parsing on execute la premiere puis heredoc la deuxieme que si success pour l instant
+
+13) jvais m en occuper jpense pcq jvois comment faire mais  jle note car a faire
+la commande exit | exit doit pas afficher exit  (comme y a des pipes ca exit pas du coup on doit pas l afficher)
+
+
+
