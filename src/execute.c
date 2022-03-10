@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 14:14:03 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 14:58:48 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,21 @@ int exec_cmds(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 	return (0);
 }
 
+void	analyseLine(t_cmd *cmd, t_data *data)
+{
+	if (!cmd)
+		return ;
+	cmd->cmd = do_redirections(cmd, data);
+	analyseLine(cmd->pipe, data);
+}
+
+
 int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 {
 	int	pipefds[2];
 	t_cmd	*temp;
 
-	parseLine(&cmd, cmd->txt, data);
+	analyseLine(cmd, data);
 	print_cmd(cmd);
 	temp = cmd;
 	nothingSignal();

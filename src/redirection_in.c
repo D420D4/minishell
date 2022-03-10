@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 13:16:54 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 15:22:07 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ char	*no_quote(char *limiter_brut)
 
 }
 
-int	set_new_rd_in_heredoc(char *limiter_brut, int *rd_in)
+int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd)
 {
 	int	pid;
 	int	pipefds[2];
 	int	status;
 	char	*limiter;
 
-	close_fd(*rd_in);
+	close_fd(cmd->fd_heredocs);
 	limiter = no_quote(limiter_brut);
 	if (limiter)
 	{
@@ -146,7 +146,7 @@ int	set_new_rd_in_heredoc(char *limiter_brut, int *rd_in)
 				g_exit_status = 130;
 				return (0);
 			}
-			*rd_in = pipefds[0];
+			cmd->fd_heredocs = pipefds[0];
 			return (1);
 		}
 	}

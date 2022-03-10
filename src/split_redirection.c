@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 13:01:14 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/10 15:24:16 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ char	**split_advanced_redirections(char *s)
 	return (ss);
 }
 
-char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
+char	**do_redirections(t_cmd *cmd, t_data *data)
 {
 	t_list	*mots;
 	int	j;
@@ -125,8 +125,11 @@ char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 	char	*string;
 	char	**wildcards;
 
+	char	**split = cmd->parsing_pre_analysis;
 	mots = 0;
 	i = -1;
+	if (!cmd->parsing_pre_analysis)
+		return (NULL);
 	while(split[++i])
 	{
 		if (!ft_memcmp(split[i], ">>", 3))
@@ -143,11 +146,7 @@ char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
 		{
-			if (!set_new_rd_in_heredoc(split[i + 1], &(cmd->fd_in)))
-			{
-				ft_lstclear(&mots,&free);
-				return (NULL);
-			}
+			cmd->fd_in = cmd->fd_heredocs;
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<", 2))
@@ -180,5 +179,7 @@ char	**do_redirections(char **split, t_cmd *cmd, t_data *data)
 	}
 	ss = list_to_tab(mots);
 	ft_lstclear(&mots,&free);
+	if (cmd->fd_in != cmd->fd_heredocs)
+		close_fd(cmd->fd_heredocs);
 	return (ss);
 }

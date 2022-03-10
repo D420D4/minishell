@@ -128,27 +128,33 @@ int progress(t_cmd *cmd)
 	free(nncmd);
 	return (1);
 }
-//
-//void do_parse_line(t_cmd **cmd, t_data *data)
-//{
-//	if (!cmd || !*cmd)
-//		return;
-//	do_parse_line(&(*cmd)->soon, data);
-//	do_parse_line(&(*cmd)->on_success, data);
-//	do_parse_line(&(*cmd)->on_fail, data);
-//	parseLine(cmd, (*cmd)->txt, data);
-//}
-//
+
+void do_preparse_line(t_cmd **cmd, t_data *data)
+{
+	if (!cmd || !*cmd)
+		return;
+	if ((*cmd)->soon)
+		do_preparse_line(&(*cmd)->soon, data);
+	else
+		preparseLine(cmd, (*cmd)->txt, data);
+	do_preparse_line(&(*cmd)->on_fail, data);
+	do_preparse_line(&(*cmd)->on_success, data);
+}
+
 
 
 void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
-	if (!brut || brut[0] == '\0')
+	if (!brut) // ctrl +d
 		return;
+	if (brut[0] == '\0') //ligne vide (on exit pas, on exec une commande vide)
+	{
+		*cmd = new_cmd();
+		return;
+	}
 	if (cmd)
 		*cmd = new_cmd_txt(brut);
-
 	progress(*cmd);
-	//do_parse_line(cmd, data);
+	do_preparse_line(cmd, data);
 	(void) data;
 }

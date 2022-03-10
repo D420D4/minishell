@@ -37,9 +37,10 @@ typedef struct s_cmd
 	struct s_cmd *on_fail;
 	int fd_out;
 	int fd_in;
+	int fd_heredocs;
 	char	*cmd_path;
-	char	**cmd_argv;
 	int	pid;
+	char	**parsing_pre_analysis;
 }	t_cmd;
 
 extern int g_exit_status;
@@ -84,14 +85,14 @@ void	execSignal(void);
 void	nothingSignal(void);
 int	len_tab(char **tab);
 int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data);
-int	set_new_rd_in_heredoc(char *limiter, int *rd_in);
+int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd);
 int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
 int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
-char	**do_redirections(char **split, t_cmd *cmd, t_data *data);
+char	**do_redirections(t_cmd *cmd, t_data *data);
 void 	print_header(void);
 t_cmd	*new_cmd(void);
 char **split_advanced(char *s, char *c);
-void parseLine(t_cmd **cmd, char *brut, t_data *data);
+void preparseLine(t_cmd **cmd, char *brut, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 

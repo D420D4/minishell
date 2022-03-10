@@ -57,18 +57,3 @@ void print_cmd(t_cmd *cmd)
 		print_cmd(cmd->on_fail);
 	}
 }
-
-void	print_path_argv(t_cmd *cmd)
-{
-	int	i;
-
-	if(!cmd)
-	{
-		printf("ERROR cmd\n");
-		return;
-	}
-	printf("cmd path = %s\n", cmd->cmd_path);
-	i = -1;
-	while(cmd->cmd_argv[++i])
-		printf("argv n %i = %s\n", i , cmd->cmd_argv[i]);
-}
