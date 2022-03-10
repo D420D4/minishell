@@ -22,11 +22,11 @@ int main(int ac, char **av, char **envp)
 		getCmdSignal();
 		cmd = getCmd(&data);
 		if (cmd)
-			exec_cmds(cmd, &data);
+			exec_cmds(cmd, cmd, &data);
 		else
 		{
 			g_exit_status = 0;
-			cmd_exit(cmd, &data); // gestion du ctrl + D
+			cmd_exit(cmd, cmd, &data); // gestion du ctrl + D
 		}
 		free_cmd(cmd);
 	}

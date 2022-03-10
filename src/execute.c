@@ -31,7 +31,7 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 			dup2(cmd->fd_in, STDIN_FILENO);
 			dup2(cmd->fd_out, STDOUT_FILENO);
 		}
-		if (execute_builtin(cmd, data))
+		if (execute_builtin(cmd, 0, data))
 		{
 			tab = NULL;
 			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
@@ -84,21 +84,21 @@ void wait_cmd(t_cmd *cmd)
 		cmd_signal(WTERMSIG(status));
 }
 
-int exec_cmds(t_cmd *cmd, t_data *data)
+int exec_cmds(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 {
 	if (cmd->soon)
-		exec_cmds(cmd->soon, data);
+		exec_cmds(cmd->soon, cmd_parent, data);
 	else
-		exec_cmd(cmd, data);
+		exec_cmd(cmd, cmd_parent, data);
 	if (cmd->on_fail && g_exit_status)
-		exec_cmds(cmd->on_fail, data);
+		exec_cmds(cmd->on_fail, cmd_parent, data);
 	if (cmd->on_success && !g_exit_status)
-		exec_cmds(cmd->on_success, data);
+		exec_cmds(cmd->on_success, cmd_parent, data);
 
 	return (0);
 }
 
-int exec_cmd(t_cmd *cmd, t_data *data)
+int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 {
 	int	pipefds[2];
 	t_cmd	*temp;
@@ -123,7 +123,7 @@ int exec_cmd(t_cmd *cmd, t_data *data)
 				close_fd(pipefds[0]);
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
-		if (cmd == temp && cmd->pipe == NULL && !execute_builtin(cmd, data))
+		if (cmd == temp && cmd->pipe == NULL && !execute_builtin(cmd, cmd_parent,data))
 			return (0);
 		exec_cmd_in_child(cmd, data, pipefds);
 		cmd = cmd->pipe;

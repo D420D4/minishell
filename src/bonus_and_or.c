@@ -124,7 +124,8 @@ int progress(t_cmd *cmd)
 	progress(cmd->soon);
 	progress(cmd->on_success);
 	progress(cmd->on_fail);
-
+	free(ncmd);
+	free(nncmd);
 	return (1);
 }
 //
@@ -144,7 +145,7 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
 	if (!brut || brut[0] == '\0')
 		return;
-	if (*cmd)
+	if (cmd)
 		*cmd = new_cmd_txt(brut);
 
 	progress(*cmd);

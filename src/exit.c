@@ -39,7 +39,7 @@ static int	exit_code(char *cmd)
 	return ((int) code);
 }
 
-int	cmd_exit(t_cmd *cmd, t_data *data)
+int	cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	int	ret;
 
@@ -68,7 +68,7 @@ int	cmd_exit(t_cmd *cmd, t_data *data)
 		}
 	}
 	ft_lstclear(&(data->env), &free);
-	free_cmd(cmd);
+	free_cmd(cmd_parent);
 	exit_clean();
 	exit(ret);
 }

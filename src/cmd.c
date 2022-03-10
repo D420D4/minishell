@@ -54,6 +54,14 @@ void	free_cmd(t_cmd *cmd)
 		free_tab(cmd->cmd_argv);
 	if (cmd->cmd)
 		free_tab(cmd->cmd);
+	if (cmd->txt)
+		free(cmd->txt);
+	if (cmd->soon)
+		free_cmd(cmd->soon);
+	if (cmd->on_fail)
+		free_cmd(cmd->on_fail);
+	if (cmd->on_success)
+		free_cmd(cmd->on_success);
 	free(cmd);
 }
 
@@ -176,6 +184,7 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	if (!new_brut)
 		return;
 	split = split_advanced(new_brut, " ");
+	free(new_brut);
 	if (!split)
 		return;
 	(*cmd)->cmd = do_redirections(split, *cmd, data);
@@ -187,6 +196,7 @@ void parseLine(t_cmd **cmd, char *brut, t_data *data)
 	char 	**bruts;
 	bruts = split_advanced(brut, "|");
 	parseLine_no_pipe(cmd, bruts, data);
+	free_tab(bruts);
 }
 
 
@@ -245,7 +255,6 @@ t_cmd *getCmd(t_data *data)
 		return (0);
 	if (brut[0] != '\0')
 		add_history(brut); //on ajoute pas les lignes vides a l histo
-	cmd = new_cmd();
 	parse_group(&cmd, brut, data);
 //	parseLine(&cmd, bruts, data);
 	free(brut);

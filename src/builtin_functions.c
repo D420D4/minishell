@@ -19,7 +19,7 @@ int	is_in_builtin(char *cmd_name)
 	return (0);
 }
 
-int	execute_builtin(t_cmd *cmd, t_data *data)
+int	execute_builtin(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	if (cmd->cmd_path == NULL)
 		return (0);
@@ -36,7 +36,7 @@ int	execute_builtin(t_cmd *cmd, t_data *data)
 	else if (!ft_memcmp(cmd->cmd_path, "pwd", 4))
 		g_exit_status = cmd_pwd(cmd);
 	else if (!ft_memcmp(cmd->cmd_path, "exit", 5))
-		g_exit_status = cmd_exit(cmd, data);
+		g_exit_status = cmd_exit(cmd, cmd_parent, data);
 	else
 		return (1);
 	return (0);
