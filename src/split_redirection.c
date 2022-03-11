@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 15:24:16 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:18:38 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 		{
 			if (is_in_special('*', split[i]))
 			{
-				wildcards = do_wildcards_word(split[i]);
+				wildcards = do_wildcards_word(split[i], data);
 				if (!wildcards || !wildcards[0])
 					ft_lstadd_back(&mots, ft_lstnew(ft_strdup(split[i])));
 				else

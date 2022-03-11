@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 14:58:48 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/11 18:31:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 	t_cmd	*temp;
 
 	analyseLine(cmd, data);
-	print_cmd(cmd);
+	//print_cmd(cmd);
 	temp = cmd;
 	nothingSignal();
 	while (cmd)

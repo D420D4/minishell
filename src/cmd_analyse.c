@@ -96,7 +96,6 @@ int inner_quote_1(char **s, int *i, t_data *data)
 	ft_memcpy(ss + *i, *s + *i + 1,f - *i - 1);
 	ft_memcpy(ss + f - 1, *s + f + 1, ft_strlen(*s + f + 1));
 	*i = f - 1;
-
 	free(*s);
 	*s = ss;
 	return (0);
@@ -121,7 +120,6 @@ int	inner_quote_2(char **s, int *i)
 	ft_memcpy(ss + *i, *s + *i + 1,f - *i - 1);
 	ft_memcpy(ss + f - 1, *s + f + 1, ft_strlen(*s + f + 1));
 	*i = f - 1;
-
 	free(*s);
 	*s = ss;
 	return (0);
@@ -141,21 +139,25 @@ char	*transform(char *original, t_data *data)
 	while (ss[i])
 	{
 		if (ss[i] == '"' && ++not_null)
+		{
 			if (inner_quote_1(&ss, &i, data))
 			{
 				free(ss);
 				return (0);
 			}
-		if (ss[i] == '\'' && ++not_null)
+		}
+		else if (ss[i] == '\'' && ++not_null) //LES ELSES SONT TURBO IMPORTANT !!!!  sinon cas d erreur ""'' ://///////
+		{
 			if (inner_quote_2(&ss, &i))
-
 			{
 				free(ss);
 				return (0);
 			}
-		if (ss[i] == '$')
+		}
+		else if (ss[i] == '$')
 			do_var(&ss, &i, data);
-		i++;
+		else
+			i++;
 	}
 	if (ss[0] == '\0' && !not_null)
 	{

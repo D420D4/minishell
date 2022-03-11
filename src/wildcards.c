@@ -6,56 +6,59 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 14:10:19 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/11 16:46:37 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	check_end_letters(char *d_name, char *s, int end)
+int	check_start_sequence(char *sequence, char **d_name, char **s, int i)
 {
-	int	i;
-	int	j;
+	int	len_sequence;
 
-	i = end + 1;
-	j = 0;
-	while (s[i] && d_name[j])
+	if (!sequence || sequence[0] == '\0')
 	{
-		while(d_name[j] && d_name[j] != s[i])
-			j++;
-		if (!d_name[j])
-			return (0);
-		i++;
-		j++;
+		free(sequence);
+		return (1);
 	}
+	len_sequence = ft_strlen(sequence);
+	if (ft_memcmp(sequence, *d_name, len_sequence))
+	{
+		free(sequence);
+		return (0);
+	}
+	free(sequence);
+	*d_name = *d_name + len_sequence;
+	*s = *s + i + 1;
 	return (1);
 }
 
-int	check_middle_end_letters(char *d_name, char *s, int start, int end)
+int	check_end_sequence(char *sequence, char *d_name)
 {
-	int	i;
-	int	j;
+	int	len;
+	int	len_sequence;
 
-	i = start;
-	j = start;
-	while (i < end)
+	if (!sequence || sequence[0] == '\0')
 	{
-		if (s[i] != '*')
-		{
-			while(d_name[j] && d_name[j] != s[i])
-				j++;
-			if (!d_name[j])
-				return (0);
-		}
-		i++;
+		free(sequence);
+		return (1);
 	}
-	if (ft_strlen(d_name + j) < ft_strlen(s + end + 1))
+	len = ft_strlen(d_name);
+	len_sequence = ft_strlen(sequence);
+	if (len < len_sequence)
+	{
+		free(sequence);
 		return (0);
-	else
-		j += ft_strlen(d_name + j) - ft_strlen(s + end + 1);
-	return (check_end_letters(d_name + j, s, end));
+	}
+	if (ft_memcmp(sequence, d_name + len - len_sequence, len_sequence + 1))
+	{
+		free(sequence);
+		return (0);
+	}
+	free(sequence);
+	return (1);
 }
-
+/*
 char	*ft_strdup_quote(const char *s)
 {
 	int		i;
@@ -80,41 +83,105 @@ char	*ft_strdup_quote(const char *s)
 
 	return (ss);
 }
+*/
 
+int	check_first_wildards(char **s, char **d_name, t_data *data)
+{
+	int	i;
+	int	quote;
+	char	*sub;
+
+	i = 0;
+	quote = 0;
+	while ((*s)[i])
+	{
+		if ((*s)[i] == '*' && !quote)
+		{
+			sub = transform(ft_substr(*s, 0, i), data);
+			if (!check_start_sequence(sub, d_name, s, i))
+				return (0);
+			else
+				return (1);
+		}
+		else if ((*s)[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if ((*s)[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	return (1);
+}
+
+int	check_sequence(char *sequence, char **d_name)
+{
+	int	len;
+	char	*search;
+
+	if (!sequence || sequence[0] == '\0')
+	{
+		free(sequence);
+		return (1);
+	}
+	len = ft_strlen(*d_name);
+	search = ft_strnstr(*d_name, sequence, len);
+	if (search == NULL)
+	{
+		free(sequence);
+		return (0);
+	}
+	*d_name = search + ft_strlen(sequence);
+	free(sequence);
+	return (1);
+}
+
+int	check_wildards(char *s, char *d_name, t_data *data)
+{
+	int	i;
+	int	quote;
+	int	d;
+	char	*sub;
+
+	i = 0;
+	d = 0;
+	quote = 0;
+	while (s[i])
+	{
+		if (s[i] == '*' && !quote)
+		{
+			sub = transform(ft_substr(s, d, i - d), data);
+			if (!check_sequence(sub, &d_name))
+				return (0);
+			d = i + 1;
+		}
+		else if (s[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (s[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	sub = transform(ft_substr(s, d, i - d), data);
+	if (!check_end_sequence(sub, d_name))
+		return (0);
+	return (1);
+}
 
 //Because we are in an universe with multiple worlds and instead ckecking only a little word, our ambitious make us checking WORLD ;-P
-void	check_if_world_match(struct dirent *dirp, char *s, t_list **wilds, int start, int end)
+void	check_if_world_match(char *d_name, char *s, t_list **wilds, t_data *data)
 {
-	//char *temp;
+	char	*temp;
 
-	if (!ft_memcmp(dirp->d_name, ".", 1)
-	|| (start != 0 && ft_memcmp(s, dirp->d_name, start))
-	|| !check_middle_end_letters(dirp->d_name, s, start, end))
-		return;
-	else
+	if (ft_memcmp(d_name, ".", 1))
 	{
-		/*
-		if (*ss == NULL)
-			*ss = ft_strdup_quote(dirp->d_name);
-		else
+		temp = d_name;
+		if (check_first_wildards(&s, &d_name, data))
 		{
-			temp = *ss;
-			*ss = ft_strjoin(temp, " '");
-			free(temp);
-			if (*ss == NULL)
-				return ;
-			temp = *ss;
-			*ss = ft_strjoin(temp, dirp->d_name);
-			free(temp);
-			temp = *ss;
-			*ss = ft_strjoin(temp, "\'");
-			free(temp);	
-		}*/
-		ft_lstadd_back(wilds, ft_lstnew(ft_strdup(dirp->d_name)));
+			if (check_wildards(s, d_name, data))
+				ft_lstadd_back(wilds, ft_lstnew(ft_strdup(temp)));
+		}
 	}
 }
 
-void	get_current_dir(char *s, t_list **wilds, int start, int end)
+void	get_current_dir(char *s, t_list **wilds, t_data *data)
 {
 	DIR	*dp;
 	char	*pwd;
@@ -140,7 +207,7 @@ void	get_current_dir(char *s, t_list **wilds, int start, int end)
 		if (dirp == NULL)
 			read_next = 0;
 		else
-			check_if_world_match(dirp, s, wilds, start, end);
+			check_if_world_match(dirp->d_name, s, wilds, data);
 	}
 	if (closedir(dp))
 		perror("closedir");
@@ -158,58 +225,19 @@ char	**ft_sort_str(t_list *wilds)
 	while (split[size])
 		size++;
 	ft_sort_vector(split, size);
-	return (split);/*
-	*wilds = ft_strjoin_vector(size, split, " ");
-	if (*wilds == NULL)
-		return (0);
-	return (1);*/
+	return (split);
 }
 
-char	**do_wildcards_word(char *s)
+char	**do_wildcards_word(char *s, t_data *data)
 {
 	t_list	*wilds;
+	char	*cpy;
 
 	wilds = 0;
-	get_current_dir(s, &wilds, ft_strchr(s, '*') - s, ft_strrchr(s, '*') - s);
-	/*
-	if (wild == NULL || !ft_sort_str(&wild))
-	{
-		*i = j -1;
-		return NULL;
-	}*/
+	cpy = ft_strdup(s);
+	if (!cpy)
+		return (NULL);
+	get_current_dir(cpy, &wilds, data);
+	free(cpy);
 	return (ft_sort_str(wilds));
-	//printf("__%s__",wild);
-	/*final = malloc(sizeof(char) * (ft_strlen(*s) - (end - start) + ft_strlen(wild) + 1));
-	if (final == NULL && ft_sort_str(&wild))
-	{
-		*i = j -1;
-		return 1;
-	}
-	//printf("%d %d\n", start, j);
-	ft_memcpy(final, *s, start);
-	ft_memcpy(final + start, wild, ft_strlen(wild));
-	ft_memcpy(final + start + ft_strlen(wild), *s + end, ft_strlen(*s + end) + 1);
-	free(*s);
-	*s = final;
-	*i = end;
-	return (0);*/
 }
-/*
-int	do_wildcards(char **s)
-{
-	int start;
-
-	start = 0;
-	while ((*s)[start])
-	{
-		if (start == 0 || (*s)[start] == ' ')
-		{
-			while ((*s)[start] == ' ')
-				start++;
-			do_wildcards_word(s, &start);
-		}
-		start++;
-	}
-
-	return (0);
-}*/

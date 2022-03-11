@@ -60,7 +60,6 @@ int	exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
 int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 void	getCmdSignal(void);
 char *getvalue(char *s, t_data *data);
-int do_wildcards(char **s);
 char	**split_advanced_redirections(char *s);
 
 int execute_builtin(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
@@ -96,7 +95,7 @@ void preparseLine(t_cmd **cmd, char *brut, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 
-char	**do_wildcards_word(char *s);
+char	**do_wildcards_word(char *s, t_data *data);
 int	is_in_special(char c, char *s);
 
 #endif
