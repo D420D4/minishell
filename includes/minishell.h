@@ -91,11 +91,12 @@ char	**do_redirections(t_cmd *cmd, t_data *data);
 void 	print_header(void);
 t_cmd	*new_cmd(void);
 char **split_advanced(char *s, char *c);
-void preparseLine(t_cmd **cmd, char *brut, t_data *data);
+int	preparseLine(t_cmd **cmd, char *brut, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 
 char	**do_wildcards_word(char *s, t_data *data);
 int	is_in_special(char c, char *s);
+int	is_only_space(char *string);
 
 #endif

@@ -6,24 +6,11 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 13:18:38 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/12 21:56:28 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
-
-static int	is_only_space(char *string)
-{
-	int i;
-
-	i = -1;
-	while (string[++i])
-	{
-		if (string[i] != ' ')
-			return (0);
-	}
-	return (1);
-}
 
 static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 {
@@ -161,7 +148,7 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 			{
 				wildcards = do_wildcards_word(split[i], data);
 				if (!wildcards || !wildcards[0])
-					ft_lstadd_back(&mots, ft_lstnew(ft_strdup(split[i])));
+					ft_lstadd_back(&mots, ft_lstnew(transform(ft_strdup(split[i]), data)));
 				else
 				{
 					j = -1;

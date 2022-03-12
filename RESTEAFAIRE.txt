@@ -1,37 +1,5 @@
 SI  TU SAIS PAS QUOI FAIRE : Y A DES TRUCS +/- FACILE OU +/- TRES CHIANT 
 
-1)
-wildcards : bah j ai code de la merde mdrrrr 
-genre faut refaire les checks 
-des exemples de commandes :
-
-check_end NUL A CHIER :
-*e detecte Makefile : c est good !
-*es detecte    Makefile includes : c est pas good !
-
-mais le partie relou et que j ai mal code c est surtout le check_middle_letters genre
-parce que je fais pas de difference entre 
-*abcd*efgh*ijkl
-et
-*a*b*c*d*e*f*g*h*i*j*k*l*
-
-exemple simple :
--   *i*l* doit trouver Makefile includes minishell : c est good 
--   *il* doit trouver que Makefile : c est pas good avec le notre ( normal j ai fait de la ****)
-
-
-
-2)si y a qu une quote / un nombre impaire de quote  : afficher le syntax error
-et set g_exit_statuts a 1
--cat "
--echo '
-echo $? affcihe 0
-
-
-"
-3) si la commande se termmine par un pipe, pareil c est une erreur de syntax  ( dans minishell ) !! faut arreter la commande
-je pense c est facile a gerer dans split_advanced, ptet juste un if un check si !ft_memcpr('|', 2)
-
 4)UN TRUC QUI PEUT TE PLAIRE
 c est pas hyper dur a faire masi c est marrant jtrouve
 echo c est une commande chelou :
@@ -95,22 +63,5 @@ export TEAM+=dream
 ca va creer la variable $TEAM qui vaut dream ( concatenation de rien + dream)
 export TEAM+=team 
 mtn $TEAM vaut dreamteam
-
-
-12) jle note ici pcq c est a faire mais jvais essayer de finir demain j ai refait les redirections out proprement
-faut finir les redirections in et y aura nottament cette histoire de heredocs qui va etre un peu chiante 
-
-exemple de commande casse couille 
-cat << mdr && cat << mdr2
-bash s occupe d abord de faire les deux heredocs
-puis parse/execute le reste de la premiere commande
-et si success
-parse/execute le reste de la deuxieme commande
-
-comme on fait pour l instant les heredocs en mm temps que le parsing on execute la premiere puis heredoc la deuxieme que si success pour l instant
-
-13) jvais m en occuper jpense pcq jvois comment faire mais  jle note car a faire
-la commande exit | exit doit pas afficher exit  (comme y a des pipes ca exit pas du coup on doit pas l afficher)
-
 
 

@@ -129,32 +129,70 @@ int progress(t_cmd *cmd)
 	return (1);
 }
 
-void do_preparse_line(t_cmd **cmd, t_data *data)
+int	do_preparse_line(t_cmd **cmd, t_data *data)
 {
 	if (!cmd || !*cmd)
-		return;
+		return (1);
 	if ((*cmd)->soon)
 		do_preparse_line(&(*cmd)->soon, data);
 	else
-		preparseLine(cmd, (*cmd)->txt, data);
+	{
+		if (!preparseLine(cmd, (*cmd)->txt, data))
+			return (0);
+	}
 	do_preparse_line(&(*cmd)->on_fail, data);
 	do_preparse_line(&(*cmd)->on_success, data);
+	return (1);
 }
 
+int	check_syntax(char *brut)
+{
+	int	i;
+	int	quote;
+	int	nb_par;
 
+	i = 0;
+	nb_par = 0;
+	quote = 0;
+	while (brut[i] && nb_par >= 0)
+	{
+		if (!quote && brut[i] == '(')
+			nb_par++;
+		else if (!quote && brut[i] == ')')
+			nb_par--;
+		else if (brut[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (brut[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	if (nb_par != 0 || quote > 0)
+		return (0);
+	return (1);
+}
 
 void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
 	if (!brut) // ctrl +d
 		return;
 	if (brut[0] == '\0') //ligne vide (on exit pas, on exec une commande vide)
-	{
 		*cmd = new_cmd();
-		return;
+	else if (!check_syntax(brut))
+	{
+		ft_putstr_fd("syntax error\n", 2);
+		g_exit_status = 2;
+		*cmd = new_cmd();
 	}
-	if (cmd)
+	else
+	{
 		*cmd = new_cmd_txt(brut);
-	progress(*cmd);
-	do_preparse_line(cmd, data);
-	(void) data;
+		progress(*cmd);
+		if (!do_preparse_line(cmd, data)) // gestion erreur syntaxe vide entre deux pipes
+		{
+			ft_putstr_fd("syntax error\n", 2);
+			g_exit_status = 2;
+			free_cmd(*cmd);
+			*cmd = new_cmd();
+		}
+	}
 }

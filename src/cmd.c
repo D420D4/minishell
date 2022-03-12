@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/10 15:26:28 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/12 22:45:34 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,6 @@ char **split_advanced(char *s, char *c)
 	d = 0;
 	quote = 0;
 	mots = 0;
-	/*
-	if (!ft_memcmp(c, " ", 2))
-	{
-		while (is_in_special('*', s))
-			if (do_wildcards(&s))
-				return (0);
-	}*/
 
 	i = 0;
 	while (i <= ft_strlen(s))
@@ -123,7 +116,14 @@ char **split_advanced(char *s, char *c)
 				}
 			}
 			else
+			{
 				free(string);
+				if (!ft_memcmp(c, "|", 2))
+				{
+					ft_lstclear(&mots, &free);
+					return (0);
+				}
+			}
 			d = i + ft_strlen(c);
 		}
 		if (s[i] == '\'' && quote != 2)
@@ -213,38 +213,44 @@ int	do_heredocs(t_cmd *cmd)
 	return (1);
 }
 
-void preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
+int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 {
 	char	**split;
 	char	*new_brut;
 
-	if (!bruts || !*bruts)
-		return;
+	if (!bruts)
+		return (0);
+	if (!*bruts)
+		return (1);
+	if (is_only_space(*bruts))
+		return (0);
 	if (!*cmd)
 		*cmd = new_cmd();
 	split = split_advanced_redirections(*bruts);
 	if (!split)
-		return;
+		return (0);
 	new_brut = ft_strjoin_vector(len_tab(split), split, " ");
 	free_tab(split);
 	if (!new_brut)
-		return;
+		return (0);
 	split = split_advanced(new_brut, " ");
 	free(new_brut);
 	if (!split)
-		return;
+		return (0);
 	(*cmd)->parsing_pre_analysis = split;
 	if (!do_heredocs(*cmd))
-		return;
-	preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data);
+		return (0);
+	return (preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data));
 }
 
-void preparseLine(t_cmd **cmd, char *brut, t_data *data)
+int	preparseLine(t_cmd **cmd, char *brut, t_data *data)
 {
 	char 	**bruts;
 	bruts = split_advanced(brut, "|");
-	preparseLine_no_pipe(cmd, bruts, data);
+	if (!preparseLine_no_pipe(cmd, bruts, data))
+		return (0);
 	free_tab(bruts);
+	return (1);
 }
 
 int	get_startingline(char **line, t_data *data)

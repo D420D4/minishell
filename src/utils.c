@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 18:53:14 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/12 21:56:36 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,16 +137,14 @@ int	ft_strcmp(char *s1, char *s2)
 		c1 = s1[0];
 		c2 = s2[0];
 		if (c1 >= 'A' && c1 <= 'Z')
-			c1 +=32;
+			c1 += 32;
 		if (c2 >= 'A' && c2 <= 'Z')
-			c2 +=32;
+			c2 += 32;
 		s1++;
 		s2++;
 	}
-	if (!*s1 && s2 && c1 == c2)
-		return (-1);
-	if (!*s2 && s1 && c1 == c2)
-		return (1);
+	if (c1 == c2)
+		return (s1[0] - s2[0]);
 	return (c1 - c2);
 }
 
@@ -186,4 +184,17 @@ int	len_tab(char **tab)
 	while (tab[size])
 		size++;
 	return (size);
+}
+
+int	is_only_space(char *string)
+{
+	int i;
+
+	i = -1;
+	while (string[++i])
+	{
+		if (string[i] != ' ')
+			return (0);
+	}
+	return (1);
 }
