@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 02:22:17 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/20 03:22:56 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/13 01:27:56 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int cmd_export(t_cmd *cmd, t_data *data)
 		while (cmd->cmd[i][j] && cmd->cmd[i][j] != '='
 			&& is_valid_identifier(cmd->cmd[i], j))
 			j++;
-		if (cmd->cmd[i][j] == '=')
+		if (cmd->cmd[i][j] == '=' && j != 0)
 		{
 			lst = data->env;
 			while (lst && !added)
@@ -58,7 +58,7 @@ int cmd_export(t_cmd *cmd, t_data *data)
 			if (!added)
 				ft_lstadd_back(&(data->env), ft_lstnew(ft_strdup(cmd->cmd[i])));
 		}
-		else if (cmd->cmd[i][j] && !is_valid_identifier(cmd->cmd[i], j))
+		else//if (cmd->cmd[i][j] && !is_valid_identifier(cmd->cmd[i], j))
 		{
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(cmd->cmd[i], 2);

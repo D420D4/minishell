@@ -24,6 +24,8 @@ char *substring(char *s, char *c)
 	i = 1;
 	while (s[i] && !is_in(s[i], c))
 		i++;
+	if (i == 1 && (s[i] == '\0' || s[i] == ' '))
+		return (NULL);
 	ss = malloc(i + 1);
 	if (!ss)
 		return (0);
@@ -43,13 +45,14 @@ void do_var(char **s, int *f, t_data *data)
 	char *var_name;
 	char *var_value;
 
-	var_name = substring((*s) + *f, " $\"");
-	if (!var_name || ft_strlen(var_name) == 1)
+	var_name = substring((*s) + *f, "' $\"");
+	if (!var_name)
 	{
+		(*f)++;
 		free(var_name);
 		return;
 	}
-	if (ft_memcmp(var_name, "$?", 3))
+	if (ft_memcmp(var_name, "$?", 2))
 	{
 		var_value = getvalue(var_name + 1, data);
 	}
@@ -69,7 +72,7 @@ void do_var(char **s, int *f, t_data *data)
 			  (*s) + *f + ft_strlen(var_name), ft_strlen((*s) + *f + ft_strlen(var_name)) + 1);
 	free(*s);
 	free(var_name);
-	*f = *f + ft_strlen(var_value) - 1;
+	*f = *f + ft_strlen(var_value);
 	*s = ss;
 }
 
@@ -83,7 +86,8 @@ int inner_quote_1(char **s, int *i, t_data *data)
 	{
 		if ((*s)[f] == '$')
 			do_var(s, &f, data);
-		f++;
+		else
+			f++;
 	}
 	if (!(*s)[f])
 	{

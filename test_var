@@ -3,3 +3,9 @@ echo $test
 echo $test$test
 echo "$test$test"
 echo '$test$test'
+echo $
+echo $""a $'' | cat -e
+echo $"$HOME"
+echo $'$HOME'
+echo abc$
+echo ?$

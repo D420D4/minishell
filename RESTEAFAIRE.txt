@@ -35,19 +35,6 @@ enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et
 jsp si c est vraiment a gerer mais sur le discord les gens disaient y a un ptit bout de temps que fallait 
 s occuper de ca avec une fonction autorise qu on a pas utilise : isatty jcrois
 
-9) jbonniva a aussi tester ca si t envoies juste 
-- "" dans notre minishell 
-y a un  tout ptit invalid read size 
-comme c est pas un test que jferai tous les jours voila faudra le corriger jle note ici surotut 
-pour le momebt ou on reglera les leaks
-
-10) jpense c est pas complique a faire mais un peu relou
-DU DETAIL ICI 
-quand on fait la commande :
--$?1
-c est interprete par bash comme $? + 1 et pas comme la variable $?1 
-du coup echo $?1 renvoie 01 genre et pas rien ( en mode la var existe pas)
-
 11) dans export toujours 
 si tu fais genre machin=truc
 ca cree machin avec la valeur truc

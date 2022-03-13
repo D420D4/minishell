@@ -40,6 +40,8 @@ char *getvalue(char *s, t_data *data)
 	t_list *lst;
 
 	j = ft_strlen(s);
+	if (j == 0)
+		return (NULL);
 	lst = data->env;
 	while (lst)
 		if (!ft_strncmp(s, (char *) lst->content, j)
