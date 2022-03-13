@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 18:31:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/13 15:49:55 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void cmd_signal(int sig)
 	}
 }
 
-void wait_cmd(t_cmd *cmd)
+int	wait_cmd(t_cmd *cmd, t_cmd *cmd_parent)
 {
 	int status;
 
@@ -76,26 +76,46 @@ void wait_cmd(t_cmd *cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) == -1)
 			perror("waitpid");
+		if (cmd_parent->bonus && __WIFSIGNALED(status))
+		{
+			cmd_signal(WTERMSIG(status));
+			return (0);
+		}
 		cmd = cmd->pipe;
 	}
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
 	else if (__WIFSIGNALED(status))
+	{
 		cmd_signal(WTERMSIG(status));
+		return (0);
+	}
+	return (1);
 }
 
-int exec_cmds(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
+int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 {
 	if (cmd->soon)
-		exec_cmds(cmd->soon, cmd_parent, data);
+	{
+		if (!exec_cmds(cmd->soon, cmd_parent, data))
+			return (0);
+	}
 	else
-		exec_cmd(cmd, cmd_parent, data);
+	{
+		if (!exec_cmd(cmd, cmd_parent, data))
+			return (0);
+	}
 	if (cmd->on_fail && g_exit_status)
-		exec_cmds(cmd->on_fail, cmd_parent, data);
+	{
+		if (!exec_cmds(cmd->on_fail, cmd_parent, data))
+			return (0);
+	}
 	if (cmd->on_success && !g_exit_status)
-		exec_cmds(cmd->on_success, cmd_parent, data);
-
-	return (0);
+	{
+		if (!exec_cmds(cmd->on_success, cmd_parent, data))
+			return (0);
+	}
+	return (1);
 }
 
 void	analyseLine(t_cmd *cmd, t_data *data)
@@ -137,11 +157,5 @@ int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 		exec_cmd_in_child(cmd, data, pipefds);
 		cmd = cmd->pipe;
 	}
-	wait_cmd(temp);/*
-	if (g_exit_status && cmd->on_fail)
-		exec_cmd(cmd->on_fail, data);
-	if (!g_exit_status && cmd->on_success)
-		exec_cmd(cmd->on_success, data);
-*/
-	return (0);
+	return (wait_cmd(temp, cmd_parent));
 }

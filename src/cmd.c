@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/12 22:45:34 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/13 15:43:16 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_cmd *new_cmd(void)
 	cmd->parsing_pre_analysis = 0;
 	cmd->pipe = 0;
 	cmd->fd_heredocs = -1;
+	cmd->bonus = 0;
 	return (cmd);
 }
 
@@ -41,8 +42,10 @@ t_cmd *new_cmd_txt(char *txt)
 	if (!cmd)
 		return (0);
 	cmd->txt = ft_strdup(txt);
+	cmd->bonus = !(is_finish(txt));
 	return (cmd);
 }
+
 void	free_cmd(t_cmd *cmd)
 {
 	if (!cmd)
@@ -239,16 +242,19 @@ int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 		return (0);
 	(*cmd)->parsing_pre_analysis = split;
 	if (!do_heredocs(*cmd))
-		return (0);
+		return (-1);
 	return (preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data));
 }
 
 int	preparseLine(t_cmd **cmd, char *brut, t_data *data)
 {
 	char 	**bruts;
+	int	ret;
+
 	bruts = split_advanced(brut, "|");
-	if (!preparseLine_no_pipe(cmd, bruts, data))
-		return (0);
+	ret = preparseLine_no_pipe(cmd, bruts, data);
+	if (ret != 1)
+		return (ret);
 	free_tab(bruts);
 	return (1);
 }

@@ -12,19 +12,7 @@ et plus exactement tu peux mettre autant de n que tu veux dans tous les -n !
 echo -nnnnnnnnnnnnnnnnn -nnnnnnnnnnnn -nnn -n -nnnnnn -nn -n -nr -n lol mdr -n 
 affiche -nr -n lol mdr -n sans \n
 
-
 5) export tout court sans argument affiche tout l env avec des trucs chelou devant chaque bail
-
-jpeux l faire rapidos ca pcq je sais ou j ai code les signaux interactifs et les heredocs 
-6) si jamais y a un ctrl + c (au sein d une commande ou pendant les heredocs)
-faut pas exec le reste des commandes $$ ||  :
-
-cat || echo oui
-ctrl+c 
-on doit pas afficher le oui !
-cat << mdr || echo non
-ctrl+c 
-on doit pas afficher le non !
 
 7) dans l exec si le retour du fork c est -1 faut se casser de l exec
 c est pas trop claire mais en fait tu peux lancer /minishell avec -ulimit

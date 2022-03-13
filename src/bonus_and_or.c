@@ -131,17 +131,22 @@ int progress(t_cmd *cmd)
 
 int	do_preparse_line(t_cmd **cmd, t_data *data)
 {
+	int ret;
+
 	if (!cmd || !*cmd)
 		return (1);
 	if ((*cmd)->soon)
-		do_preparse_line(&(*cmd)->soon, data);
+		ret = do_preparse_line(&(*cmd)->soon, data);
 	else
-	{
-		if (!preparseLine(cmd, (*cmd)->txt, data))
-			return (0);
-	}
-	do_preparse_line(&(*cmd)->on_fail, data);
-	do_preparse_line(&(*cmd)->on_success, data);
+		ret = preparseLine(cmd, (*cmd)->txt, data);
+	if (ret != 1)
+		return (ret);
+	ret = do_preparse_line(&(*cmd)->on_fail, data);
+	if (ret != 1)
+		return (ret);
+	ret = do_preparse_line(&(*cmd)->on_success, data);
+	if (ret != 1)
+		return (ret);
 	return (1);
 }
 
@@ -173,6 +178,8 @@ int	check_syntax(char *brut)
 
 void parse_group(t_cmd **cmd, char *brut, t_data *data)
 {
+	int	ret;
+
 	if (!brut) // ctrl +d
 		return;
 	if (brut[0] == '\0') //ligne vide (on exit pas, on exec une commande vide)
@@ -187,10 +194,16 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 	{
 		*cmd = new_cmd_txt(brut);
 		progress(*cmd);
-		if (!do_preparse_line(cmd, data)) // gestion erreur syntaxe vide entre deux pipes
+		ret = do_preparse_line(cmd, data);
+		if (ret == 0)
 		{
 			ft_putstr_fd("syntax error\n", 2);
 			g_exit_status = 2;
+			free_cmd(*cmd);
+			*cmd = new_cmd();
+		}
+		else if (ret == -1)
+		{
 			free_cmd(*cmd);
 			*cmd = new_cmd();
 		}

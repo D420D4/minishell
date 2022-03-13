@@ -41,6 +41,7 @@ typedef struct s_cmd
 	char	*cmd_path;
 	int	pid;
 	char	**parsing_pre_analysis;
+	int	bonus;
 }	t_cmd;
 
 extern int g_exit_status;
@@ -94,7 +95,7 @@ char **split_advanced(char *s, char *c);
 int	preparseLine(t_cmd **cmd, char *brut, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
-
+int is_finish(char *txt);
 char	**do_wildcards_word(char *s, t_data *data);
 int	is_in_special(char c, char *s);
 int	is_only_space(char *string);
