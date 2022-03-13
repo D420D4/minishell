@@ -1,16 +1,33 @@
 SI  TU SAIS PAS QUOI FAIRE : Y A DES TRUCS +/- FACILE OU +/- TRES CHIANT 
 
-4)UN TRUC QUI PEUT TE PLAIRE
-c est pas hyper dur a faire masi c est marrant jtrouve
-echo c est une commande chelou :
-tu peux mettre autant de "-n" que tu veux AU DEBUT ca change pas la commande :
+1) Erreur de syntax le retour
 
-echo -n -n -n -n -n -n -n -nr -n lol mdr -n 
-affiche -nr -n lol mdr -n sans \n
+-() renvoie une erreur ca c est good !!
+-(           ) renvoie une erreur ca c est good !!
+-() cat renvoie pas d erreur , du coup command () not found !!!
+des que is_only_space(ce qu il y a entre deux parantheses) == 1 c est une erreur de syntaxe
 
-et plus exactement tu peux mettre autant de n que tu veux dans tous les -n !
-echo -nnnnnnnnnnnnnnnnn -nnnnnnnnnnnn -nnn -n -nnnnnn -nn -n -nr -n lol mdr -n 
-affiche -nr -n lol mdr -n sans \n
+- ls && () separe meme pas la commande et du coup il cherche les fichiers "&&" et "()"
+
+- ls &&    || ()
+fait crash notre minishell SEGFAULTTTT
+
+
+jsuis pas mauvais pour trouver des erreurs mdrrrrr
+a mon avis faut faire un retour sur progress
+
+et changer dans parsegroupe :
+
+progress(*cmd);
+ret = do_preparse_line(cmd, data);
+
+enfin
+if (!progress(*cmd))
+	ret = 0;
+else
+	do_preparse_line(cmd, data);
+
+et faire en sorte que progress renvoie 0 si erreur de syntax
 
 5) export tout court sans argument affiche tout l env avec des trucs chelou devant chaque bail
 

@@ -182,7 +182,7 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 
 	if (!brut) // ctrl +d
 		return;
-	if (brut[0] == '\0') //ligne vide (on exit pas, on exec une commande vide)
+	if (is_only_space(brut)) //ligne vide (on exit pas, on exec une commande vide)
 		*cmd = new_cmd();
 	else if (!check_syntax(brut))
 	{

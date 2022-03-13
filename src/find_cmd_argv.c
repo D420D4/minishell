@@ -6,12 +6,13 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 18:25:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/11 11:33:43 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/13 17:09:09 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+/*
 char	**find_cmd_argv(char **cmd, char *cmd_path)
 {
 	char	**cmd_argv;
@@ -51,3 +52,4 @@ char	**find_cmd_argv(char **cmd, char *cmd_path)
 		return (NULL);
 	return (cmd_argv);
 }
+*/
