@@ -29,31 +29,11 @@ else
 
 et faire en sorte que progress renvoie 0 si erreur de syntax
 
-5) export tout court sans argument affiche tout l env avec des trucs chelou devant chaque bail
-
-7) dans l exec si le retour du fork c est -1 faut se casser de l exec
+2) dans l exec si le retour du fork c est -1 faut se casser de l exec
 c est pas trop claire mais en fait tu peux lancer /minishell avec -ulimit
 une option chelou j ai plus la commande exacte mais jdemanderai a julien qui a test ca sur notre minishell hier x)
 enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et du coup il a lancer un truc avec 5 pipe et je quittais pas l exec enfin c etait de la merde x)
 
-8) si tu fais ./minishell < /dev/urandom globalement le notre doit reagir comme dans bash
+3) si tu fais ./minishell < /dev/urandom globalement le notre doit reagir comme dans bash
 jsp si c est vraiment a gerer mais sur le discord les gens disaient y a un ptit bout de temps que fallait 
 s occuper de ca avec une fonction autorise qu on a pas utilise : isatty jcrois
-
-11) dans export toujours 
-si tu fais genre machin=truc
-ca cree machin avec la valeur truc
-et si tu fais machin+=truc 
-ca ft_strjoin(truc, avec l ancienne valeur de $machin)
-voila pas tres clair
-AUCUNE IDEE SI C EST A GERER OU PAS mais comme ils disent sans argument et que bah techniquement c est pas un argument 
-je le met la
-
-exemple
-si jfais
-export TEAM+=dream
-ca va creer la variable $TEAM qui vaut dream ( concatenation de rien + dream)
-export TEAM+=team 
-mtn $TEAM vaut dreamteam
-
-

@@ -1,0 +1,21 @@
+export lol=mdr
+export team+=dream
+export team+=" team"
+export test
+export test+lol
+export 1abcd=marchepas
+export abcd11=marche
+export ne+marchepas
+export marche+=deouf+++normalementquoi
+export je=je pense=pense que=que ca=ca marche=marche
+export un_truc_qui_MARCHE=testtt
+export Ne+marche+pas=ok
+export Ne]]marchepas=ok
+export trucdeffff05[+=ok
+export "" ''
+export LUNDI=
+export MARDI=
+export MERCREDI+=
+export JEUDI+=
+export JEUDI+=MILIEU+de=SEMAINE=xd+lol
+env
