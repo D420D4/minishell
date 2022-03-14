@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 13:19:21 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/14 19:34:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,10 @@ int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 		if (!wildcards || len_tab(wildcards) > 1)
 			filename = NULL;
 		else if (wildcards[0] == 0)
-			filename = filename_brut;
+			filename = transform(ft_strdup(filename_brut), data);
 		else
-			filename = wildcards[0];
+			filename = ft_strdup(wildcards[0]);
+		free_tab(wildcards);
 	}
 	else
 		filename = transform(ft_strdup(filename_brut), data);
@@ -62,10 +63,13 @@ int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 	}
 	else
 	{
+		free(filename);
 		g_exit_status = 1;
 		ft_putstr_fd("ambiguous redirect\n", 2);
+		*rd_in = -1;
 		return (0);
 	}
+	free(filename);
 	return (1);
 }
 
@@ -108,7 +112,7 @@ char	*no_quote(char *limiter_brut)
 
 }
 
-int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd)
+int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	int	pid;
 	int	pipefds[2];
@@ -116,6 +120,7 @@ int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd)
 	char	*limiter;
 
 	close_fd(cmd->fd_heredocs);
+	cmd->fd_heredocs = -1;
 	limiter = no_quote(limiter_brut);
 	if (limiter)
 	{
@@ -124,31 +129,34 @@ int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd)
 		pid = fork();
 		if (pid == -1)
 			perror("fork");
-		else if (pid == 0)
+		if (pid == 0)
 		{
 			close_fd(pipefds[0]);
 			if (signal(SIGINT, SIG_DFL) == SIG_ERR)
 				printf("failed to register interrupts with kernel\n");
 			read_stdin(limiter,pipefds[1]);
+			close_fd(pipefds[1]);
+			free(limiter);
+			free_tab(cmd_parent->bruts);
+			free_cmd(cmd_parent);
+			ft_lstclear(&(data->env), &free);
 			exit (0);
 		}
-		else
+		nothingSignal();
+		if (waitpid(pid, &status, 0) == -1)
+			perror("waitpid");
+		getCmdSignal();
+		close_fd(pipefds[1]);
+		if (__WIFSIGNALED(status) && WTERMSIG(status) == 2)
 		{
-			nothingSignal();
-			if (waitpid(pid, &status, 0) == -1)
-				perror("waitpid");
-			getCmdSignal();
-			close_fd(pipefds[1]);
-			if (__WIFSIGNALED(status) && WTERMSIG(status) == 2)
-			{
-				close_fd(pipefds[0]);
-				ft_putstr_fd("\n", 1);
-				g_exit_status = 130;
-				return (0);
-			}
-			cmd->fd_heredocs = pipefds[0];
-			return (1);
+			close_fd(pipefds[0]);
+			ft_putstr_fd("\n", 1);
+			g_exit_status = 130;
+			return (0);
 		}
+		cmd->fd_heredocs = pipefds[0];
+		free(limiter);
+		return (1);
 	}
 	return (0);
 }

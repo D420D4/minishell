@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/12 21:56:28 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/14 18:45:52 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,7 @@ static int	add_redirection(char *s, t_list **mots, int *i, int *d)
 	{
 		free(string);
 		if (*mots != 0)
-		{
-			ft_putstr_fd("syntax error\n", 2);
-			g_exit_status = 2;
 			return (0);
-		}
 	}
 	else
 	{
@@ -122,13 +118,23 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 		if (!ft_memcmp(split[i], ">>", 3))
 		{
 			if (!set_new_rd_out_append(split[i + 1], &(cmd->fd_out), data))
+			{
+				ft_lstclear(&mots,&free);
+				if (cmd->fd_in != cmd->fd_heredocs)
+					close_fd(cmd->fd_heredocs);
 				return (NULL);
+			}
 			i++;
 		}
 		else if (!ft_memcmp(split[i], ">", 2))
 		{
 			if (!set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out), data))
+			{
+				ft_lstclear(&mots,&free);
+				if (cmd->fd_in != cmd->fd_heredocs)
+					close_fd(cmd->fd_heredocs);
 				return (NULL);
+			}
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
@@ -139,7 +145,12 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 		else if (!ft_memcmp(split[i], "<", 2))
 		{
 			if (!set_new_rd_in_open(split[i + 1], &(cmd->fd_in), data))
+			{
+				ft_lstclear(&mots,&free);
+				if (cmd->fd_in != cmd->fd_heredocs)
+					close_fd(cmd->fd_heredocs);
 				return (NULL);
+			}
 			i++;
 		}
 		else
@@ -155,6 +166,7 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 					while (wildcards[++j])
 						ft_lstadd_back(&mots, ft_lstnew(ft_strdup(wildcards[j])));
 				}
+				free_tab(wildcards);
 			}
 			else
 			{
@@ -166,7 +178,7 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 	}
 	ss = list_to_tab(mots);
 	ft_lstclear(&mots,&free);
-	if (cmd->fd_in != cmd->fd_heredocs)
-		close_fd(cmd->fd_heredocs);
+	if (cmd->fd_in == cmd->fd_heredocs)
+		cmd->fd_heredocs = -1;
 	return (ss);
 }

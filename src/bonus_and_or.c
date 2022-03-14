@@ -129,22 +129,22 @@ int progress(t_cmd *cmd)
 	return (1);
 }
 
-int	do_preparse_line(t_cmd **cmd, t_data *data)
+int	do_preparse_line(t_cmd **cmd, t_cmd **cmd_parent,t_data *data)
 {
 	int ret;
 
 	if (!cmd || !*cmd)
 		return (1);
 	if ((*cmd)->soon)
-		ret = do_preparse_line(&(*cmd)->soon, data);
+		ret = do_preparse_line(&(*cmd)->soon, cmd_parent, data);
 	else
-		ret = preparseLine(cmd, (*cmd)->txt, data);
+		ret = preparseLine(cmd, (*cmd)->txt, *cmd_parent, data);
 	if (ret != 1)
 		return (ret);
-	ret = do_preparse_line(&(*cmd)->on_fail, data);
+	ret = do_preparse_line(&(*cmd)->on_fail, cmd_parent, data);
 	if (ret != 1)
 		return (ret);
-	ret = do_preparse_line(&(*cmd)->on_success, data);
+	ret = do_preparse_line(&(*cmd)->on_success, cmd_parent, data);
 	if (ret != 1)
 		return (ret);
 	return (1);
@@ -194,7 +194,7 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 	{
 		*cmd = new_cmd_txt(brut);
 		progress(*cmd);
-		ret = do_preparse_line(cmd, data);
+		ret = do_preparse_line(cmd, cmd, data);
 		if (ret == 0)
 		{
 			ft_putstr_fd("syntax error\n", 2);

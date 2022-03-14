@@ -22,7 +22,7 @@ int	is_in_builtin(char *cmd_name)
 int	execute_builtin(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	if (cmd->cmd_path == NULL)
-		return (0);
+		return (1);
 	else if (!ft_memcmp(cmd->cmd_path, "echo", 5))
 		g_exit_status = cmd_echo(cmd);
 	else if (!ft_memcmp(cmd->cmd_path, "env", 4))

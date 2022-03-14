@@ -53,9 +53,7 @@ void do_var(char **s, int *f, t_data *data)
 		return;
 	}
 	if (ft_memcmp(var_name, "$?", 2))
-	{
 		var_value = getvalue(var_name + 1, data);
-	}
 	else
 		var_value = ft_itoa(g_exit_status);
 	
@@ -64,6 +62,8 @@ void do_var(char **s, int *f, t_data *data)
 	if (!ss)
 	{
 		free(var_name);
+		if (ft_memcmp(var_name, "$?", 2))
+			free(var_value);
 		return ;
 	}
 	ft_memcpy(ss, *s, *f);
@@ -71,9 +71,11 @@ void do_var(char **s, int *f, t_data *data)
 	ft_memcpy(ss + *f + ft_strlen(var_value),
 			  (*s) + *f + ft_strlen(var_name), ft_strlen((*s) + *f + ft_strlen(var_name)) + 1);
 	free(*s);
-	free(var_name);
 	*f = *f + ft_strlen(var_value);
 	*s = ss;
+	if (!ft_memcmp(var_name, "$?", 2))
+		free(var_value);
+	free(var_name);
 }
 
 int inner_quote_1(char **s, int *i, t_data *data)

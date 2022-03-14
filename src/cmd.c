@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 05:42:35 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/13 16:33:02 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/14 19:22:04 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ void	free_cmd(t_cmd *cmd)
 		free(cmd->txt);
 	if (cmd->soon)
 		free_cmd(cmd->soon);
+	if (cmd->parsing_pre_analysis)
+		free_tab(cmd->parsing_pre_analysis);
+	close_fd(cmd->fd_heredocs);
 	if (cmd->on_fail)
 		free_cmd(cmd->on_fail);
 	if (cmd->on_success)
@@ -195,7 +198,7 @@ void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	parseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data);
 }*/
 
-int	do_heredocs(t_cmd *cmd)
+int	do_heredocs(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
 	int	i;
 	char	**split;
@@ -208,7 +211,7 @@ int	do_heredocs(t_cmd *cmd)
 	{
 		if (!ft_memcmp(split[i], "<<", 3))
 		{
-			if (!set_new_rd_in_heredoc(split[i + 1], cmd))
+			if (!set_new_rd_in_heredoc(split[i + 1], cmd, cmd_parent, data))
 				return (0);
 			i++;
 		}
@@ -216,7 +219,7 @@ int	do_heredocs(t_cmd *cmd)
 	return (1);
 }
 
-int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
+int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_cmd *cmd_parent, t_data *data)
 {
 	char	**split;
 	char	*new_brut;
@@ -241,21 +244,23 @@ int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
 	if (!split)
 		return (0);
 	(*cmd)->parsing_pre_analysis = split;
-	if (!do_heredocs(*cmd))
+	if (!do_heredocs(*cmd, cmd_parent, data))
 		return (-1);
-	return (preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data));
+	return (preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, cmd_parent, data));
 }
 
-int	preparseLine(t_cmd **cmd, char *brut, t_data *data)
+int	preparseLine(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data)
 {
 	char 	**bruts;
 	int	ret;
 
 	bruts = split_advanced(brut, "|");
-	ret = preparseLine_no_pipe(cmd, bruts, data);
+	cmd_parent->bruts = bruts; 
+	ret = preparseLine_no_pipe(cmd, bruts, cmd_parent, data);
+	free_tab(bruts);
+	cmd_parent->bruts = NULL;
 	if (ret != 1)
 		return (ret);
-	free_tab(bruts);
 	return (1);
 }
 

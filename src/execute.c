@@ -6,14 +6,14 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/13 15:49:55 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/14 17:48:12 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/debug.h"
 
-static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
+static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2], t_cmd *cmd_parent)
 {
 	int child;
 	char **tab;
@@ -24,17 +24,13 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 	else if (child == 0)
 	{
 		execSignal();
-		if (cmd->pipe != NULL && cmd->pipe->fd_in == pipefds[0])
-			close_fd(pipefds[0]);
-		if (cmd->fd_in >= 0 && cmd->fd_out >= 0)
+		if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
 		{
+			if (cmd->pipe != NULL && cmd->pipe->fd_in == pipefds[0])
+				close_fd(pipefds[0]);
 			dup2(cmd->fd_in, STDIN_FILENO);
 			dup2(cmd->fd_out, STDOUT_FILENO);
-		}
-		if (execute_builtin(cmd, 0, data))
-		{
-			tab = NULL;
-			if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
+			if (execute_builtin(cmd, 0, data))
 			{
 				tab = env_to_tab(data->env);
 				if (execve(cmd->cmd_path, cmd->cmd, tab))
@@ -44,7 +40,7 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2])
 		}
 		close_fd(cmd->fd_in);
 		close_fd(cmd->fd_out);
-		free_cmd(cmd); // envoyer temp ??
+		free_cmd(cmd_parent);
 		ft_lstclear(&(data->env), &free);
 		exit_clean();
 		exit(g_exit_status);
@@ -126,7 +122,6 @@ void	analyseLine(t_cmd *cmd, t_data *data)
 	analyseLine(cmd->pipe, data);
 }
 
-
 int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 {
 	int	pipefds[2];
@@ -152,9 +147,9 @@ int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 				close_fd(pipefds[0]);
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
-		if (cmd == temp && cmd->pipe == NULL && !execute_builtin(cmd, cmd_parent,data))
-			return (0);
-		exec_cmd_in_child(cmd, data, pipefds);
+		if (cmd == temp && cmd->pipe == NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0 && !execute_builtin(cmd, cmd_parent,data))
+			return (1);
+		exec_cmd_in_child(cmd, data, pipefds, cmd_parent);
 		cmd = cmd->pipe;
 	}
 	return (wait_cmd(temp, cmd_parent));

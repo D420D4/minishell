@@ -10,7 +10,8 @@ des que is_only_space(ce qu il y a entre deux parantheses) == 1 c est une erreur
 - ls && () separe meme pas la commande et du coup il cherche les fichiers "&&" et "()"
 
 - ls &&    || ()
-fait crash notre minishell SEGFAULTTTT
+- () fait crahs ( avec l esapce au debut)
+font crash notre minishell SEGFAULTTTT
 
 
 jsuis pas mauvais pour trouver des erreurs mdrrrrr
@@ -37,3 +38,16 @@ enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et
 3) si tu fais ./minishell < /dev/urandom globalement le notre doit reagir comme dans bash
 jsp si c est vraiment a gerer mais sur le discord les gens disaient y a un ptit bout de temps que fallait 
 s occuper de ca avec une fonction autorise qu on a pas utilise : isatty jcrois
+
+4)
+- ls && (ls || ls)
+parsing rate ??? ls devient juste un l x)
+
+5) A verifier
+si jamais on a un ambiguous redirect en redction out apres une reddirection in fonctionnel 
+je pense que je close pas le fd_in
+a verifier !
+TLDR 1 : est ce que je close les fd si cmd->cmd == vide 
+TLDR 2 : cat > mdr < * = ambiguous redirect : verifier si mdr est ferme
+	 cat < mdr >> * = ambiguous redirect : verifier si mdr est ferme
+

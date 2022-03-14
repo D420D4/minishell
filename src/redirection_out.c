@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:09:58 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 13:19:46 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/14 16:56:19 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data)
 		if (!wildcards || len_tab(wildcards) > 1)
 			filename = NULL;
 		else if (wildcards[0] == 0)
-			filename = filename_brut;
+			filename = transform(ft_strdup(filename_brut), data);
 		else
-			filename = wildcards[0];
+			filename = ft_strdup(wildcards[0]);
+		free_tab(wildcards);
 	}
 	else
 		filename = transform(ft_strdup(filename_brut), data);
@@ -38,10 +39,13 @@ int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data)
 	}
 	else
 	{
+		free(filename);
 		g_exit_status = 1;
 		ft_putstr_fd("ambiguous redirect\n", 2);
+		*rd_out = -1;
 		return (0);
 	}
+	free(filename);
 	return (1);
 }
 
@@ -57,9 +61,10 @@ int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data)
 		if (!wildcards || len_tab(wildcards) > 1)
 			filename = NULL;
 		else if (wildcards[0] == 0)
-			filename = filename_brut;
+			filename = transform(ft_strdup(filename_brut), data);
 		else
-			filename = wildcards[0];
+			filename = ft_strdup(wildcards[0]);
+		free_tab(wildcards);
 	}
 	else
 		filename = transform(ft_strdup(filename_brut), data);
@@ -71,9 +76,12 @@ int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data)
 	}
 	else
 	{
+		free(filename);
 		g_exit_status = 1;
 		ft_putstr_fd("ambiguous redirect\n", 2);
+		*rd_out = -1;
 		return (0);
 	}
+	free(filename);
 	return (1);
 }
