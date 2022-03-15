@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 16:12:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 19:15:01 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,10 @@ int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_d
 			exit_clean(data, cmd_parent);
 			exit (0);
 		}
-		nothingSignal();
+		nothing_signal();
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-		getCmdSignal();
+		get_cmd_signal();
 		close_fd(pipefds[1]);
 		if (__WIFSIGNALED(status) && WTERMSIG(status) == 2)
 		{

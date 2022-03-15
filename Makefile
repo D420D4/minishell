@@ -10,6 +10,7 @@ SRC		= minishell.c\
 		  echo.c\
 		  env.c\
 		  execute.c\
+		  execute2.c\
 		  exit.c\
 		  export.c\
 		  find_cmd_argv.c\
@@ -24,7 +25,10 @@ SRC		= minishell.c\
 		  split_redirection.c\
 		  unset.c\
 		  utils.c\
+		  utils_str.c\
+		  utils_tabs.c\
 		  wildcards.c\
+		  wildcards2.c\
 
 SRCBONUS= bonus.c
 

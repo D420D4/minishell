@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 15:45:29 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/09 13:46:50 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 19:20:39 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static char	*find_cmd_path_with_name(char *cmd_name)
 		ft_putchar_fd('\n', 2);
 		return (NULL);
 	}
-	ft_putstr_fd(cmd_name,2);
+	ft_putstr_fd(cmd_name, 2);
 	ft_putstr_fd(": Is a directory\n", 2);
 	g_exit_status = 126;
-	return(NULL);
+	return (NULL);
 }
 
-static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
+static char	*find_cmd_absolute_path(char *cmd_name, t_list *env)
 {
 	char	**path;
 	char	*cmd_path;
@@ -75,7 +75,7 @@ static char	*find_cmd_absolute_path(char *cmd_name, t_list* env)
 	return (cmd_path);
 }
 
-char	*find_cmd_name(char **cmd)
+static char	*find_cmd_name(char **cmd)
 {
 	if (!cmd)
 		return (NULL);

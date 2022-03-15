@@ -49,23 +49,12 @@ extern int g_exit_status;
 
 //CREATE ENV
 t_list *parse_env(char **env);
-
 t_cmd *getCmd(t_data *data);
-
 t_list *parse_env(char **env);
 int	find_rd_in(char **cmd, int *rd_in);
 int	find_rd_output(char **cmd, int *rd_out);
-int	is_in_str(char *str, char c);
-char	*find_cmd_path(char **cmd, t_list *env);
-int	is_a_file(char *str);
-char	**find_cmd_argv(char **cmd, char *cmd_path);
-int	check_null(char **tab, int len);
 int	exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
-int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
-void	getCmdSignal(void);
-
 char	**split_advanced_redirections(char *s);
-
 
 // BUILTIN
 int execute_builtin(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
@@ -78,19 +67,8 @@ int cmd_cd(char **cmd, t_data *data);
 int cmd_pwd(t_cmd *cmd);
 int cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 
-
-void	close_fd(int fd);
-void	free_tab(char **tab);
-
 void	free_cmd(t_cmd *cmd);
 char	*transform(char *original, t_data *data);
-
-char **list_to_tab(t_list *lst);
-void	ft_sort_vector(char **vector, int size);
-char	*ft_strjoin_vector(int size, char **strs, char *sep);
-void	execSignal(void);
-void	nothingSignal(void);
-int	len_tab(char **tab);
 int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
 int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
@@ -103,10 +81,27 @@ int	preparseLine(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data);
 void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 int is_finish(char *txt);
-char	**do_wildcards_word(char *s, t_data *data);
 int	is_in_special(char c, char *s);
-int	is_only_space(char *string);
-char	*get_pwd(void);
+
+// EXEC
+int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+int	exec_cmd(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+int	wait_cmd(t_cmd *cmd, t_cmd *cmd_parent);
+char	*find_cmd_path(char **cmd, t_list *env);
+void	analyse_line(t_cmd *cmd, t_data *data);
+
+//SIGNAL
+void	exec_signal(void);
+void	nothing_signal(void);
+void	get_cmd_signal(void);
+void	cmd_signal(int sig);
+
+//WILDCARDS
+char	**do_wildcards_word(char *s, t_data *data);
+int	check_sequence(char *sequence, char **d_name);
+int	check_first_wildards(char **s, char **d_name, t_data *data);
+int	check_end_sequence(char *sequence, char *d_name);
+int	check_start_sequence(char *sequence, char **d_name, char **s, int i);
 
 //EXIT
 void	exit_clean(t_data *data, t_cmd *cmd_parent);
@@ -114,5 +109,22 @@ void	exit_clean(t_data *data, t_cmd *cmd_parent);
 //UTILS
 char	**env_to_tab(t_list *env);
 char *getvalue(char *s, t_data *data);
+int	len_cmd(t_list *mots);
+int	is_a_file(char *str);
+void	close_fd(int fd);
+char	*get_pwd(void);
+
+//UTILS TABS
+char **list_to_tab(t_list *lst);
+void	ft_sort_tab(char **tab, int size);
+void	free_tab(char **tab);
+int	len_tab(char **tab);
+int	check_null(char **tab, int len);
+char	*ft_strjoin_vector(int size, char **strs, char *sep);
+
+//UTILS STR
+int	is_in_str(char *str, char c);
+int	ft_strcmp(char *s1, char *s2);
+int	is_only_space(char *string);
 
 #endif

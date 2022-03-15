@@ -1,10 +1,18 @@
-//
-// Created by plefevre on 3/8/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/15 19:15:31 by lcalvie           #+#    #+#             */
+/*   Updated: 2022/03/15 19:15:58 by lcalvie          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void print_header(void)
+void	print_header(void)
 {
 	printf ("\n");
 	printf ("\e[1;34m");
@@ -21,6 +29,4 @@ void print_header(void)
 	printf ("\e[0;36m By\e[1;34m plefevre\e[0;36m &\e[1;34m lcalvie\n");
 	printf ("\e[0m");
 	printf ("\n");
-
-
 }
