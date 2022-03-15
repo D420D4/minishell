@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/14 17:48:12 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 02:10:56 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,15 @@ int	wait_cmd(t_cmd *cmd, t_cmd *cmd_parent)
 
 	while (cmd)
 	{
-		if (waitpid(cmd->pid, &status, 0) == -1)
-			perror("waitpid");
-		if (cmd_parent->bonus && __WIFSIGNALED(status))
+		if (cmd->pid != -1)
 		{
-			cmd_signal(WTERMSIG(status));
-			return (0);
+			if (waitpid(cmd->pid, &status, 0) == -1)
+				perror("waitpid");
+			if (cmd_parent->bonus && __WIFSIGNALED(status))
+			{
+				cmd_signal(WTERMSIG(status));
+				return (0);
+			}
 		}
 		cmd = cmd->pipe;
 	}

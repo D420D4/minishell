@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 15:32:37 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/02/19 16:16:05 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 00:42:21 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ int	cmd_pwd(t_cmd *cmd)
 		return (1);
 	}
 	ft_putendl_fd(pwd, cmd->fd_out);
+	free(pwd);
 	return (0);
 }

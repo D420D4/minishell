@@ -85,7 +85,7 @@ char	*ft_strjoin_vector(int size, char **strs, char *sep);
 void	execSignal(void);
 void	nothingSignal(void);
 int	len_tab(char **tab);
-int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data);
+int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
 int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
 int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);

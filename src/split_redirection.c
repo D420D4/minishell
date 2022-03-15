@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:23:23 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/14 18:45:52 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 03:04:34 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,6 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 			if (!set_new_rd_out_append(split[i + 1], &(cmd->fd_out), data))
 			{
 				ft_lstclear(&mots,&free);
-				if (cmd->fd_in != cmd->fd_heredocs)
-					close_fd(cmd->fd_heredocs);
 				return (NULL);
 			}
 			i++;
@@ -131,24 +129,21 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 			if (!set_new_rd_out_trunc(split[i + 1], &(cmd->fd_out), data))
 			{
 				ft_lstclear(&mots,&free);
-				if (cmd->fd_in != cmd->fd_heredocs)
-					close_fd(cmd->fd_heredocs);
 				return (NULL);
 			}
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<<", 3))
 		{
+			close_fd(cmd->fd_in);
 			cmd->fd_in = cmd->fd_heredocs;
 			i++;
 		}
 		else if (!ft_memcmp(split[i], "<", 2))
 		{
-			if (!set_new_rd_in_open(split[i + 1], &(cmd->fd_in), data))
+			if (!set_new_rd_in_open(split[i + 1], cmd, data))
 			{
 				ft_lstclear(&mots,&free);
-				if (cmd->fd_in != cmd->fd_heredocs)
-					close_fd(cmd->fd_heredocs);
 				return (NULL);
 			}
 			i++;

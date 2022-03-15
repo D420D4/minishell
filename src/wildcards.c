@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/11 16:46:37 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 02:54:45 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ char	**ft_sort_str(t_list *wilds)
 	int	size;
 
 	split = list_to_tab(wilds);
+	ft_lstclear(&wilds, &free);
 	if (split == NULL)
 		return (0);
 	size = 0;

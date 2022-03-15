@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/14 19:34:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 03:16:24 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ static void	read_stdin(char *limiter, int fd)
 	}
 }
 
-int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
+int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data)
 {
 	char *filename;
 	char	**wildcards;
 	
-	close_fd(*rd_in);
+	if (cmd->fd_in != cmd->fd_heredocs)
+		close_fd(cmd->fd_in);
 	if (is_in_special('*', filename_brut))
 	{
 		wildcards = do_wildcards_word(filename_brut, data);
@@ -57,8 +58,8 @@ int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 		filename = transform(ft_strdup(filename_brut), data);
 	if (filename)
 	{
-		*rd_in = open(filename, O_RDONLY);
-		if (*rd_in == -1)
+		cmd->fd_in = open(filename, O_RDONLY);
+		if (cmd->fd_in == -1)
 			perror("open");
 	}
 	else
@@ -66,10 +67,9 @@ int	set_new_rd_in_open(char *filename_brut, int *rd_in, t_data *data)
 		free(filename);
 		g_exit_status = 1;
 		ft_putstr_fd("ambiguous redirect\n", 2);
-		*rd_in = -1;
+		cmd->fd_in = -1;
 		return (0);
 	}
-	free(filename);
 	return (1);
 }
 
