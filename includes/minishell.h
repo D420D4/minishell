@@ -47,7 +47,9 @@ typedef struct s_cmd
 
 extern int g_exit_status;
 
+//CREATE ENV
 t_list *parse_env(char **env);
+
 t_cmd *getCmd(t_data *data);
 
 t_list *parse_env(char **env);
@@ -61,9 +63,11 @@ int	check_null(char **tab, int len);
 int	exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
 int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 void	getCmdSignal(void);
-char *getvalue(char *s, t_data *data);
+
 char	**split_advanced_redirections(char *s);
 
+
+// BUILTIN
 int execute_builtin(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
 int is_in_builtin(char *cmd_name);
 int cmd_echo(t_cmd *cmd);
@@ -73,12 +77,14 @@ int cmd_unset(t_cmd *cmd, t_data *data);
 int cmd_cd(char **cmd, t_data *data);
 int cmd_pwd(t_cmd *cmd);
 int cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+
+
 void	close_fd(int fd);
 void	free_tab(char **tab);
-char	**env_to_tab(t_list *env);
+
 void	free_cmd(t_cmd *cmd);
 char	*transform(char *original, t_data *data);
-void exit_clean(void);
+
 char **list_to_tab(t_list *lst);
 void	ft_sort_vector(char **vector, int size);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
@@ -100,5 +106,13 @@ int is_finish(char *txt);
 char	**do_wildcards_word(char *s, t_data *data);
 int	is_in_special(char c, char *s);
 int	is_only_space(char *string);
+char	*get_pwd(void);
+
+//EXIT
+void	exit_clean(t_data *data, t_cmd *cmd_parent);
+
+//UTILS
+char	**env_to_tab(t_list *env);
+char *getvalue(char *s, t_data *data);
 
 #endif

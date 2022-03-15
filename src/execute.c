@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 12:33:18 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:12:43 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,7 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2], t_cmd *c
 		}
 		close_fd(cmd->fd_in);
 		close_fd(cmd->fd_out);
-		free_cmd(cmd_parent);
-		ft_lstclear(&(data->env), &free);
-		exit_clean();
-		close(0);
-		close(1);
-		close(2);
+		exit_clean(data, cmd_parent);
 		exit(g_exit_status);
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);

@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 17:10:18 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/14 18:00:22 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:00:21 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,4 +197,20 @@ int	is_only_space(char *string)
 			return (0);
 	}
 	return (1);
+}
+
+char	*get_pwd(void)
+{
+	char	*pwd;
+	
+	pwd = malloc(sizeof(char) * 4096);
+	if (pwd == NULL)
+		return (NULL);
+	if (getcwd(pwd, 4096) == NULL)
+	{
+		perror("getcwd");
+		free(pwd);
+		return (NULL);
+	}
+	return (pwd);
 }

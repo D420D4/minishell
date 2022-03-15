@@ -7,7 +7,7 @@ export 1abcd=marchepas
 export abcd11=marche
 export ne+marchepas
 export marche+=deouf+++normalementquoi
-export je=je pense=pense que=que ca=ca marche=marche
+export je=je pense=pense que=que ca=ca marche1=marche1
 export un_truc_qui_MARCHE=testtt
 export Ne+marche+pas=ok
 export Ne]]marchepas=ok
@@ -19,3 +19,8 @@ export MERCREDI+=
 export JEUDI+=
 export JEUDI+=MILIEU+de=SEMAINE=xd+lol
 env
+echo $marche
+export marche=changement
+echo $marche
+export
+exit

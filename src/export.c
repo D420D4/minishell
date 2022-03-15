@@ -6,13 +6,13 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 02:22:17 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/14 02:29:06 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 15:53:09 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	is_valid_identifier(char *name, int j)
+static int	is_valid_identifier_export(char *name, int j)
 {
 	if (j == 0)
 	{
@@ -25,7 +25,7 @@ static int	is_valid_identifier(char *name, int j)
 	return (0);
 }
 
-char	*ft_strdup_without_plus(const char *s)
+static char	*ft_strdup_without_plus(const char *s)
 {
 	int		i;
 	int		plus;
@@ -51,12 +51,12 @@ char	*ft_strdup_without_plus(const char *s)
 	return (ss);
 }
 
-void	print_env_export(t_cmd *cmd, t_data *data)
+static void	print_env_export(t_cmd *cmd, t_data *data)
 {
-	t_list *env;
-	int	i;
+	t_list	*env;
+	int		i;
 	char	*content;
-	
+
 	env = data->env;
 	while (env)
 	{
@@ -66,7 +66,7 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 		while (content[++i] != '=')
 			ft_putchar_fd(content[i], cmd->fd_out);
 		ft_putstr_fd("=\"", cmd->fd_out);
-		while(content[++i])
+		while (content[++i])
 		{
 			if (content[i] == '"')
 				ft_putstr_fd("\\\"", cmd->fd_out);
@@ -78,56 +78,50 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 	}
 }
 
+static void	export_new_content(t_data *data, char *var, int j, int added)
+{
+	t_list	*lst;
+	char	*new_content;
+
+	lst = data->env;
+	while (lst && !added)
+	{
+		if (!ft_strncmp(var, (char *) lst->content, j))
+			added = 1;
+		else
+			lst = lst->next;
+	}
+	if (var[j] == '=')
+		new_content = ft_strdup(var);
+	else if (added)
+		new_content = ft_strjoin(lst->content, var + j + 2);
+	else
+		new_content = ft_strdup_without_plus(var);
+	if (added && new_content)
+	{
+		free(lst->content);
+		lst->content = new_content;
+	}
+	else if (new_content)
+		ft_lstadd_back(&(data->env), ft_lstnew(new_content));
+}
+
 int	cmd_export(t_cmd *cmd, t_data *data)
 {
-	int i;
-	int j;
-	int added;
-	int ret;
-	t_list *lst;
-	char	*new_content;
+	int		i;
+	int		j;
+	int		ret;
 
 	i = 0;
 	ret = 0;
 	while (cmd->cmd[++i])
 	{
-		added = 0;
 		j = 0;
-		while (cmd->cmd[i][j] && cmd->cmd[i][j] != '=' && ft_memcmp(cmd->cmd[i] + j,"+=", 2)
-			&& is_valid_identifier(cmd->cmd[i], j))
+		while (cmd->cmd[i][j] && is_valid_identifier_export(cmd->cmd[i], j))
 			j++;
-		if ((cmd->cmd[i][j] == '='  || !ft_memcmp(cmd->cmd[i] + j,"+=", 2)) && j != 0)
-		{
-			lst = data->env;
-			while (lst && !added)
-			{
-				if (!ft_strncmp(cmd->cmd[i], (char *) lst->content, j))
-					added = 1;
-				else
-					lst = lst->next;
-			}
-			if (added)
-			{
-				if (cmd->cmd[i][j] == '=')
-					new_content = ft_strdup(cmd->cmd[i]);
-				else
-					new_content = ft_strjoin(lst->content, cmd->cmd[i] + j + 2);
-				if (new_content)
-				{
-					free(lst->content);
-					lst->content = new_content;
-				}
-			}
-			else
-			{
-				if (cmd->cmd[i][j] == '=')
-					new_content = ft_strdup(cmd->cmd[i]);
-				else
-					new_content = ft_strdup_without_plus(cmd->cmd[i]);
-				if (new_content)
-					ft_lstadd_back(&(data->env), ft_lstnew(new_content));
-			}
-		}
+		if ((cmd->cmd[i][j] == '=' || !ft_memcmp(cmd->cmd[i] + j, "+=", 2))
+			&& j != 0)
+			export_new_content(data, cmd->cmd[i], j, 0);
 		else if (cmd->cmd[i][j] || j == 0)
 		{
 			ft_putstr_fd("minishell: export: `", 2);

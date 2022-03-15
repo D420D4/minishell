@@ -1,8 +1,15 @@
-//
-// Created by plefevre on 2/9/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/15 15:55:49 by lcalvie           #+#    #+#             */
+/*   Updated: 2022/03/15 16:01:33 by lcalvie          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../includes/debug.h"
 #include "../includes/minishell.h"
 
 t_list	*parse_env(char **env)
@@ -18,12 +25,13 @@ t_list	*parse_env(char **env)
 	return (lst);
 }
 
-int cmd_env(t_cmd *cmd, t_data *data)
+int	cmd_env(t_cmd *cmd, t_data *data)
 {
-	t_list *env = data->env;
+	t_list	*env;
 
+	env = data->env;
 	if (cmd->cmd[1])
-		ft_putstr_fd("No options or arguments needed\n",2);
+		ft_putstr_fd("No options or arguments needed\n", 2);
 	while (env)
 	{
 		ft_putstr_fd((char *) env->content, cmd->fd_out);
@@ -34,23 +42,25 @@ int cmd_env(t_cmd *cmd, t_data *data)
 }
 
 //Do not free!!
-char *getvalue(char *s, t_data *data)
+char	*getvalue(char *s, t_data *data)
 {
-	int j;
-	t_list *lst;
+	int		j;
+	t_list	*lst;
 
 	j = ft_strlen(s);
 	if (j == 0)
 		return (NULL);
 	lst = data->env;
 	while (lst)
+	{
 		if (!ft_strncmp(s, (char *) lst->content, j)
-				&& ft_strlen((char *) lst->content) >= j
-				&& ((char *) lst->content)[j] == '=')
+			&& ft_strlen((char *) lst->content) >= j
+			&& ((char *) lst->content)[j] == '=')
 			return (lst->content + ft_strlen(s) + 1);
 		else
 			lst = lst->next;
-	return (NULL); // plus logique de return NULL ici et pas le malloc(1) car sinon faut free dans des cas particuliers c relou
+	}
+	return (NULL);
 }
 
 char	**env_to_tab(t_list *env)
@@ -64,7 +74,7 @@ char	**env_to_tab(t_list *env)
 	if (tab == NULL)
 		return (NULL);
 	i = 0;
-	while(env)
+	while (env)
 	{
 		tab[i] = ft_strdup(env->content);
 		env = env->next;

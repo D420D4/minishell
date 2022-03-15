@@ -36,11 +36,7 @@ int main(int ac, char **av, char **envp)
 		}
 		free_cmd(cmd);
 	}
-	ft_lstclear(&data.env, &free);
-	exit_clean();
-	close(0);
-	close(1);
-	close(2);
+	exit_clean(&data, NULL);
 	return (0);
 }
 

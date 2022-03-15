@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 12:48:38 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:12:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,12 +139,7 @@ int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_d
 			close_fd(pipefds[1]);
 			free(limiter);
 			free_tab(cmd_parent->bruts);
-			free_cmd(cmd_parent);
-			ft_lstclear(&(data->env), &free);
-			exit_clean();
-			close(0);
-			close(1);
-			close(2);
+			exit_clean(data, cmd_parent);
 			exit (0);
 		}
 		nothingSignal();
