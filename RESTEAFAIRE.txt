@@ -30,7 +30,7 @@ else
 
 et faire en sorte que progress renvoie 0 si erreur de syntax
 
-
+vir point 4 jpense c est lie !
 ---------------------------
 
 2) dans l exec si le retour du fork c est -1 faut se casser de l exec
@@ -38,7 +38,7 @@ c est pas trop claire mais en fait tu peux lancer /minishell avec -ulimit
 une option chelou j ai plus la commande exacte mais jdemanderai a julien qui a test ca sur notre minishell hier x)
 enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et du coup il a lancer un truc avec 5 pipe et je quittais pas l exec enfin c etait de la merde x)
 
-J ai essaye de secure mais il me faut la commande de julien pour verif ce point 
+!!!!!!!!!!!!   J ai essaye de secure mais il me faut la commande de julien pour verif ce point !!!!!!!!!
 
 ---------------------------
 4)
@@ -47,28 +47,7 @@ parsing rate ??? ls devient juste un l x)
 
 ---------------------------
 
-5) A verifier
-si jamais on a un ambiguous redirect en redction out apres une reddirection in fonctionnel 
-je pense que je close pas le fd_in
-a verifier !
-TLDR 1 : est ce que je close les fd si cmd->cmd == vide 
-TLDR 2 : cat > mdr < * = ambiguous redirect : verifier si mdr est ferme
-	 cat < mdr >> * = ambiguous redirect : verifier si mdr est ferme
-
----------------------------
-
 6) L env au demarrage
 ->Que $PWD existe ou pas faut le changer :
 si il existe pas faut creer la variable
 si il existe il change sa valeur a la creation pour concorder avec le pwd actuel !!!
-
----------------------------
-
-7) Quand on execute un execute_builtin reellement (ligne 153 execute)
-avant de return 1 faut close fd_in et fd_out
-verifier avec genre echo < Makefile si le fd est bien close 
-
----------------------------
-
-LEAKS :
-- echo < "lol" cree un LEAK

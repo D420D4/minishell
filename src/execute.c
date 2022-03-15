@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 10:32:36 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 02:10:56 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 12:33:18 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2], t_cmd *c
 	else if (child == 0)
 	{
 		execSignal();
+		if (cmd->pipe != NULL && cmd->pipe->fd_in == pipefds[0])
+			close_fd(pipefds[0]);
 		if (cmd->cmd_path != NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0)
 		{
-			if (cmd->pipe != NULL && cmd->pipe->fd_in == pipefds[0])
-				close_fd(pipefds[0]);
 			dup2(cmd->fd_in, STDIN_FILENO);
 			dup2(cmd->fd_out, STDOUT_FILENO);
 			if (execute_builtin(cmd, 0, data))
@@ -43,6 +43,9 @@ static void exec_cmd_in_child(t_cmd *cmd, t_data *data, int pipefds[2], t_cmd *c
 		free_cmd(cmd_parent);
 		ft_lstclear(&(data->env), &free);
 		exit_clean();
+		close(0);
+		close(1);
+		close(2);
 		exit(g_exit_status);
 	}
 	//printf("in %d/ out %d\n",cmd->fd_in, cmd->fd_out);
@@ -151,7 +154,11 @@ int exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data)
 		}
 		cmd->cmd_path = find_cmd_path(cmd->cmd, data->env);
 		if (cmd == temp && cmd->pipe == NULL && cmd->fd_in >= 0 && cmd->fd_out >= 0 && !execute_builtin(cmd, cmd_parent,data))
+		{
+			close_fd(cmd->fd_in);
+			close_fd(cmd->fd_out);
 			return (1);
+		}
 		exec_cmd_in_child(cmd, data, pipefds, cmd_parent);
 		cmd = cmd->pipe;
 	}

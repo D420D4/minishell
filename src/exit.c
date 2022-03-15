@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:30:08 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/12 21:18:25 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/15 12:34:57 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ int	cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 	ft_lstclear(&(data->env), &free);
 	free_cmd(cmd_parent);
 	exit_clean();
+	close(0);
+	close(1);
+	close(2);
 	exit(ret);
 }
 

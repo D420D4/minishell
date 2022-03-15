@@ -14,11 +14,12 @@ int main(int ac, char **av, char **envp)
 
 	(void) av;
 	(void) ac;
+	/*
 	if (!isatty(0)) // gestion de /dev/urandom 
 	{
 		perror("isatty");
 		return (1);
-	}
+	}*/
 	data.env = parse_env(envp);
 
 	print_header();
@@ -37,6 +38,9 @@ int main(int ac, char **av, char **envp)
 	}
 	ft_lstclear(&data.env, &free);
 	exit_clean();
+	close(0);
+	close(1);
+	close(2);
 	return (0);
 }
 
