@@ -3,10 +3,11 @@ SRC		= minishell.c\
 		  builtin_functions.c\
 		  bonus_and_or.c\
 		  cd.c\
+		  check_cmd.c\
+		  create_groups.c\
 		  header.c\
 		  cmd.c\
 		  cmd_analyse.c\
-		  debug.c\
 		  do_redirections.c\
 		  echo.c\
 		  env.c\
@@ -19,6 +20,7 @@ SRC		= minishell.c\
 		  ft_strjoin_vector.c\
 		  get_next_line/get_next_line.c\
 		  get_next_line/get_next_line_utils.c\
+		  inner_quote.c\
 		  pwd.c\
 		  redirection_in.c\
 		  redirection_out.c\

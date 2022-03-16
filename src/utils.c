@@ -50,3 +50,18 @@ int	len_cmd(t_list *mots)
 	}
 	return (len);
 }
+
+int	is_in(char c, char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (c == s[i])
+			return (1);
+		else
+			i++;
+	}
+	return (0);
+}
