@@ -71,10 +71,7 @@ int cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 
 void	free_cmd(t_cmd *cmd);
 char	*transform(char *original, t_data *data);
-int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
-int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
-int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
-int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
+
 void 	print_header(void);
 t_cmd	*new_cmd(void);
 char **split_advanced(char *s, char *c);
@@ -87,6 +84,11 @@ int	is_in_special(char c, char *s);
 //ANALYSE
 char	**split_advanced_redirections(char *s);
 char	**do_redirections(t_cmd *cmd, t_data *data);
+int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
+int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
+int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
+char	*find_filename(char *filename_brut, t_data *data);
 
 // EXEC
 int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
@@ -100,6 +102,8 @@ void	exec_signal(void);
 void	nothing_signal(void);
 void	get_cmd_signal(void);
 void	cmd_signal(int sig);
+void	quit_heredoc(int sig);
+void	save_before_signal(int mode, int fd, char *limiter);
 
 //WILDCARDS
 char	**do_wildcards_word(char *s, t_data *data);
@@ -131,5 +135,6 @@ char	*ft_strjoin_vector(int size, char **strs, char *sep);
 int	is_in_str(char *str, char c);
 int	ft_strcmp(char *s1, char *s2);
 int	is_only_space(char *string);
+char	*ft_strdup_no_quote(char *limiter_brut);
 
 #endif
