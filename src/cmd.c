@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/minishell.h"
 
-t_cmd *new_cmd(void)
+t_cmd	*new_cmd(void)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
@@ -36,9 +35,11 @@ t_cmd *new_cmd(void)
 	return (cmd);
 }
 
-t_cmd *new_cmd_txt(char *txt)
+t_cmd	*new_cmd_txt(char *txt)
 {
-	t_cmd *cmd = new_cmd();
+	t_cmd	*cmd;
+
+	cmd = new_cmd();
 	if (!cmd)
 		return (0);
 	cmd->txt = ft_strdup(txt);
@@ -49,7 +50,7 @@ t_cmd *new_cmd_txt(char *txt)
 void	free_cmd(t_cmd *cmd)
 {
 	if (!cmd)
-		return;
+		return ;
 	if (cmd->pipe)
 		free_cmd(cmd->pipe);
 	if (cmd->cmd_path)
@@ -70,14 +71,13 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
-int is_in_special(char c, char *s)
+int	is_in_special(char c, char *s)
 {
-	int i;
+	int	i;
 	int	quote;
 
 	i = 0;
 	quote = 0;
-
 	while (s[i])
 	{
 		if (c == s[i] && !quote)
@@ -92,24 +92,24 @@ int is_in_special(char c, char *s)
 }
 
 //s have an even number of " and '
-char **split_advanced(char *s, char *c)
+char	**split_advanced(char *s, char *c)
 {
-	t_list *mots;
-	char **ss;
-	int i;
-	int d;
-	int quote;
+	t_list	*mots;
+	char	**ss;
+	int		i;
+	int		d;
+	int		quote;
+	char	*string;
 
 	d = 0;
 	quote = 0;
 	mots = 0;
-
 	i = 0;
 	while (i <= ft_strlen(s))
 	{
 		if ((!ft_memcmp(s + i, c, ft_strlen(c)) || !s[i]) && quote == 0)
 		{
-			char *string = ft_substr(s, d, i - d);
+			string = ft_substr(s, d, i - d);
 			if (!string)
 				return (0);
 			if (ft_strlen(string))
@@ -139,30 +139,30 @@ char **split_advanced(char *s, char *c)
 		i++;
 	}
 	ss = list_to_tab(mots);
-	ft_lstclear(&mots,&free);
+	ft_lstclear(&mots, &free);
 	return (ss);
 }
 
 //Bonus, remove first spaces
-char *first_word(const char *s)
+char	*first_word(const char *s)
 {
-	int	i;
-	int	j;
-	char *ss;
+	int		i;
+	int		j;
+	char	*ss;
 
 	if (!s)
 		return (0);
 	i = 0;
 	j = 0;
-	while (s[i] ==  ' ')
+	while (s[i] == ' ')
 		i++;
-	while (s[i + j] && s[i + j] !=  ' ')
+	while (s[i + j] && s[i + j] != ' ')
 		j++;
 	ss = malloc(j + 1);
 	if (!ss)
 		return (0);
 	j = 0;
-	while (s[i + j] && s[i + j] !=  ' ')
+	while (s[i + j] && s[i + j] != ' ')
 	{
 		ss[j] = s[i + j];
 		j++;
@@ -171,43 +171,16 @@ char *first_word(const char *s)
 	return (ss);
 }
 
-
-/*
-void parseLine_no_pipe(t_cmd **cmd, char **bruts, t_data *data)
-{
-	char	**split;
-	char	*new_brut;
-
-	if (!bruts || !*bruts)
-		return;
-	if (!*cmd)
-		*cmd = new_cmd();
-	split = split_advanced_redirections(*bruts);
-	if (!split)
-		return;
-	new_brut = ft_strjoin_vector(len_tab(split), split, " ");
-	free_tab(split);
-	if (!new_brut)
-		return;
-	split = split_advanced(new_brut, " ");
-	free(new_brut);
-	if (!split)
-		return;
-	(*cmd)->cmd = do_redirections(split, *cmd, data);
-	free_tab(split);
-	parseLine_no_pipe(&((*cmd)->pipe), bruts + 1, data);
-}*/
-
 int	do_heredocs(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 {
-	int	i;
+	int		i;
 	char	**split;
 
 	split = cmd->parsing_pre_analysis;
 	if (!split)
 		return (1);
 	i = -1;
-	while(split[++i])
+	while (split[++i])
 	{
 		if (!ft_memcmp(split[i], "<<", 3))
 		{
@@ -219,7 +192,8 @@ int	do_heredocs(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 	return (1);
 }
 
-int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_cmd *cmd_parent, t_data *data)
+int	preparse_line_no_pipe(t_cmd **cmd, char **bruts,
+			t_cmd *cmd_parent, t_data *data)
 {
 	char	**split;
 	char	*new_brut;
@@ -246,17 +220,18 @@ int	preparseLine_no_pipe(t_cmd **cmd, char **bruts, t_cmd *cmd_parent, t_data *d
 	(*cmd)->parsing_pre_analysis = split;
 	if (!do_heredocs(*cmd, cmd_parent, data))
 		return (-1);
-	return (preparseLine_no_pipe(&((*cmd)->pipe), bruts + 1, cmd_parent, data));
+	return (preparse_line_no_pipe(&((*cmd)->pipe),
+			bruts + 1, cmd_parent, data));
 }
 
-int	preparseLine(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data)
+int	preparse_line(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data)
 {
-	char 	**bruts;
-	int	ret;
+	char	**bruts;
+	int		ret;
 
 	bruts = split_advanced(brut, "|");
-	cmd_parent->bruts = bruts; 
-	ret = preparseLine_no_pipe(cmd, bruts, cmd_parent, data);
+	cmd_parent->bruts = bruts;
+	ret = preparse_line_no_pipe(cmd, bruts, cmd_parent, data);
 	free_tab(bruts);
 	cmd_parent->bruts = NULL;
 	if (ret != 1)
@@ -273,7 +248,7 @@ int	get_startingline(char **line, t_data *data)
 	pwd = malloc(sizeof(char) * 4096);
 	if (pwd == NULL)
 		return (0);
-	if (getcwd(pwd,4096) == NULL)
+	if (getcwd(pwd, 4096) == NULL)
 	{
 		perror("getcwd");
 		free(pwd);
@@ -301,14 +276,13 @@ int	get_startingline(char **line, t_data *data)
 	if (*line == NULL)
 		return (0);
 	return (1);
-
 }
 
-t_cmd *getCmd(t_data *data)
+t_cmd	*get_cmd(t_data *data)
 {
-	char *startingline;
-	char *brut;
-	t_cmd *cmd;
+	char	*startingline;
+	char	*brut;
+	t_cmd	*cmd;
 
 	cmd = 0;
 	if (!get_startingline(&startingline, data))
@@ -318,8 +292,7 @@ t_cmd *getCmd(t_data *data)
 	if (!brut)
 		return (0);
 	if (!is_only_space(brut))
-		add_history(brut); //on ajoute pas les lignes vides a l histo
-//	parseLine(&cmd, bruts, data);
+		add_history(brut);
 	parse_group(&cmd, brut, data);
 	free(brut);
 	return (cmd);
