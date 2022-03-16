@@ -7,13 +7,13 @@ SRC		= minishell.c\
 		  cmd.c\
 		  cmd_analyse.c\
 		  debug.c\
+		  do_redirections.c\
 		  echo.c\
 		  env.c\
 		  execute.c\
 		  execute2.c\
 		  exit.c\
 		  export.c\
-		  find_cmd_argv.c\
 		  find_cmd_path.c\
 		  ft_strjoin_vector.c\
 		  get_next_line/get_next_line.c\
