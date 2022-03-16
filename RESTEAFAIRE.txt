@@ -9,7 +9,11 @@ enfin bref il a limiter le nombre de creation de fork par processus a genre 5 et
 
 ---------------------------
 
-6) L env au demarrage
-->Que $PWD existe ou pas faut le changer :
-si il existe pas faut creer la variable
-si il existe il change sa valeur a la creation pour concorder avec le pwd actuel !!!
+4) Verifier le fonctionnement de 
+echo oui || (echo non && echo lol)
+echo oui || echo non && echo lol
+
+---------------------------
+
+5) syntax error si parantehse pas a cote de && ou de || 
+

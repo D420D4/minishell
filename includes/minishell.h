@@ -49,12 +49,14 @@ extern int g_exit_status;
 
 //CREATE ENV
 t_list *parse_env(char **env);
+void	add_pwd(t_data *data);
+
 t_cmd *getCmd(t_data *data);
 t_list *parse_env(char **env);
 int	find_rd_in(char **cmd, int *rd_in);
 int	find_rd_output(char **cmd, int *rd_out);
 int	exec_cmd(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
-char	**split_advanced_redirections(char *s);
+
 
 // BUILTIN
 int execute_builtin(t_cmd *cmd, t_cmd *cmd_parent,t_data *data);
@@ -73,7 +75,6 @@ int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
 int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
 int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
-char	**do_redirections(t_cmd *cmd, t_data *data);
 void 	print_header(void);
 t_cmd	*new_cmd(void);
 char **split_advanced(char *s, char *c);
@@ -82,6 +83,10 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data);
 t_cmd *new_cmd_txt(char *txt);
 int is_finish(char *txt);
 int	is_in_special(char c, char *s);
+
+//ANALYSE
+char	**split_advanced_redirections(char *s);
+char	**do_redirections(t_cmd *cmd, t_data *data);
 
 // EXEC
 int	exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);

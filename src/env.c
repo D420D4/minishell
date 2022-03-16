@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 15:55:49 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 16:01:33 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/16 13:15:22 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,32 @@ char	**env_to_tab(t_list *env)
 	}
 	tab[i] = NULL;
 	return (tab);
+}
+
+void	add_pwd(t_data *data)
+{
+	char	*pwd;
+	t_list	*lst;
+	char	*temp;
+
+	temp = get_pwd();
+	pwd = ft_strjoin("PWD=", temp);
+	free(temp);
+	if (!pwd)
+		return ;
+	lst = data->env;
+	while (lst)
+	{
+		if (!ft_strncmp("PWD", (char *) lst->content, 3)
+			&& ft_strlen((char *) lst->content) >= 3
+			&& ((char *) lst->content)[3] == '=')
+		{
+			free(lst->content);
+			lst->content = pwd;
+			return ;
+		}
+		else
+			lst = lst->next;
+	}
+	ft_lstadd_back(&data->env, ft_lstnew(pwd));
 }

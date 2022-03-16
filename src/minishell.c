@@ -18,10 +18,10 @@ int main(int ac, char **av, char **envp)
 	if (!isatty(0)) // gestion de /dev/urandom 
 	{
 		perror("isatty");
-		return (1);
+		return (2);
 	}*/
 	data.env = parse_env(envp);
-
+	add_pwd(&data);
 	print_header();
 	while (42)
 	{

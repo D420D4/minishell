@@ -7,6 +7,7 @@ SRC		= minishell.c\
 		  cmd.c\
 		  cmd_analyse.c\
 		  debug.c\
+		  do_redirections.c\
 		  echo.c\
 		  env.c\
 		  execute.c\
