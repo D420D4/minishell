@@ -27,6 +27,7 @@ int main(int ac, char **av, char **envp)
 	{
 		get_cmd_signal();
 		cmd = getCmd(&data);
+		print_cmd(cmd);
 		if (cmd)
 			exec_cmds(cmd, cmd, &data);
 		else

@@ -312,15 +312,15 @@ t_cmd *getCmd(t_data *data)
 
 	cmd = 0;
 	if (!get_startingline(&startingline, data))
-		return 0;
+		return (0);
 	brut = readline(startingline);
 	free(startingline);
 	if (!brut)
 		return (0);
 	if (!is_only_space(brut))
 		add_history(brut); //on ajoute pas les lignes vides a l histo
-	parse_group(&cmd, brut, data);
 //	parseLine(&cmd, bruts, data);
+	parse_group(&cmd, brut, data);
 	free(brut);
 	return (cmd);
 }
