@@ -75,19 +75,16 @@ char	*get_next(char *s, int *i)
 	int cmp = 0;
 	while (s[j])
 	{
-		if (!quote && s[j] == ')')
-			return (0);
 		if (!ft_memcmp(s + j, "&&", 2) || !ft_memcmp(s + j, "||", 2))
 		{
 			*i = j;
 			cmp++;
 		}
-
-		if (cmp == 1 || !s[j + 1])
+		if (cmp == 2 || !s[j + 1])
 		{
-			if (cmp == 2)
-				*i = j;
-			else
+//			if (cmp == 2)
+//				*i = j;
+//			else
 				j = *i;
 			char *cp = malloc(j + 1);
 			memcpy(cp, s, j);

@@ -27,14 +27,16 @@ int main(int ac, char **av, char **envp)
 	{
 		get_cmd_signal();
 		cmd = getCmd(&data);
-		print_cmd(cmd);
 		if (cmd)
+		{
 			exec_cmds(cmd, cmd, &data);
+		}
 		else
 		{
 			g_exit_status = 0;
 			cmd_exit(cmd, cmd, &data); // gestion du ctrl + D
 		}
+		print_cmd(cmd);
 		free_cmd(cmd);
 	}
 	exit_clean(&data, NULL);
