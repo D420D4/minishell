@@ -43,6 +43,7 @@ char	*get_next(char *s, int *i)
 
 	while (s[j]==' ')
 		j++;
+	*i = j;
 	if (s[j] == '(')
 	{
 		nb_par = 1;
@@ -62,13 +63,12 @@ char	*get_next(char *s, int *i)
 		k = j;
 		while (s[j]==' ')
 			j++;
-		//TODO libft
 		if (ft_memcmp(s + j, "&&", 2) && ft_memcmp(s + j, "||", 2) && s[j])
 			return (0);
+		char *cp = malloc(k - 1 - *i);
+		memcpy(cp, s + 1 + *i, k - 2 - *i);
+		cp[k - 2 - *i] = 0;
 		*i = j;
-		char *cp = malloc(k - 1);
-		memcpy(cp, s + 1, k - 2);
-		cp[k - 2] = 0;
 		return cp;
 	}
 
@@ -83,7 +83,7 @@ char	*get_next(char *s, int *i)
 			cmp++;
 		}
 
-		if (cmp == 2 || !s[j + 1])
+		if (cmp == 1 || !s[j + 1])
 		{
 			if (cmp == 2)
 				*i = j;
@@ -92,7 +92,7 @@ char	*get_next(char *s, int *i)
 			char *cp = malloc(j + 1);
 			memcpy(cp, s, j);
 			cp[j] = 0;
-			return cp;
+			return (cp);
 		}
 		if (s[j] == '\'' && quote != 2)
 			quote = (quote + 1) % 2;
@@ -150,6 +150,52 @@ int	do_preparse_line(t_cmd **cmd, t_cmd **cmd_parent,t_data *data)
 	return (1);
 }
 
+int check_parenthesis_left(char *s, int i)
+{
+	if (i == 0)
+		return (0);
+	if (s[i - 1] == ' ' || s[i - 1] == '(')
+		return (check_parenthesis_left(s, i - 1));
+	if (i > 1 && ((s[i - 1] == '&' && s[i - 2] == '&') ||(s[i - 1] == '|' && s[i - 2] == '|')))
+		return (0);
+	return (1);
+}
+
+int check_parenthesis_right(char *s, int i)
+{
+	if (i == ft_strlen(s) - 1)
+		return (0);
+	if (s[i + 1] == ' ' || s[i + 1] == ')')
+		return (check_parenthesis_right(s, i + 1));
+	if (i < ft_strlen(s) - 1 && ((s[i + 1] == '&' && s[i + 2] == '&') ||(s[i + 1] == '|' && s[i + 2] == '|')))
+		return (0);
+	return (1);
+}
+
+//Check if () are ok with && and ||
+int check_parenthesis(char *s)
+{
+	int i;
+	int	quote;
+
+	i = 0;
+	quote = 0;
+
+	while (s[i])
+	{
+		if (quote == 0 && s[i] == '(' && check_parenthesis_left(s, i))
+			return (0);
+		if (quote == 0 && s[i] == ')' && check_parenthesis_right(s, i))
+			return (0);
+		if (s[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (s[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	return (1);
+}
+
 int	check_syntax(char *brut)
 {
 	int	i;
@@ -184,7 +230,7 @@ void parse_group(t_cmd **cmd, char *brut, t_data *data)
 		return;
 	if (is_only_space(brut)) //ligne vide (on exit pas, on exec une commande vide)
 		*cmd = new_cmd();
-	else if (!check_syntax(brut))
+	else if (!check_syntax(brut) || !check_parenthesis(brut))
 	{
 		ft_putstr_fd("syntax error\n", 2);
 		g_exit_status = 2;
