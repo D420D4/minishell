@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	argument_is_n(char **args, int *i)
+static int	argument_is_n(char **args, int *i)
 {
 	int	j;
 	int	end;

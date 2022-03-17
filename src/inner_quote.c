@@ -35,7 +35,7 @@ static char	*substring(char *s, char *c)
 	return (ss);
 }
 
-int	do_var_init(char **var_name, char **var_value, int *f, t_data *data)
+static int	do_var_init(char **var_name, char **var_value, int *f, t_data *data)
 {
 	if (!*var_name)
 	{

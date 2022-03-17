@@ -41,7 +41,6 @@ int	cmd_env(t_cmd *cmd, t_data *data)
 	return (0);
 }
 
-//Do not free!!
 char	*getvalue(char *s, t_data *data)
 {
 	int		j;

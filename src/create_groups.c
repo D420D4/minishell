@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	genious_quote(const char c, int quote)
+static int	genious_quote(const char c, int quote)
 {
 	if (c == '\'' && quote != 2)
 		quote = (quote + 1) % 2;
@@ -21,7 +21,7 @@ int	genious_quote(const char c, int quote)
 	return (quote);
 }
 
-char	*do_start_parentese(const char *s, int *i, int j)
+static char	*do_start_parentese(const char *s, int *i, int j)
 {
 	int		nb_par;
 	char	*cp;
@@ -50,7 +50,7 @@ char	*do_start_parentese(const char *s, int *i, int j)
 	return (cp);
 }
 
-char	*do_not_start_parentese(char *s, int *i, int j)
+static char	*do_not_start_parentese(char *s, int *i, int j)
 {
 	int		quote;
 	char	*cp;
@@ -78,7 +78,7 @@ char	*do_not_start_parentese(char *s, int *i, int j)
 	return (0);
 }
 
-char	*get_next(char *s, int *i)
+static char	*get_next(char *s, int *i)
 {
 	int		j;
 

@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	check_start_sequence(char *sequence, char **d_name, char **s, int i)
+static int	check_start_sequence(char *sequence, char **d_name, char **s, int i)
 {
 	int	len_sequence;
 

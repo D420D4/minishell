@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-static	int	spread_words(t_cmd *cmd, int i, t_data *data)
+static int	spread_words(t_cmd *cmd, int i, t_data *data)
 {
 	char	**split;
 

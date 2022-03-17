@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-static	int	len_no_quote(char *limiter_brut)
+static int	len_no_quote(char *limiter_brut)
 {
 	int	len;
 	int	quote;

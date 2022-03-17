@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	check_wildards(char *s, char *d_name, t_data *data)
+static int	check_wildards(char *s, char *d_name, t_data *data)
 {
 	int		i;
 	int		quote;
@@ -44,7 +44,8 @@ int	check_wildards(char *s, char *d_name, t_data *data)
 //Because we are in an universe with multiple worlds 
 //and instead ckecking only a little word
 //our ambitious make us checking WORLD ;-P
-void	check_if_world_match(char *d_name, char *s, t_list **wild, t_data *data)
+static void
+	check_if_world_match(char *d_name, char *s, t_list **wild, t_data *data)
 {
 	char	*temp;
 
@@ -59,7 +60,7 @@ void	check_if_world_match(char *d_name, char *s, t_list **wild, t_data *data)
 	}
 }
 
-void	get_current_dir(char *s, t_list **wilds, t_data *data)
+static void	get_current_dir(char *s, t_list **wilds, t_data *data)
 {
 	DIR				*dp;
 	char			*pwd;
@@ -86,7 +87,7 @@ void	get_current_dir(char *s, t_list **wilds, t_data *data)
 		perror("closedir");
 }
 
-char	**ft_sort_str(t_list *wilds)
+static char	**ft_sort_str(t_list *wilds)
 {
 	char	**split;
 	int		size;

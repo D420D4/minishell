@@ -91,21 +91,3 @@ void	ft_sort_tab(char **tab, int size)
 		i++;
 	}
 }
-
-int	check_null(char **tab, int len)
-{
-	int	i;
-
-	i = -1;
-	while (++i < len)
-	{
-		if (tab[i] == NULL)
-		{
-			while (--i >= 0)
-				free(tab[i]);
-			free(tab);
-			return (1);
-		}
-	}
-	return (0);
-}

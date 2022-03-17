@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	is_valid_identifier_unset(char *name)
+static int	is_valid_identifier_unset(char *name)
 {
 	int	i;
 

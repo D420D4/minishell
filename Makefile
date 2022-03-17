@@ -112,6 +112,8 @@ print_name:
 	@tput setaf 208
 	@printf "%-10s " $(NAME)
 
-re: fclean all
+bonus: all
+
+re: fclean all bonus
 
 .PHONY: all clean fclean re bonus print_name

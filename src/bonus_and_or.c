@@ -38,7 +38,7 @@ int	is_finish(char *txt)
 	return (1);
 }
 
-int	do_preparse_line(t_cmd **cmd, t_cmd **cmd_parent, t_data *data)
+static int	do_preparse_line(t_cmd **cmd, t_cmd **cmd_parent, t_data *data)
 {
 	int	ret;
 
@@ -59,7 +59,7 @@ int	do_preparse_line(t_cmd **cmd, t_cmd **cmd_parent, t_data *data)
 	return (1);
 }
 
-void	do_error_cmd(t_cmd **cmd)
+static void	do_error_cmd(t_cmd **cmd)
 {
 	if (*cmd)
 		free_cmd(*cmd);

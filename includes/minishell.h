@@ -12,7 +12,6 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define PROMPT "\e[1;36m$> \e[0m"
 # include "../libft/libft.h"
 # include "../includes/get_next_line.h"
 # include <fcntl.h>
@@ -64,7 +63,6 @@ void	add_pwd(t_data *data);
 
 //CMD
 t_cmd	*get_cmd(t_data *data);
-t_list	*parse_env(char **env);
 t_cmd	*new_cmd(void);
 t_cmd	*new_cmd_txt(char *txt);
 void	free_cmd(t_cmd *cmd);
@@ -124,7 +122,6 @@ void	save_before_signal(int mode, int fd, char *limiter);
 int		check_sequence(char *sequence, char **d_name);
 int		check_first_wildards(char **s, char **d_name, t_data *data);
 int		check_end_sequence(char *sequence, char *d_name);
-int		check_start_sequence(char *sequence, char **d_name, char **s, int i);
 char	**do_wildcards_word(char *s, t_data *data);
 
 //EXIT
@@ -141,7 +138,6 @@ void	close_fd(int fd);
 
 //UTILS TABS
 int		len_tab(char **tab);
-int		check_null(char **tab, int len);
 char	**list_to_tab(t_list *lst);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
 void	ft_sort_tab(char **tab, int size);
