@@ -40,10 +40,8 @@ SRC		= minishell.c\
 SRCBONUS= bonus.c
 
 OBJ		= $(patsubst %.c, %.o, $(SRC))
-OBJBONUS= $(patsubst %.c, %.o, $(SRCBONUS))
 
 OBJS		= $(addprefix ${OBJDIR}, ${OBJ})
-OBJSBONUS	= $(addprefix ${OBJDIR},${OBJBONUS})
 
 SRCDIR	= src/
 OBJDIR	= obj/
@@ -63,15 +61,6 @@ $(NAME): libft/libft.a $(OBJS)
 	@tput setaf 6
 	@echo "${@}"
 	@$(CC) -o $(NAME) $(addprefix $(OBJDIR),$(OBJ)) libft/libft.a $(LFLAGS)
-
-bonus: $(OBJSBONUS) libft/libft.a
-	@make print_name --no-print-directory
-	@tput bold
-	@tput setaf 2
-	@printf "%-16s" "Linking "
-	@tput sgr0
-	@tput setaf 6
-	@$(CC) -o $(NAME) $(OBJSBONUS) $(LFLAGS) libft/libft.a --no-print-directory
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@make print_name --no-print-directory
@@ -114,6 +103,6 @@ print_name:
 
 bonus: all
 
-re: fclean all bonus
+re: fclean all
 
 .PHONY: all clean fclean re bonus print_name
