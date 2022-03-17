@@ -23,6 +23,17 @@ jsais pas trop ou ca segfault mais dans ma logique c etait pas trop con donc a v
 
 -------------------------
 
+ETTTTTTTTTTTT SEGFAULTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+G UN PTIT FICHIER pour trouver les leaks genre test_leak jpense il s apelle 
+bah du coup pour voir si j en avais creer en faisant la norme bah j ai vu y a un segfault qu est apparu !!!!
+y avait pas de segfault avant la norme et ca vient d avant mes commits la donc ptet c est juste le invalid read sur do var init ou jsais plus quoi la 
+
+tu le trouveras avec ./minishell < test_leak
+
+
+------------
+
 Si tu sais plus quoi faire mdrr et que tu t emmerdes
 en ptit bonus final tu peux t amuser a fait le SHLVL mais c est vraiment pas obligatoire mdrr
 
