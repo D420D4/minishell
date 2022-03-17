@@ -44,7 +44,7 @@ static int	do_var_init(char **var_name, char **var_value, int *f, t_data *data)
 		return (1);
 	}
 	if (ft_memcmp(*var_name, "$?", 2))
-		*var_value = strdup(getvalue(*var_name + 1, data));
+		*var_value = ft_strdup(getvalue(*var_name + 1, data));
 	else
 		*var_value = ft_itoa(g_exit_status);
 	return (0);

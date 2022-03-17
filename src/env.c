@@ -19,7 +19,7 @@ t_list	*parse_env(char **env)
 	lst = 0;
 	while (*env)
 	{
-		ft_lstadd_back(&lst, ft_lstnew(strdup(*env)));
+		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(*env)));
 		env++;
 	}
 	return (lst);

@@ -6,7 +6,7 @@
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 15:44:36 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/16 15:45:53 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/03/17 11:28:01 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,50 @@
 #include "get_next_line.h"
 
 int	g_exit_status = 0;
+
+
+void print_cmd(t_cmd *cmd)
+{
+	if  (!cmd)
+		return;
+	int i;
+
+	i = 0;
+	if(!cmd)
+	{
+		printf("ERROR cmd\n");
+		return;
+	}
+	if (cmd->soon)
+		print_cmd(cmd->soon);
+	else
+	{
+		printf ("%d << >> %d : ", cmd->fd_in, cmd->fd_out);
+		if (cmd->cmd == NULL)
+			printf("[] = NULL");
+		while (cmd->cmd && cmd->cmd[i])
+		{
+			printf("[%s] ", cmd->cmd[i]);
+			i++;
+		}
+		printf("\n");
+		if (cmd->pipe)
+		{
+			printf("| ");
+			print_cmd(cmd->pipe);
+		}
+	}
+	if (cmd->on_success)
+	{
+		printf("&& ");
+		print_cmd(cmd->on_success);
+	}
+	if (cmd->on_fail)
+	{
+		printf("|| ");
+		print_cmd(cmd->on_fail);
+	}
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -36,6 +80,7 @@ int	main(int ac, char **av, char **envp)
 			g_exit_status = 0;
 			cmd_exit(cmd, cmd, &data);
 		}
+		print_cmd(cmd);
 		free_cmd(cmd);
 	}
 	exit_clean(&data, NULL);

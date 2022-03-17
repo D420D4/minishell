@@ -106,7 +106,7 @@ int	progress(t_cmd *cmd)
 	ncmd = get_next(cmd->txt, &i);
 	if (!ncmd)
 		return (0);
-	nncmd = strdup(cmd->txt + i + 2);
+	nncmd = ft_strdup(cmd->txt + i + 2);
 	if (cmd->txt[i] == '&')
 		cmd->on_success = new_cmd_txt(nncmd);
 	if (cmd->txt[i] == '|')

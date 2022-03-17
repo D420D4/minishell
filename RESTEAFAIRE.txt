@@ -1,10 +1,6 @@
 alors ptit segfault trouver encore
 c est de ma faute quasi sur
 
-genre echo 
-$EXISTEPAS"lol" segfault
-alors que c est cense renvoyer lol 
-
 alors du coup ca va etre dans transform qu il faut gerer ca
 par contre faut faire attention parce que on doit garder un truc qui marche 
 
