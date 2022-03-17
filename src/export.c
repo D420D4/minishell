@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 02:22:17 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 15:53:09 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 17:57:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,33 +49,6 @@ static char	*ft_strdup_without_plus(const char *s)
 	}
 	ss[i - plus] = s[i];
 	return (ss);
-}
-
-static void	print_env_export(t_cmd *cmd, t_data *data)
-{
-	t_list	*env;
-	int		i;
-	char	*content;
-
-	env = data->env;
-	while (env)
-	{
-		content = (char *) env->content;
-		ft_putstr_fd("declare -x ", cmd->fd_out);
-		i = -1;
-		while (content[++i] != '=')
-			ft_putchar_fd(content[i], cmd->fd_out);
-		ft_putstr_fd("=\"", cmd->fd_out);
-		while (content[++i])
-		{
-			if (content[i] == '"')
-				ft_putstr_fd("\\\"", cmd->fd_out);
-			else
-				ft_putchar_fd(content[i], cmd->fd_out);
-		}
-		ft_putstr_fd("\"\n", cmd->fd_out);
-		env = env->next;
-	}
 }
 
 static void	export_new_content(t_data *data, char *var, int j, int added)
@@ -124,11 +97,11 @@ int	cmd_export(t_cmd *cmd, t_data *data)
 			export_new_content(data, cmd->cmd[i], j, 0);
 		else if (cmd->cmd[i][j] || j == 0)
 		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(cmd->cmd[i], 2);
-			ft_putendl_fd("\': not a valid identifier", 2);
+			print_error_export(cmd->cmd[i]);
 			ret = 1;
 		}
+		else if (!(cmd->cmd[i][j]))
+			export_null_content(data, cmd->cmd[i]);
 	}
 	if (cmd->cmd[1] == NULL)
 		print_env_export(cmd, data);

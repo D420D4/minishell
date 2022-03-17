@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 17:33:24 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 18:43:30 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 17:08:14 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static char	**ft_sort_str(t_list *wilds)
 	size = 0;
 	while (split[size])
 		size++;
-	ft_sort_tab(split, size);
+	ft_sort_tab(split, size, ft_strcmp_wildcards);
 	return (split);
 }
 

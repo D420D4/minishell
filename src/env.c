@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 15:55:49 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/16 13:15:22 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 18:29:59 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ int	cmd_env(t_cmd *cmd, t_data *data)
 		ft_putstr_fd("No options or arguments needed\n", 2);
 	while (env)
 	{
-		ft_putstr_fd((char *) env->content, cmd->fd_out);
-		ft_putstr_fd("\n", cmd->fd_out);
+		if (ft_strchr(env->content, '='))
+		{
+			ft_putstr_fd((char *) env->content, cmd->fd_out);
+			ft_putstr_fd("\n", cmd->fd_out);
+		}
 		env = env->next;
 	}
 	return (0);

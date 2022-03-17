@@ -15,6 +15,7 @@ SRC		= minishell.c\
 		  execute2.c\
 		  exit.c\
 		  export.c\
+		  export2.c\
 		  find_cmd_path.c\
 		  ft_strdup_no_quote.c\
 		  ft_strjoin_vector.c\

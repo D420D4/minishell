@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 17:15:39 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/17 01:31:11 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 18:32:35 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,9 @@ int		cmd_unset(t_cmd *cmd, t_data *data);
 int		cmd_cd(char **cmd, t_data *data);
 int		cmd_pwd(t_cmd *cmd);
 int		cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+void	export_null_content(t_data *data, char *var);
+void	print_error_export(char *var);
+void	print_env_export(t_cmd *cmd, t_data *data);
 
 //SIGNAL
 void	exec_signal(void);
@@ -140,12 +143,13 @@ void	close_fd(int fd);
 int		len_tab(char **tab);
 char	**list_to_tab(t_list *lst);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
-void	ft_sort_tab(char **tab, int size);
+void	ft_sort_tab(char **tab, int size, int (f)(char *, char *));
 void	free_tab(char **tab);
 
 //UTILS STR
 int		is_in_str(char *str, char c);
-int		ft_strcmp(char *s1, char *s2);
+int		ft_strcmp_wildcards(char *s1, char *s2);
+int		ft_strcmp_export(char *s1, char *s2);
 int		is_only_space(char *string);
 char	*ft_strdup_no_quote(char *limiter_brut);
 

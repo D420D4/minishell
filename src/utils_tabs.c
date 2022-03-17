@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 18:18:27 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 18:45:18 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 17:06:05 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	ft_sort_tab(char **tab, int size)
+void	ft_sort_tab(char **tab, int size, int (f)(char *, char *))
 {
 	int		i;
 	int		j;
@@ -80,7 +80,7 @@ void	ft_sort_tab(char **tab, int size)
 		j = 0;
 		while (j < size - 1)
 		{
-			if (ft_strcmp(tab[i], tab[j]) < 0)
+			if (f(tab[i], tab[j]) < 0)
 			{
 				str_temp = &(tab[i][0]);
 				tab[i] = &(tab[j][0]);
