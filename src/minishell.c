@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 15:44:36 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/17 11:28:01 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/03/17 12:03:34 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int ac, char **av, char **envp)
 			g_exit_status = 0;
 			cmd_exit(cmd, cmd, &data);
 		}
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		free_cmd(cmd);
 	}
 	exit_clean(&data, NULL);

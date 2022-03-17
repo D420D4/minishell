@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:59:21 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/17 01:38:51 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 12:10:06 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ static void	exec_fork(t_cmd *cmd, t_data *data,
 	{
 		dup2(cmd->fd_in, STDIN_FILENO);
 		dup2(cmd->fd_out, STDOUT_FILENO);
-		close_fd(cmd->fd_in);
-		close_fd(cmd->fd_out);
 		if (execute_builtin(cmd, cmd_parent, data))
 		{
 			tab = env_to_tab(data->env);
@@ -33,11 +31,8 @@ static void	exec_fork(t_cmd *cmd, t_data *data,
 			free_tab(tab);
 		}
 	}
-	else
-	{
-		close_fd(cmd->fd_in);
-		close_fd(cmd->fd_out);
-	}
+	close_fd(cmd->fd_in);
+	close_fd(cmd->fd_out);
 }
 
 static void	exec_child(t_cmd *cmd, t_data *data,
