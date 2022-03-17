@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:06:16 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/16 20:31:57 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/16 23:47:47 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ static int	create_child(int pipefds[2], char *limiter,
 		if (signal(SIGINT, quit_heredoc) == SIG_ERR)
 			printf("heu le signal deconne/n");
 		read_stdin(limiter, pipefds[1]);
-		close_fd(pipefds[1]);
-		free(limiter);
+		save_before_signal(0, 0, NULL);
 		rl_clear_history();
 		close(0);
 		close(1);

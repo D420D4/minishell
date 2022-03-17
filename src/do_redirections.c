@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 13:20:59 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/16 16:40:30 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 00:42:53 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,24 @@ char	**do_redirections(t_cmd *cmd, t_data *data)
 			add_word_tranform(split[i], &mots, data);
 	}
 	return (create_cmd_tab(mots, cmd));
+}
+
+int	is_in_special(char c, char *s)
+{
+	int	i;
+	int	quote;
+
+	i = 0;
+	quote = 0;
+	while (s[i])
+	{
+		if (c == s[i] && !quote)
+			return (1);
+		if (s[i] == '\'' && quote != 2)
+			quote = (quote + 1) % 2;
+		else if (s[i] == '\"' && quote != 1)
+			quote = (quote + 2) % 4;
+		i++;
+	}
+	return (0);
 }

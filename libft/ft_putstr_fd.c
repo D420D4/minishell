@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 20:48:47 by plefevre          #+#    #+#             */
-/*   Updated: 2022/02/15 17:23:23 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 01:32:00 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	ft_putstr_fd(char *s, int fd)
 	while (*(s + i))
 		i++;
 	if (fd == 2)
-		write(2, "\e[1;31m",7);
+		write(2, "\e[1;31m", 7);
 	write(fd, s, i);
 	if (fd == 2)
-		write(2, "\e[0m",4);
+		write(2, "\e[0m", 4);
 }

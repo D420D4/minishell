@@ -18,14 +18,17 @@ SRC		= minishell.c\
 		  find_cmd_path.c\
 		  ft_strdup_no_quote.c\
 		  ft_strjoin_vector.c\
+		  get_cmd.c\
 		  get_next_line/get_next_line.c\
 		  get_next_line/get_next_line_utils.c\
 		  inner_quote.c\
+		  preparsing.c\
 		  pwd.c\
 		  redirection_in.c\
 		  redirection_out.c\
 		  signal.c\
 		  signal_heredoc.c\
+		  split_advanced.c\
 		  split_redirection.c\
 		  unset.c\
 		  utils.c\

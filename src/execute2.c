@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:59:21 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/15 20:55:14 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 01:38:51 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,24 @@ static void	pipe_transition(t_cmd *cmd, int pipefds[2])
 	if (cmd->pipe != NULL)
 	{
 		if (pipe(pipefds) == -1)
+		{
 			perror("pipe");
-		if (cmd->fd_out == 1)
-			cmd->fd_out = pipefds[1];
+			if (cmd->fd_out == 1)
+				cmd->fd_out = -1;
+			if ((cmd->pipe)->fd_in == 0)
+				(cmd->pipe)->fd_in = -1;
+		}
 		else
-			close_fd(pipefds[1]);
-		if ((cmd->pipe)->fd_in == 0)
-			(cmd->pipe)->fd_in = pipefds[0];
-		else
-			close_fd(pipefds[0]);
+		{
+			if (cmd->fd_out == 1)
+				cmd->fd_out = pipefds[1];
+			else
+				close_fd(pipefds[1]);
+			if ((cmd->pipe)->fd_in == 0)
+				(cmd->pipe)->fd_in = pipefds[0];
+			else
+				close_fd(pipefds[0]);
+		}
 	}
 }
 

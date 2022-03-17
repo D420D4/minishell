@@ -1,0 +1,37 @@
+alors ptit segfault trouver encore
+c est de ma faute quasi sur
+
+genre echo 
+$EXISTEPAS"lol" segfault
+alors que c est cense renvoyer lol 
+
+alors du coup ca va etre dans transform qu il faut gerer ca
+par contre faut faire attention parce que on doit garder un truc qui marche 
+
+transform($EXISTEPAS, data) DOIT RENVOYER NULL (et pas "\0")
+ca c est obligatoire
+
+c est pour faire la difference entre une var qui existe pas et "" ou '' 
+cad differencier 
+echo $EXISTEPAS $EXISTEPAS | cat -e      qui renvoie rien 
+et
+echo "" "" | cat -e    qui renvoie un espace (l espace entre les deux \0)
+
+du coup j avais fait une variable not_null (fichier cmd_analyse) qui regarde si ca passe par un "" ou un '' 
+et a la fin si y avait un \0 et pas de guillemet (!not_null) c etait cense renvoyer NULL
+jsais pas trop ou ca segfault mais dans ma logique c etait pas trop con donc a voir si ca se regle pas facilement 
+
+-------------------------
+
+Si tu sais plus quoi faire mdrr et que tu t emmerdes
+en ptit bonus final tu peux t amuser a fait le SHLVL mais c est vraiment pas obligatoire mdrr
+
+genre quand tu rentres dans le minishell en theorie faut monter $SHLVL de 1 
+sauf si $SHLVL vaut plus de 999 dans ce cas la faut le reset a 1
+voila c pas ultra important mais 
+si un correcteur fait env - i minishell normalement bash refait 2 variables PWD et SHLVL
+et du coup si il print env il va voir qu on l a pas fait donc faudra se justifier mdr 
+
+-------
+
+sinon tu peux tenter de trouver des leaks ou des conneries comme ca avec les ctrl+c ou des commandes qui bugs mais ca m a l air carre la

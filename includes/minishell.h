@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 17:15:39 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/16 20:38:32 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/17 01:31:11 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,51 @@ typedef struct s_cmd
 
 extern int	g_exit_status;
 
+//HEADER
+void	print_header(void);
+
 //CREATE ENV
 t_list	*parse_env(char **env);
 void	add_pwd(t_data *data);
 
+//CMD
 t_cmd	*get_cmd(t_data *data);
 t_list	*parse_env(char **env);
-int		find_rd_in(char **cmd, int *rd_in);
-int		find_rd_output(char **cmd, int *rd_out);
+t_cmd	*new_cmd(void);
+t_cmd	*new_cmd_txt(char *txt);
+void	free_cmd(t_cmd *cmd);
+
+// PARSING
+int		check_parenthesis(char *s);
+int		check_syntax(char *brut);
+int		preparse_line(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data);
+int		is_finish(char *txt);
+int		is_in_special(char c, char *s);
+char	**split_advanced_redirections(char *s);
+char	**split_advanced(char *s, char *c);
+void	parse_group(t_cmd **cmd, char *brut, t_data *data);
+
+//ANALYSE
+
+int		set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
+int		set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd,
+			t_cmd *cmd_parent, t_data *data);
+int		set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
+int		set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
+int		inner_quote_1(char **s, int *i, t_data *data);
+int		inner_quote_2(char **s, int *i);
+int		progress(t_cmd *cmd);
+char	*transform(char *original, t_data *data);
+char	**do_redirections(t_cmd *cmd, t_data *data);
+char	*find_filename(char *filename_brut, t_data *data);
+void	do_var(char **s, int *f, t_data *data);
+
+// EXEC
+int		exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 int		exec_cmd(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+int		wait_cmd(t_cmd *cmd, t_cmd *cmd_parent);
+char	*find_cmd_path(char **cmd, t_list *env);
+void	analyse_line(t_cmd *cmd, t_data *data);
 
 // BUILTIN
 int		execute_builtin(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
@@ -76,39 +112,6 @@ int		cmd_cd(char **cmd, t_data *data);
 int		cmd_pwd(t_cmd *cmd);
 int		cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 
-void	free_cmd(t_cmd *cmd);
-char	*transform(char *original, t_data *data);
-void 	print_header(void);
-t_cmd	*new_cmd(void);
-char	**split_advanced(char *s, char *c);
-int		preparse_line(t_cmd **cmd, char *brut, t_cmd *cmd_parent, t_data *data);
-void	parse_group(t_cmd **cmd, char *brut, t_data *data);
-t_cmd	*new_cmd_txt(char *txt);
-int		is_finish(char *txt);
-int		is_in_special(char c, char *s);
-
-//ANALYSE
-char	**split_advanced_redirections(char *s);
-char	**do_redirections(t_cmd *cmd, t_data *data);
-int	set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
-int	set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
-int	set_new_rd_out_trunc(char *filename_brut, int *rd_out, t_data *data);
-int	set_new_rd_out_append(char *filename_brut, int *rd_out, t_data *data);
-char	*find_filename(char *filename_brut, t_data *data);
-int		check_parenthesis(char *s);
-int		check_syntax(char *brut);
-void	do_var(char **s, int *f, t_data *data);
-int		inner_quote_1(char **s, int *i, t_data *data);
-int		inner_quote_2(char **s, int *i);
-int		progress(t_cmd *cmd);
-
-// EXEC
-int		exec_cmds(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
-int		exec_cmd(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
-int		wait_cmd(t_cmd *cmd, t_cmd *cmd_parent);
-char	*find_cmd_path(char **cmd, t_list *env);
-void	analyse_line(t_cmd *cmd, t_data *data);
-
 //SIGNAL
 void	exec_signal(void);
 void	nothing_signal(void);
@@ -118,36 +121,36 @@ void	quit_heredoc(int sig);
 void	save_before_signal(int mode, int fd, char *limiter);
 
 //WILDCARDS
-char	**do_wildcards_word(char *s, t_data *data);
 int		check_sequence(char *sequence, char **d_name);
 int		check_first_wildards(char **s, char **d_name, t_data *data);
 int		check_end_sequence(char *sequence, char *d_name);
 int		check_start_sequence(char *sequence, char **d_name, char **s, int i);
+char	**do_wildcards_word(char *s, t_data *data);
 
 //EXIT
 void	exit_clean(t_data *data, t_cmd *cmd_parent);
 
 //UTILS
-char	**env_to_tab(t_list *env);
-char	*getvalue(char *s, t_data *data);
+int		is_in(char c, char *s);
 int		len_cmd(t_list *mots);
 int		is_a_file(char *str);
-void	close_fd(int fd);
 char	*get_pwd(void);
-int		is_in(char c, char *s);
+char	**env_to_tab(t_list *env);
+char	*getvalue(char *s, t_data *data);
+void	close_fd(int fd);
 
 //UTILS TABS
-char	**list_to_tab(t_list *lst);
-void	ft_sort_tab(char **tab, int size);
-void	free_tab(char **tab);
 int		len_tab(char **tab);
 int		check_null(char **tab, int len);
+char	**list_to_tab(t_list *lst);
 char	*ft_strjoin_vector(int size, char **strs, char *sep);
+void	ft_sort_tab(char **tab, int size);
+void	free_tab(char **tab);
 
 //UTILS STR
-int	is_in_str(char *str, char c);
-int	ft_strcmp(char *s1, char *s2);
-int	is_only_space(char *string);
+int		is_in_str(char *str, char c);
+int		ft_strcmp(char *s1, char *s2);
+int		is_only_space(char *string);
 char	*ft_strdup_no_quote(char *limiter_brut);
 
 #endif
