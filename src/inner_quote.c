@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inner_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 16:31:58 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/16 16:31:59 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/03/17 12:01:51 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,10 @@ void	do_var(char **s, int *f, t_data *data)
 	if (do_var_init(&var_name, &var_value, f, data))
 		return ;
 	ss = malloc(ft_strlen(*s) - ft_strlen(var_name) + ft_strlen(var_value) + 1);
-	if (!ss || !var_value)
+	if (!ss)
 	{
 		free(var_name);
-		if (var_value)
-			free(var_value);
+		free(var_value);
 		return ;
 	}
 	ft_memcpy(ss, *s, *f);
