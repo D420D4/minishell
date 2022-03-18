@@ -1,8 +1,0 @@
-Parsing paranthesis le retourrrr
-
-echo 1 || echo 2 && echo 3
-renvoie 1 et 3 (good)
-
-echo 1 || (echo 2 && echo 3)
-renvoie 1 et 3) (nulnulnul)
-
