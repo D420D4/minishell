@@ -140,6 +140,8 @@ char	*get_pwd(void);
 char	**env_to_tab(t_list *env);
 char	*getvalue(char *s, t_data *data);
 void	close_fd(int fd);
+char	*get_string(const char *s, const int *i, int j);
+
 
 //UTILS TABS
 int		len_tab(char **tab);

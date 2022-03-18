@@ -45,13 +45,14 @@ static int	atoi_shlvl(char *str)
 	}
 	if (str[i] == '\0' && n < 999)
 		return (n + 1);
-	ft_putendl_fd("minishell : warning: shell level too high, resetting to 1", 1);
+	ft_putendl_fd("minishell : warning: shell level too high, resetting to 1",
+		1);
 	return (1);
 }
 
 static char	*find_new_value_shlvl(char *old_content)
 {
-	int	value;
+	int		value;
 	char	*new_content;
 
 	value = atoi_shlvl(old_content);
@@ -85,4 +86,3 @@ void	add_shlvl(t_data *data)
 	if (new_content)
 		ft_lstadd_back(&data->env, ft_lstnew(new_content));
 }
-

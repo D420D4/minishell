@@ -71,3 +71,14 @@ int	is_only_space(char *string)
 	}
 	return (1);
 }
+
+char	*get_string(const char *s, const int *i, int j)
+{
+	char	*cp;
+
+	j = *i;
+	cp = malloc(j + 1);
+	memcpy(cp, s, j);
+	cp[j] = 0;
+	return (cp);
+}

@@ -53,7 +53,6 @@ static char	*do_start_parentese(const char *s, int *i, int j)
 static char	*do_not_start_parentese(char *s, int *i, int j)
 {
 	int		quote;
-	char	*cp;
 	int		cmp;
 	int		par;
 
@@ -69,13 +68,7 @@ static char	*do_not_start_parentese(char *s, int *i, int j)
 			cmp++;
 		}
 		if (cmp == 2 || !s[j + 1])
-		{
-			j = *i;
-			cp = malloc(j + 1);
-			memcpy(cp, s, j);
-			cp[j] = 0;
-			return (cp);
-		}
+			return (get_string(s, i, j));
 		par += !quote * ((s[j] == '(') - (s[j] == ')'));
 		quote = genious_quote(s[j++], quote);
 	}
