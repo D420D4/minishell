@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **envp)
 	(void) ac;
 	data.env = parse_env(envp);
 	add_pwd(&data);
-	print_header();
+	print_header(0);
 	add_shlvl(&data);
 	while (42)
 	{

@@ -18,9 +18,9 @@ static void	add_color(char **line)
 
 	temp = *line;
 	if (g_exit_status)
-		*line = ft_strjoin("\e[1;31m➜\e[1;36m minishell: \e[1;34m", temp);
+		*line = ft_strjoin("\e[1;31m➜ \e[1;36m minishell: \e[1;34m", temp);
 	else
-		*line = ft_strjoin("\e[1;32m➜\e[1;36m minishell: \e[1;34m", temp);
+		*line = ft_strjoin("\e[1;32m➜ \e[1;36m minishell: \e[1;34m", temp);
 	free(temp);
 	temp = *line;
 	*line = ft_strjoin(temp, " $> \e[0m");

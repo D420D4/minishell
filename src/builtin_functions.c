@@ -21,6 +21,7 @@ int	is_in_builtin(char *cmd_name)
 		|| !ft_memcmp(cmd_name, "export", 7)
 		|| !ft_memcmp(cmd_name, "unset", 6)
 		|| !ft_memcmp(cmd_name, "cd", 3)
+		|| !ft_memcmp(cmd_name, "42", 3)
 		|| !ft_memcmp(cmd_name, "pwd", 4)
 		|| !ft_memcmp(cmd_name, "exit", 5))
 		return (1);
@@ -41,6 +42,8 @@ int	execute_builtin(t_cmd *cmd, t_cmd *cmd_parent, t_data *data)
 		g_exit_status = cmd_unset(cmd, data);
 	else if (!ft_memcmp(cmd->cmd_path, "cd", 3))
 		g_exit_status = cmd_cd(cmd->cmd, data);
+	else if (!ft_memcmp(cmd->cmd_path, "42", 3))
+		g_exit_status = cmd_42(cmd);
 	else if (!ft_memcmp(cmd->cmd_path, "pwd", 4))
 		g_exit_status = cmd_pwd(cmd);
 	else if (!ft_memcmp(cmd->cmd_path, "exit", 5))

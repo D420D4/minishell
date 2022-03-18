@@ -55,7 +55,7 @@ typedef struct s_cmd
 extern int	g_exit_status;
 
 //HEADER
-void	print_header(void);
+void	print_header(int fd);
 
 //CREATE ENV
 t_list	*parse_env(char **env);
@@ -79,7 +79,6 @@ char	**split_advanced(char *s, char *c);
 void	parse_group(t_cmd **cmd, char *brut, t_data *data);
 
 //ANALYSE
-
 int		set_new_rd_in_open(char *filename_brut, t_cmd *cmd, t_data *data);
 int		set_new_rd_in_heredoc(char *limiter_brut, t_cmd *cmd,
 			t_cmd *cmd_parent, t_data *data);
@@ -108,6 +107,7 @@ int		cmd_env(t_cmd *cmd, t_data *data);
 int		cmd_export(t_cmd *cmd, t_data *data);
 int		cmd_unset(t_cmd *cmd, t_data *data);
 int		cmd_cd(char **cmd, t_data *data);
+int		cmd_42(t_cmd *cmd);
 int		cmd_pwd(t_cmd *cmd);
 int		cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
 char	*ft_strjoin_added(char *content, char *var);
@@ -141,7 +141,6 @@ char	**env_to_tab(t_list *env);
 char	*getvalue(char *s, t_data *data);
 void	close_fd(int fd);
 char	*get_string(const char *s, const int *i, int j);
-
 
 //UTILS TABS
 int		len_tab(char **tab);
