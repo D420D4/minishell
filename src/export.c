@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 02:22:17 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/17 17:57:00 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/18 00:58:50 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	export_new_content(t_data *data, char *var, int j, int added)
 	if (var[j] == '=')
 		new_content = ft_strdup(var);
 	else if (added)
-		new_content = ft_strjoin(lst->content, var + j + 2);
+		new_content = ft_strjoin_added(lst->content, var + j + 2);
 	else
 		new_content = ft_strdup_without_plus(var);
 	if (added && new_content)

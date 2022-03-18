@@ -27,6 +27,7 @@ SRC		= minishell.c\
 		  pwd.c\
 		  redirection_in.c\
 		  redirection_out.c\
+		  shlvl.c\
 		  signal.c\
 		  signal_heredoc.c\
 		  split_advanced.c\

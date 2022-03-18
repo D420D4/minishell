@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 17:49:12 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/17 18:27:27 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/18 01:04:40 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static	void	export_print_content(char *content, t_cmd *cmd)
 	if (content[0])
 	{
 		ft_putstr_fd("=\"", cmd->fd_out);
-		i = -1;
+		i = 0;
 		while (content[++i])
 		{
 			if (content[i] == '"')
@@ -59,8 +59,9 @@ static	void	export_print_content(char *content, t_cmd *cmd)
 			else
 				ft_putchar_fd(content[i], cmd->fd_out);
 		}
-		ft_putstr_fd("\"\n", cmd->fd_out);
+		ft_putchar_fd('\"', cmd->fd_out);
 	}
+	ft_putchar_fd('\n', cmd->fd_out);
 }
 
 void	print_env_export(t_cmd *cmd, t_data *data)
@@ -76,7 +77,7 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 		return ;
 	j = -1;
 	while (split[++j])
-	{
+	{	
 		content = split[j];
 		ft_putstr_fd("declare -x ", cmd->fd_out);
 		i = -1;
@@ -85,4 +86,21 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 		export_print_content(content + i, cmd);
 	}
 	free_tab(split);
+}
+
+char	*ft_strjoin_added(char *content, char *var)
+{
+	int	i;
+	char	*new_content;
+	char	*temp;
+
+	i = 0;
+	while (content[i] != '=' && content[i])
+		i++;
+	if (content[i] == '=')
+		return (ft_strjoin(content, var));
+	temp = ft_strjoin(content, "=");
+	new_content = ft_strjoin(temp, var);
+	free(temp);
+	return (new_content);
 }

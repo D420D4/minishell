@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 17:15:39 by plefevre          #+#    #+#             */
-/*   Updated: 2022/03/17 18:32:35 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/18 01:04:37 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	print_header(void);
 //CREATE ENV
 t_list	*parse_env(char **env);
 void	add_pwd(t_data *data);
+void	add_shlvl(t_data *data);
 
 //CMD
 t_cmd	*get_cmd(t_data *data);
@@ -109,6 +110,7 @@ int		cmd_unset(t_cmd *cmd, t_data *data);
 int		cmd_cd(char **cmd, t_data *data);
 int		cmd_pwd(t_cmd *cmd);
 int		cmd_exit(t_cmd *cmd, t_cmd *cmd_parent, t_data *data);
+char	*ft_strjoin_added(char *content, char *var);
 void	export_null_content(t_data *data, char *var);
 void	print_error_export(char *var);
 void	print_env_export(t_cmd *cmd, t_data *data);
