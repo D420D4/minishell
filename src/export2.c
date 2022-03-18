@@ -70,10 +70,10 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 	int		i;
 	char	*content;
 	char	**split;
-	
+
 	split = list_to_tab(data->env);
 	ft_sort_tab(split, len_tab(split), ft_strcmp_export);
-	if (split ==  NULL)
+	if (split == NULL)
 		return ;
 	j = -1;
 	while (split[++j])
@@ -90,7 +90,7 @@ void	print_env_export(t_cmd *cmd, t_data *data)
 
 char	*ft_strjoin_added(char *content, char *var)
 {
-	int	i;
+	int		i;
 	char	*new_content;
 	char	*temp;
 

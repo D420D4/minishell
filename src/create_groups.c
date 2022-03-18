@@ -55,12 +55,15 @@ static char	*do_not_start_parentese(char *s, int *i, int j)
 	int		quote;
 	char	*cp;
 	int		cmp;
+	int		par;
 
 	cmp = 0;
 	quote = 0;
+	par = 0;
 	while (s[j])
 	{
-		if (!ft_memcmp(s + j, "&&", 2) || !ft_memcmp(s + j, "||", 2))
+		if (!quote && !par && (!ft_memcmp(s + j, "&&", 2)
+				|| !ft_memcmp(s + j, "||", 2)))
 		{
 			*i = j;
 			cmp++;
@@ -73,6 +76,7 @@ static char	*do_not_start_parentese(char *s, int *i, int j)
 			cp[j] = 0;
 			return (cp);
 		}
+		par += !quote * ((s[j] == '(') - (s[j] == ')'));
 		quote = genious_quote(s[j++], quote);
 	}
 	return (0);
