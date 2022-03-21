@@ -96,23 +96,24 @@ int	progress(t_cmd *cmd)
 	char	*nncmd;
 
 	i = 0;
-	if (!cmd || !cmd->txt)
-		return (0);
-	if (is_finish(cmd->txt))
+	if (!cmd || !cmd->txt || is_finish(cmd->txt))
 		return (0);
 	ncmd = get_next(cmd->txt, &i);
 	if (!ncmd)
 		return (0);
-	nncmd = ft_strdup(cmd->txt + i + 2);
-	if (cmd->txt[i] == '&')
-		cmd->on_success = new_cmd_txt(nncmd);
-	if (cmd->txt[i] == '|')
-		cmd->on_fail = new_cmd_txt(nncmd);
+	if (i + 2 <= ft_strlen(cmd->txt))
+	{
+		nncmd = ft_strdup(cmd->txt + i + 2);
+		if (cmd->txt[i] == '&')
+			cmd->on_success = new_cmd_txt(nncmd);
+		if (cmd->txt[i] == '|')
+			cmd->on_fail = new_cmd_txt(nncmd);
+		free(nncmd);
+	}
 	cmd->soon = new_cmd_txt(ncmd);
 	progress(cmd->soon);
 	progress(cmd->on_success);
 	progress(cmd->on_fail);
 	free(ncmd);
-	free(nncmd);
 	return (1);
 }
