@@ -6,7 +6,7 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 23:49:47 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/03/18 00:46:24 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/03/21 13:58:04 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,13 @@ static int	atoi_shlvl(char *str)
 static char	*find_new_value_shlvl(char *old_content)
 {
 	int		value;
+	char	*temp;
 	char	*new_content;
 
 	value = atoi_shlvl(old_content);
-	new_content = ft_strjoin("SHLVL=", ft_itoa(value));
+	temp = ft_itoa(value);
+	new_content = ft_strjoin("SHLVL=", temp);
+	free(temp);
 	return (new_content);
 }
 
